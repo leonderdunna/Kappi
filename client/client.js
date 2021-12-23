@@ -1,5 +1,17 @@
 var card = null;
-var stat = null
+var stat = null;
+var clientname = "Leonard"
+
+function like(){
+
+    if(!card.Like.includes(clientname)){
+        card.Like.push(clientname)
+    } else{
+        card.Like.splice(card.Like.indexOf(clientname),1)
+    }
+    save(card)
+    refreschUI()
+}
 
 function getCard() {
     //card = await fetch()
@@ -8,10 +20,32 @@ function getCard() {
         "ID": 98726103948,
         "Antwort": "ca 300m",
         "Autor": "Leonard",
-        "Like": ["Leonard", "Orlando", "LOL allen anderen"]
+        "Like": ["Leonard", "Orlando"]
     }
     getStatus()
     refreschUI()
+}
+function refreschUI(){
+    document.getElementById("cardfrage").innerHTML = card.Frage
+    document.getElementById("cardantwort").innerHTML = card.Antwort
+    document.getElementById("cardid").textContent = "Karte "+card.ID
+    document.getElementById("cardfach").textContent = "Fach: "+card.Fach+", Autor: "+card.Autor
+    document.getElementById("gefälltmir").textContent = "Gefällt mir: "+card.Like.length
+
+    if(!card.Like.includes(clientname)){
+        document.getElementById("gefälltmir").classList.remove("btn-primary")
+        document.getElementById("gefälltmir").classList.add("btn-outline-primary")
+    } else{
+        document.getElementById("gefälltmir").classList.remove("btn-outline-primary")
+        document.getElementById("gefälltmir").classList.add("btn-primary")
+    }
+
+    let antwortElements = document.getElementsByClassName("antwort")
+
+    for (element of antwortElements){
+        element.style.display = "none";
+    }
+    document.getElementById("zeigeAntwort").style.display = "block"
 }
 
 async function antworten(schwierigkeit) {
