@@ -8,7 +8,9 @@
 </head>
 
 <body>
-
+    <style>
+        @import url(style.css);
+    </style>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -44,11 +46,11 @@
             <div class="col">
                 <div class="container">
                     <div class="row">
-                        <button type="button" class="btn btn-outline-primary disabled">Herz</button>
+                        <button type="button" class="btn my-3 btn-outline-primary disabled">Herz (42)</button>
                     </div>
                     <div class="row">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                            <button type="button" class="btn my-3 btn-primary dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 Filter
                             </button>
@@ -92,17 +94,25 @@
                     <div class="card-body">
                         <h5 class="card-title">Karte: ID</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Fach</h6>
-                        <p class="card-text">Die eigendliche karte</p>
-                        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                            <button type="button" class="btn btn-danger">Nochmal</button>
-                            <button type="button" class="btn btn-warning">Schwierig</button>
-                            <button type="button" class="btn btn-success">Gut</button>
+                        <p class="card-text">Frage</p>
+                        <hr>
+                        <p class="card-text antwort">Antwort</p>
+                        <hr class="antwort">
+                        <div class="btn-group" role="group" aria-label="Basic mixed styles ">
+                            <button onclick="zeigeAntwort()" id="zeigeAntwort" type="button" class="btn btn-primary ">Zeige Antwort</button>
+                            <button id="nochmal" type="button" class="btn btn-danger antwort">Nochmal</button>
+                            <button id="schwierig" type="button" class="btn btn-warning antwort">Schwierig</button>
+                            <button id="gut" type="button" class="btn btn-success antwort">Gut</button>
+                            <button id="einfach" type="button" class="btn btn-success antwort">Einfach</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col">
-                Edit && delete
+                <div class="container">
+                    <div class="row"><button type="button" class="btn my-3 btn-primary ">Bearbeiten</button></div>
+                    <div class="row"><button type="button" class="btn my-3 btn-primary ">Löschen</button></div>
+                </div>
             </div>
         </div>
 

@@ -1,8 +1,8 @@
-import Express from "express";
-const app = Express();
+const express = require("express")
+const app = express();
 const port = 3000
 
 
-app.use(Express.static('./client'))
+app.use(express.static('./client'))
 
 app.listen(port, ()=>{console.log("server wird gestartet")})
