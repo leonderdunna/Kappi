@@ -46,11 +46,12 @@
             <div class="col">
                 <div class="container">
                     <div class="row">
-                        <button onclick="like()" id="gefälltmir" type="button" class="btn my-3 btn-outline-primary ">Gefällt mir</button>
+                        <button onclick="like()" id="gefälltmir" type="button"
+                            class="btn my-3 btn-outline-primary ">Gefällt mir</button>
                     </div>
                     <div class="row">
                         <div id="filter" class="btn-group">
-                            <button  type="button" class="btn my-3 btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                            <button type="button" class="btn my-3 btn-primary dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 Filter
                             </button>
@@ -99,11 +100,16 @@
                         <p id="cardantwort" class="card-text antwort">Antwort</p>
                         <hr class="antwort">
                         <div class="btn-group" role="group" aria-label="Basic mixed styles ">
-                            <button onclick="zeigeAntwort()" id="zeigeAntwort" type="button" class="btn btn-primary ">Zeige Antwort</button>
-                            <button onclick="antworten('nocmal')" id="nochmal" type="button" class="btn btn-danger antwort">Nochmal</button>
-                            <button onclick="antworten('schwierig')" id="schwierig" type="button" class="btn btn-warning antwort">Schwierig</button>
-                            <button onclick="antworten('gut')" id="gut" type="button" class="btn btn-success antwort">Gut</button>
-                            <button onclick="antworten('einfach')" id="einfach" type="button" class="btn btn-success antwort">Einfach</button>
+                            <button onclick="zeigeAntwort()" id="zeigeAntwort" type="button"
+                                class="btn btn-primary ">Zeige Antwort</button>
+                            <button onclick="antworten('nocmal')" id="nochmal" type="button"
+                                class="btn btn-danger antwort">Nochmal</button>
+                            <button onclick="antworten('schwierig')" id="schwierig" type="button"
+                                class="btn btn-warning antwort">Schwierig</button>
+                            <button onclick="antworten('gut')" id="gut" type="button"
+                                class="btn btn-success antwort">Gut</button>
+                            <button onclick="antworten('einfach')" id="einfach" type="button"
+                                class="btn btn-success antwort">Einfach</button>
                         </div>
                     </div>
                 </div>
@@ -123,9 +129,21 @@
             <h6 class="card-subtitle mb-2 text-muted">Im moment sind keine Karten fällig</h6>
             <p class="card-text">Vielleicht sin in anderen fächern noch karten fällig.</p>
             <hr>
-           
-         
+
+
         </div>
+    </div>
+
+    <div id="anmelden" class="card">
+        <h5 class="card-title">Anmelden</h5>
+        <p class="card-text">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">@</span>
+            <input id="clientname" type="text" class="form-control" placeholder="Username" aria-label="Username"
+                aria-describedby="basic-addon1">
+        </div>
+        <button onclick="anmelden()" type="button" class="btn btn-primary">Anmelden</button>
+        </p>
     </div>
     <!-- Scripts -->
     <script src="client.js"></script>

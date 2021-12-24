@@ -1,6 +1,22 @@
 var card = null;
 var stat = null;
-var clientname = "Leonard"
+var clientname = null;
+
+function start() {
+    clientname = window.localStorage.getItem("name")
+    if (!clientname) {
+        document.getElementsByClassName("abfrage")[0].style.display = "none";
+        document.getElementById("anmelden").style.display = "block";
+    } else {
+        getCard()
+    }
+}
+function anmelden() {
+    window.localStorage.setItem("name", document.getElementById("clientname").value)
+    document.getElementsByClassName("abfrage")[0].style.display = "block";
+    document.getElementById("anmelden").style.display = "none";
+    start()
+}
 
 function like() {
 
@@ -9,14 +25,14 @@ function like() {
     } else {
         card.Like.splice(card.Like.indexOf(clientname), 1)
     }
-    save(card)
+    //save(card)
     refreschUI()
 }
 
 function getCard() {
     //card = await fetch()
     card = {
-        "stat": "fertig",
+        "stat": "ok",
         "Frage": "Wie hoch ist der Eifelturm?",
         "ID": 98726103948,
         "Antwort": "ca 300m",
@@ -97,3 +113,5 @@ function zeigeAntwort() {
     }
     document.getElementById("zeigeAntwort").style.display = "none"
 }
+
+start()
