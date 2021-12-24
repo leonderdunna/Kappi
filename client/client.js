@@ -2,12 +2,12 @@ var card = null;
 var stat = null;
 var clientname = "Leonard"
 
-function like(){
+function like() {
 
-    if(!card.Like.includes(clientname)){
+    if (!card.Like.includes(clientname)) {
         card.Like.push(clientname)
-    } else{
-        card.Like.splice(card.Like.indexOf(clientname),1)
+    } else {
+        card.Like.splice(card.Like.indexOf(clientname), 1)
     }
     save(card)
     refreschUI()
@@ -16,6 +16,7 @@ function like(){
 function getCard() {
     //card = await fetch()
     card = {
+        "stat": "fertig",
         "Frage": "Wie hoch ist der Eifelturm?",
         "ID": 98726103948,
         "Antwort": "ca 300m",
@@ -25,27 +26,36 @@ function getCard() {
     getStatus()
     refreschUI()
 }
-function refreschUI(){
-    document.getElementById("cardfrage").innerHTML = card.Frage
-    document.getElementById("cardantwort").innerHTML = card.Antwort
-    document.getElementById("cardid").textContent = "Karte "+card.ID
-    document.getElementById("cardfach").textContent = "Fach: "+card.Fach+", Autor: "+card.Autor
-    document.getElementById("gefälltmir").textContent = "Gefällt mir: "+card.Like.length
+function refreschUI() {
 
-    if(!card.Like.includes(clientname)){
-        document.getElementById("gefälltmir").classList.remove("btn-primary")
-        document.getElementById("gefälltmir").classList.add("btn-outline-primary")
-    } else{
-        document.getElementById("gefälltmir").classList.remove("btn-outline-primary")
-        document.getElementById("gefälltmir").classList.add("btn-primary")
+    if (card.stat == "fertig") {
+        document.getElementsByClassName("abfrage")[0].style.display = "none";
+        document.getElementById("cardfertig").style.display = "block";
+        document.getElementById("cardfertigbody").appendChild(document.getElementById("filter"))
     }
 
-    let antwortElements = document.getElementsByClassName("antwort")
+    if (card.ID) {
+        document.getElementById("cardfrage").innerHTML = card.Frage
+        document.getElementById("cardantwort").innerHTML = card.Antwort
+        document.getElementById("cardid").textContent = "Karte " + card.ID
+        document.getElementById("cardfach").textContent = "Fach: " + card.Fach + ", Autor: " + card.Autor
+        document.getElementById("gefälltmir").textContent = "Gefällt mir: " + card.Like.length
 
-    for (element of antwortElements){
-        element.style.display = "none";
+        if (!card.Like.includes(clientname)) {
+            document.getElementById("gefälltmir").classList.remove("btn-primary")
+            document.getElementById("gefälltmir").classList.add("btn-outline-primary")
+        } else {
+            document.getElementById("gefälltmir").classList.remove("btn-outline-primary")
+            document.getElementById("gefälltmir").classList.add("btn-primary")
+        }
+
+        let antwortElements = document.getElementsByClassName("antwort")
+
+        for (element of antwortElements) {
+            element.style.display = "none";
+        }
+        document.getElementById("zeigeAntwort").style.display = "block"
     }
-    document.getElementById("zeigeAntwort").style.display = "block"
 }
 
 async function antworten(schwierigkeit) {
@@ -60,14 +70,14 @@ async function antworten(schwierigkeit) {
         stat.Leichtigkeit = stat.Leichtigkeit * 1.1
         stat.Intervall = stat.Intervall * stat.Leichtigkeit
         stat.Fällig = Date.now() + stat.Intervall
-    } else if (schwierigkeit == "Einfach"){
+    } else if (schwierigkeit == "Einfach") {
         stat.Leichtigkeit = stat.Leichtigkeit * 1.3
         stat.Intervall = stat.Intervall * stat.Leichtigkeit
         stat.Fällig = Date.now() + stat.Intervall
     }
     //fetch(set/status/id POST stat{})
     getCard()
-    
+
 }
 
 function getStatus() {
@@ -79,11 +89,11 @@ function getStatus() {
     }
 }
 
-function zeigeAntwort(){
-   let antwortElements = document.getElementsByClassName("antwort")
+function zeigeAntwort() {
+    let antwortElements = document.getElementsByClassName("antwort")
 
-   for (element of antwortElements){
-       element.style.display = "block";
-   }
-   document.getElementById("zeigeAntwort").style.display = "none"
+    for (element of antwortElements) {
+        element.style.display = "block";
+    }
+    document.getElementById("zeigeAntwort").style.display = "none"
 }

@@ -41,7 +41,7 @@
         </div>
     </nav>
 
-    <div class="container my-3">
+    <div class="container my-3 abfrage">
         <div class="row">
             <div class="col">
                 <div class="container">
@@ -49,8 +49,8 @@
                         <button onclick="like()" id="gefälltmir" type="button" class="btn my-3 btn-outline-primary ">Gefällt mir</button>
                     </div>
                     <div class="row">
-                        <div class="btn-group">
-                            <button type="button" class="btn my-3 btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                        <div id="filter" class="btn-group">
+                            <button  type="button" class="btn my-3 btn-primary dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 Filter
                             </button>
@@ -117,8 +117,15 @@
         </div>
 
     </div>
-    <div class="container fixed-bottom mb-2">
-
+    <div id="cardfertig" class="card">
+        <div id="cardfertigbody" class="card-body">
+            <h5 class="card-title">Fertig!!</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Im moment sind keine Karten fällig</h6>
+            <p class="card-text">Vielleicht sin in anderen fächern noch karten fällig.</p>
+            <hr>
+           
+         
+        </div>
     </div>
     <!-- Scripts -->
     <script src="client.js"></script>
