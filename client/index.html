@@ -23,10 +23,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Lernen</a>
+                        <a class="nav-link active" aria-current="page" href="./index.html">Lernen</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#">Neue Karte</a>
+                        <a class="nav-link" href="./neueKarte.html">Neue Karte</a>
                     </li>
 
                     <li class="nav-item">
@@ -137,12 +137,32 @@
     <div id="anmelden" class="card">
         <h5 class="card-title">Anmelden</h5>
         <p class="card-text">
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">@</span>
-            <input id="clientname" type="text" class="form-control" placeholder="Username" aria-label="Username"
-                aria-describedby="basic-addon1">
+
+        <div class="input-group my-3">
+            <span class="input-group-text">Name und Passwort</span>
+            <input id="clientname" type="text" aria-label="First name" class="form-control">
+            <input id="clientpasswort" type="password" aria-label="Last name" class="form-control">
         </div>
         <button onclick="anmelden()" type="button" class="btn btn-primary">Anmelden</button>
+        </p>
+        <h5 class="card-title">Registrieren</h5>
+        <p class="card-text">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">Name</span>
+            <input type="text" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">Email</span>
+            <input type="text" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">Passwort</span>
+            <input type="password" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default">
+        </div>
+        <button onclick="registrieren()" type="button" class="btn btn-primary">Anmelden</button>
         </p>
     </div>
     <!-- Scripts -->
