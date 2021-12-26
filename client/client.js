@@ -31,18 +31,14 @@ function like() {
 
 function getCard() {
     //card = await fetch()
-    card = {
-        "stat": "ok",
-        "Frage": "Wie hoch ist der Eifelturm?",
-        "ID": 98726103948,
-        "Antwort": "ca 300m",
-        "Autor": "Leonard",
-        "Like": ["Leonard", "Orlando"]
-    }
-   
-    refreschUI()
+    fetch('http://localhost:3000/card')
+	.then(response => response.json())
+	.then(data => {console.log(data);card = data;refreschUI()})
+	.catch(err => console.error(err));
 }
 function refreschUI() {
+
+console.log(card)
 
     if (card.stat == "fertig") {
         document.getElementsByClassName("abfrage")[0].style.display = "none";
@@ -50,7 +46,7 @@ function refreschUI() {
         document.getElementById("cardfertigbody").appendChild(document.getElementById("filter"))
     }
 
-    if (card.ID) {
+    else{
         document.getElementById("cardfrage").innerHTML = card.Frage
         document.getElementById("cardantwort").innerHTML = card.Antwort
         document.getElementById("cardid").textContent = "Karte " + card.ID

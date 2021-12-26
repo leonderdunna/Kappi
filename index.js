@@ -3,11 +3,30 @@ const app = express();
 const port = 3000
 
 
+function getFälligeKarten() {
+    cards = cards.filter((e) => {
+        e["Fällig"] < Date.now()
+    })
+}
+
+
+//NUR zum ausprobieren
+cards = []
+
+
+
 app.use(express.static('./client'))
 app.use(express.json())
 
-app.post("/add",(req,res)=>{
-    console.log(req.body)
+app.post("/add", (req, res) => {
+    card = req.body
+    card.Like =[]
+    cards.push(card);
+    console.log(cards)
+})
+app.get("/card", (req, res) => {
+    if (cards.length < 1) res.end(JSON.stringify({ "stat": "fertig" }))
+    res.end(JSON.stringify(cards[0]))
 })
 
-app.listen(port, ()=>{console.log("server wird gestartet")})
+app.listen(port, () => { console.log("server wird gestartet") })
