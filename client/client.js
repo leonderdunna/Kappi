@@ -32,7 +32,7 @@ function like() {
 function getCard() {
     //card = await fetch()
     card = {
-        "stat": "ok",
+        "stat": "fertig",
         "Frage": "Wie hoch ist der Eifelturm?",
         "ID": 98726103948,
         "Antwort": "ca 300m",
