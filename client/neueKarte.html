@@ -47,31 +47,31 @@
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Frage</span>
-            <input type="text" class="form-control" aria-label="Sizing example input"
+            <input id="frageinput" type="text" class="form-control" aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-default">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Antwort</span>
-            <input type="text" class="form-control" aria-label="Sizing example input"
+            <input id="antwortinput" type="text" class="form-control" aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-default">
         </div>
-        <select class="form-select my-3" aria-label="Default select example">
-            <option selected>Fach</option>
-            <option value="1">Fach 1</option>
-            <option value="2">Fach 2</option>
-            <option value="3">Fach 3</option>
+        <select id="fachselect" class="form-select my-3" aria-label="Default select example">
+            <option selected value="0">Fach</option>
+            <option value="1a">Fach 1</option>
+            <option value="2a">Fach 2</option>
+            <option value="3a">Fach 3</option>
         </select>
-        <select class="form-select my-3" aria-label="Default select example">
-            <option selected>Thema</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+        <select id="themaselect" class="form-select my-3" aria-label="Default select example">
+            <option selected value="0">Thema</option>
+            <option value="1a">One</option>
+            <option value="2a">Two</option>
+            <option value="3a">Three</option>
         </select>
 
         <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-primary">Verwerfen</button>
-            <button type="button" class="btn btn-primary">Vorschlagen</button>
-            <button type="button" class="btn btn-primary">Hinzfügen</button>
+            <button onclick="verwerfen()" type="button" class="btn btn-primary">Verwerfen</button>
+            <button onclick="vorschlagen()" type="button" class="btn btn-primary">Vorschlagen</button>
+            <button onclick="hinzufügen()" type="button" class="btn btn-primary">Hinzfügen</button>
           </div>
     </div>
 

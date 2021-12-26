@@ -1,5 +1,5 @@
 var card = null;
-var stat = null;
+
 var clientname = null;
 
 function start() {
@@ -32,14 +32,14 @@ function like() {
 function getCard() {
     //card = await fetch()
     card = {
-        "stat": "fertig",
+        "stat": "ok",
         "Frage": "Wie hoch ist der Eifelturm?",
         "ID": 98726103948,
         "Antwort": "ca 300m",
         "Autor": "Leonard",
         "Like": ["Leonard", "Orlando"]
     }
-    getStatus()
+   
     refreschUI()
 }
 function refreschUI() {
@@ -96,14 +96,6 @@ async function antworten(schwierigkeit) {
 
 }
 
-function getStatus() {
-    //return await fetch(status/card.id...)
-    stat = {
-        "Intervall": 1000000000,
-        "Leichtigkeit": 2.5,
-        "Fällig": 284239847
-    }
-}
 
 function zeigeAntwort() {
     let antwortElements = document.getElementsByClassName("antwort")
