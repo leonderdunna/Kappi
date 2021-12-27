@@ -1,6 +1,7 @@
 const express = require("express")
 const app = express();
 const port = 3000
+const database = require("./database/database")
 
 
 function getFälligeKarten() {
@@ -9,9 +10,9 @@ function getFälligeKarten() {
     })
 }
 
-
-//NUR zum ausprobieren
 cards = []
+//NUR zum ausprobieren
+ database.getAlleKarten().then((r)=>{cards = r})
 
 
 
@@ -30,3 +31,6 @@ app.get("/card", (req, res) => {
 })
 
 app.listen(port, () => { console.log("server wird gestartet") })
+
+
+database.addUser("helmuth")
