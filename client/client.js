@@ -40,6 +40,8 @@ function refreschUI() {
 
 console.log(card)
 console.log(card.Frage)
+console.log(Object.getOwnPropertyNames(card))
+console.log(card[1])
     if (card.stat == "fertig") {
         document.getElementsByClassName("abfrage")[0].style.display = "none";
         document.getElementById("cardfertig").style.display = "block";

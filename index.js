@@ -12,7 +12,10 @@ function getFälligeKarten() {
 
 cards = []
 //NUR zum ausprobieren
- database.getAlleKarten().then((r)=>{cards = r.map((r)=>{return r[0]})})
+database.getAlleKarten().then((r) => {
+    if (r)
+        cards = r.map((e) => { return JSON.parse(e[0]) })
+})
 
 
 
@@ -21,7 +24,7 @@ app.use(express.json())
 
 app.post("/add", (req, res) => {
     card = req.body
-    card.Like =[]
+    card.Like = []
     cards.push(card);
     database.kartenSpeichern(cards)
 })
@@ -31,5 +34,5 @@ app.get("/card", (req, res) => {
 })
 
 app.listen(port, () => { console.log("server wird gestartet") })
-setInterval(()=>{
-console.log(cards)},10000)
+// setInterval(()=>{
+// console.log(cards)},10000)
