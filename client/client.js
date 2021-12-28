@@ -33,13 +33,13 @@ function getCard() {
     //card = await fetch()
     fetch('http://localhost:3000/card')
 	.then(response => response.json())
-	.then(data => {console.log(data);card = data;refreschUI()})
+	.then(data => {console.log(data);card = data;refreschUI();console.log(card)})
 	.catch(err => console.error(err));
 }
 function refreschUI() {
 
 console.log(card)
-
+console.log(card.Frage)
     if (card.stat == "fertig") {
         document.getElementsByClassName("abfrage")[0].style.display = "none";
         document.getElementById("cardfertig").style.display = "block";

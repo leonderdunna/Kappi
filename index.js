@@ -12,7 +12,7 @@ function getFälligeKarten() {
 
 cards = []
 //NUR zum ausprobieren
- database.getAlleKarten().then((r)=>{cards = r})
+ database.getAlleKarten().then((r)=>{cards = r.map((r)=>{return r[0]})})
 
 
 
@@ -23,7 +23,7 @@ app.post("/add", (req, res) => {
     card = req.body
     card.Like =[]
     cards.push(card);
-    console.log(cards)
+    database.kartenSpeichern(cards)
 })
 app.get("/card", (req, res) => {
     if (cards.length < 1) res.end(JSON.stringify({ "stat": "fertig" }))
@@ -31,6 +31,5 @@ app.get("/card", (req, res) => {
 })
 
 app.listen(port, () => { console.log("server wird gestartet") })
-
-
-database.addUser("helmuth")
+setInterval(()=>{
+console.log(cards)},10000)

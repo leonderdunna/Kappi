@@ -16,9 +16,10 @@ client.authorize(
         }
     }
 );
+const gsapi = google.sheets({ version: 'v4', auth: client })
 
 function addUser( username) {
-    const gsapi = google.sheets({ version: 'v4', auth: client })
+   
    // const sheets = google.sheets({ version: 'v4', auth });
     const request = {
         // The ID of the spreadsheet
@@ -56,7 +57,7 @@ function addUser( username) {
 
 }
 async function gsrun(cl) {
-    const gsapi = google.sheets({ version: 'v4', auth: cl })
+  
     const opt = {
         spreadsheetId: '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8',
         range: 'Karten!A2:B13'
@@ -94,7 +95,24 @@ async function getAlleKarten() {
     return karten = res.data.values;
 
 }
+
+async function kartenSpeichern(neueKarten){
+
+
+    var opt = {
+        spreadsheetId: '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8',
+        range: 'Karten!A1',
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+            values: neueKarten.map((r)=>{return [JSON.stringify(r)]})
+        }
+
+    }
+    gsapi.spreadsheets.values.update(opt)
+}
+
 module.exports = {
     "getAlleKarten": getAlleKarten,
-    "addUser":addUser
+    "addUser":addUser,
+    "kartenSpeichern":kartenSpeichern
 }
