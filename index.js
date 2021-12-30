@@ -1,21 +1,9 @@
 const express = require("express")
 const app = express();
 const port = 3000
-const database = require("./database/database")
+const api = require('./api/api.js')
 
 
-function getFälligeKarten() {
-    cards = cards.filter((e) => {
-        e["Fällig"] < Date.now()
-    })
-}
-
-cards = []
-//NUR zum ausprobieren
-database.getAlleKarten().then((r) => {
-    if (r)
-        cards = r.map((e) => { return JSON.parse(e[0]) })
-})
 
 
 
@@ -26,13 +14,15 @@ app.post("/add", (req, res) => {
     card = req.body
     card.Like = []
     cards.push(card);
-    database.kartenSpeichern(cards)
+    api.karteSpeichern(cards)
 })
 app.get("/card", (req, res) => {
     if (cards.length < 1) res.end(JSON.stringify({ "stat": "fertig" }))
     res.end(JSON.stringify(cards[0]))
 })
 
-app.listen(port, () => { console.log("server wird gestartet") })
+//app.listen(port, () => { console.log("server wird gestartet") })
 // setInterval(()=>{
 // console.log(cards)},10000)
+
+

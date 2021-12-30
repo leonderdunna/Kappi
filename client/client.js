@@ -5,8 +5,7 @@ var clientname = null;
 function start() {
     clientname = window.localStorage.getItem("name")
     if (!clientname) {
-        document.getElementsByClassName("abfrage")[0].style.display = "none";
-        document.getElementById("anmelden").style.display = "block";
+       location.href="./account.html"
     } else {
         getCard()
     }
