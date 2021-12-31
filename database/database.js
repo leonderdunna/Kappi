@@ -3,7 +3,8 @@ const keys = require('./kareikarten-f627f4a15f72.json')
 const client = new google.auth.JWT(
     keys.client_email, null, keys.private_key, ['https://www.googleapis.com/auth/spreadsheets']
 );
-const datadocid='1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8'
+const datadocid = '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8'
+var user = {}
 
 client.authorize(
     (err, tokens) => {
@@ -18,9 +19,9 @@ client.authorize(
 );
 const gsapi = google.sheets({ version: 'v4', auth: client })
 
-function addUser( username) {
-   
-   // const sheets = google.sheets({ version: 'v4', auth });
+function addUser(username, password) {
+
+    // const sheets = google.sheets({ version: 'v4', auth });
     const request = {
         // The ID of the spreadsheet
         "spreadsheetId": datadocid,
@@ -51,13 +52,15 @@ function addUser( username) {
         if (err) {
             // TODO: Handle error
         } else {
-            console.log("User "+username+" wurde hinzugefügt")
+            console.log("User " + username + " wurde hinzugefügt")
         }
     });
+    user[username] = { "password": password }
+    userSpeichern(user)
 
 }
 async function gsrun(cl) {
-  
+
     const opt = {
         spreadsheetId: '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8',
         range: 'Karten!A2:B13'
@@ -88,7 +91,7 @@ async function gsrun(cl) {
 async function getAlleKarten() {
     const gsapi = google.sheets({ version: 'v4', auth: client })
     const opt = {
-        spreadsheetId: '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8',
+        spreadsheetId: datadocid,
         range: 'Karten!A1:A'
     }
     let res = await gsapi.spreadsheets.values.get(opt);
@@ -96,7 +99,22 @@ async function getAlleKarten() {
 
 }
 
-async function kartenSpeichern(neueKarten){
+async function getAlleUserNamen() {
+    const gsapi = google.sheets({ version: 'v4', auth: client })
+    const opt = {
+        spreadsheetId: datadocid,
+        range: 'User!A1:B'
+    }
+    let res = await gsapi.spreadsheets.values.get(opt);
+    let userArray = res.data.values;
+
+    for (u of userArray) {
+        user[u[0]] = { "password": u[1] }
+    }
+
+}
+
+async function kartenSpeichern(neueKarten) {
 
 
     var opt = {
@@ -104,15 +122,42 @@ async function kartenSpeichern(neueKarten){
         range: 'Karten!A1',
         valueInputOption: 'USER_ENTERED',
         resource: {
-            values: neueKarten.map((r)=>{return [JSON.stringify(r)]})
+            values: neueKarten.map((r) => { return [JSON.stringify(r)] })
+        }
+
+    }
+    gsapi.spreadsheets.values.update(opt)
+}
+async function userSpeichern(neueUser) {
+
+    usernamen = Object.getOwnPropertyNames(neueUser)
+    console.log(usernamen)
+    u = []
+    for (name of usernamen) {
+        u.push([name, neueUser[name].password])
+    }
+
+    var opt = {
+        spreadsheetId: datadocid,
+        range: 'User!A1',
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+            values: u
         }
 
     }
     gsapi.spreadsheets.values.update(opt)
 }
 
+
+
+//INIT
+getAlleUserNamen()
+
 module.exports = {
     "getAlleKarten": getAlleKarten,
-    "addUser":addUser,
-    "kartenSpeichern":kartenSpeichern
+    "addUser": addUser,
+    "kartenSpeichern": kartenSpeichern
 }
+
+//Testausgaben

@@ -1,4 +1,5 @@
-var card = null;
+const api = require('./api/api.js')
+
 
 var clientname = null;
 
@@ -7,7 +8,7 @@ function start() {
     if (!clientname) {
        location.href="./account.html"
     } else {
-        getCard()
+        api.getCard()
     }
 }
 function anmelden() {
@@ -28,13 +29,7 @@ function like() {
     refreschUI()
 }
 
-function getCard() {
-    //card = await fetch()
-    fetch('http://localhost:3000/card')
-	.then(response => response.json())
-	.then(data => {console.log(data);card = data;refreschUI();console.log(card)})
-	.catch(err => console.error(err));
-}
+
 function refreschUI() {
 
 console.log(card)
@@ -89,7 +84,7 @@ async function antworten(schwierigkeit) {
         stat.Fällig = Date.now() + stat.Intervall
     }
     //fetch(set/status/id POST stat{})
-    getCard()
+    api.getCard()
 
 }
 

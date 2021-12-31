@@ -20,9 +20,12 @@ app.get("/card", (req, res) => {
     if (cards.length < 1) res.end(JSON.stringify({ "stat": "fertig" }))
     res.end(JSON.stringify(cards[0]))
 })
+app.get("/userExists/:user", (req, res) => {
+    res.end(JSON.stringify(api.userExists(req.params.user)))
+})
+app.get("/adduser/:username", (req, res) => {
+    res.end(JSON.stringify(api.addUser(req.params.username)))
+})
 
-//app.listen(port, () => { console.log("server wird gestartet") })
-// setInterval(()=>{
-// console.log(cards)},10000)
-
+app.listen(port, () => { console.log("server wird gestartet") })
 

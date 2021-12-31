@@ -1,3 +1,4 @@
+const { addUser } = require('../database/database.js');
 const database = require('../database/database.js')
 
 function newPassword() {
@@ -17,6 +18,22 @@ database.getAlleKarten().then((r) => {
 })
 
 
-module.exports = {
+function userExists(user) {
+    if (database.user[user]) return true; return false
+}
+function anmeldedatenÜberprüfen(name, password) {
 
+}
+
+function addUser(name) {
+    if (userExists(name)) return false;
+    pass = newPassword()
+    database.addUser(name,pass)
+    return pass
+}
+
+module.exports = {
+    "cards": cards,
+    "userExists": userExists,
+    "addUser":addUser
 }
