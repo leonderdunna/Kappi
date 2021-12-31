@@ -3,7 +3,7 @@
 var clientname = null;
 
 function start() {
-    clientname = window.localStorage.getItem("name")
+    clientname = window.localStorage.getItem("angemeldet")
     if (!clientname) {
        location.href="./account.html"
     } else {

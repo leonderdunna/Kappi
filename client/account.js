@@ -14,7 +14,9 @@ if (angemeldet) {
 else {
     for (e of document.getElementsByClassName("einstellungen"))
         e.style.display = "none";
-    setInterval(() => {
+  
+  
+        setInterval(() => {
         if (benutzernameRegistrieren != document.getElementById("benutzernameinputregistrieren").value && document.getElementById("benutzernameinputregistrieren").value != "") {
             benutzernameRegistrieren = document.getElementById("benutzernameinputregistrieren").value;
             api.userExists(benutzernameRegistrieren).then((r) => {

@@ -26,6 +26,7 @@ function anmeldedatenÜberprüfen(name, password) {
 }
 
 function addUser(name) {
+    console.log(name)
     if (userExists(name)) return false;
     pass = newPassword()
     database.addUser(name, pass)
