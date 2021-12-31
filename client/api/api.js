@@ -9,29 +9,33 @@ function getCard() {
         .catch(err => console.error(err));
 }
 
-async function userExists(user) {
+async function userExists(user, registrieren = false) {
     r = await fetch(server + 'userExists/' + user)
     r = r.json()
+    if (registrieren && r) {
+        fetch(server + "adduser/" + user).then(r => r.json()).then(
+            (r) => {
+
+                document.getElementById("passwort").textContent = r
+
+                for (e of document.getElementsByClassName("anmelden"))
+                    e.style.display = "none";
+                for (e of document.getElementsByClassName("registrieren"))
+                    e.style.display = "none";
+
+                document.getElementById("registrierungAbschließen").style.display = "block"
+                angemeldet = true
+                localStorage.setItem("angemeldet", true)
+            }
+        )
+    }
     return r
 }
 
 function registrieren() {
-//TODO ist der benutzer schon benutzt?
-    fetch(server + "adduser/" + benutzernameRegistrieren).then(r => r.json()).then(
-        (r) => {
-            console.log(r)
-            document.getElementById("passwort").textContent =r
+    //TODO ist der benutzer schon benutzt?
+    userExists(benutzernameRegistrieren, true)
 
-            for (e of document.getElementsByClassName("anmelden"))
-                e.style.display = "none";
-            for (e of document.getElementsByClassName("registrieren"))
-                e.style.display = "none";
-
-            document.getElementById("registrierungAbschließen").style.display="block"
-            angemeldet=true
-            localStorage.setItem("angemeldet",true)
-        }
-    )
 
 }
 
