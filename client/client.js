@@ -1,4 +1,3 @@
-const api = require('./api/api.js')
 
 
 var clientname = null;

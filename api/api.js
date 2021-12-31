@@ -1,10 +1,10 @@
-const { addUser } = require('../database/database.js');
 const database = require('../database/database.js')
 
 function newPassword() {
     return (Math.random() + 1).toString(36).substring(7);
 }
-function getFälligeKarten() {
+function getFälligeKarten(user) {
+    //TODO 
     cards = cards.filter((e) => {
         e["Fällig"] < Date.now()
     })
@@ -12,13 +12,13 @@ function getFälligeKarten() {
 
 cards = []
 //NUR zum ausprobieren
-database.getAlleKarten().then((r) => {
-    if (r)
-        cards = r.map((e) => { return JSON.parse(e[0]) })
+database.getAlleKarten().then((c) => {
+    cards = c
 })
 
 
 function userExists(user) {
+   
     if (database.user[user]) return true; return false
 }
 function anmeldedatenÜberprüfen(name, password) {
@@ -28,12 +28,12 @@ function anmeldedatenÜberprüfen(name, password) {
 function addUser(name) {
     if (userExists(name)) return false;
     pass = newPassword()
-    database.addUser(name,pass)
+    database.addUser(name, pass)
     return pass
 }
 
 module.exports = {
     "cards": cards,
     "userExists": userExists,
-    "addUser":addUser
+    "addUser": addUser
 }

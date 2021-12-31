@@ -21,6 +21,7 @@ app.get("/card", (req, res) => {
     res.end(JSON.stringify(cards[0]))
 })
 app.get("/userExists/:user", (req, res) => {
+    
     res.end(JSON.stringify(api.userExists(req.params.user)))
 })
 app.get("/adduser/:username", (req, res) => {

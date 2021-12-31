@@ -9,10 +9,12 @@ function getCard() {
 }
 
 async function userExists(user){
-    return JSON.parse(await fetch(server+ 'userExists/'+user))
+    r =await fetch(server+ 'userExists/'+user)
+    r = r.json()
+    return r
 }
 
-module.exports={
+api = {
     "getCard":getCard,
     "userExists":userExists
 }

@@ -95,7 +95,7 @@ async function getAlleKarten() {
         range: 'Karten!A1:A'
     }
     let res = await gsapi.spreadsheets.values.get(opt);
-    return karten = res.data.values;
+    return res.data.values.map((e)=> {return JSON.parse(e[0])});
 
 }
 
@@ -157,7 +157,8 @@ getAlleUserNamen()
 module.exports = {
     "getAlleKarten": getAlleKarten,
     "addUser": addUser,
-    "kartenSpeichern": kartenSpeichern
+    "kartenSpeichern": kartenSpeichern,
+    "user":user
 }
 
 //Testausgaben
