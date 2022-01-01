@@ -5,7 +5,7 @@
 #cardfertig{
     display:none
 }
-#benutzernameSchonVergeben{
+#benutzernameSchonVergeben, #error{
     color:red
 }
 #registrierungAbschließen{

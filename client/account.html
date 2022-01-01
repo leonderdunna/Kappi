@@ -48,9 +48,11 @@
         <div class="input-group my-3">
             <span class="input-group-text">Name und Passwort</span>
             <input id="clientname" type="text" aria-label="First name" class="form-control">
+          
             <input id="clientpasswort" type="password" aria-label="Last name" class="form-control">
         </div>
-        <button onclick="anmelden()" type="button" class="btn btn-primary">Anmelden</button>
+        <p id="error"></p>
+        <button onclick="anmelden(document.getElementById('clientname').value,document.getElementById('clientpasswort').value)" type="button" class="btn btn-primary">Anmelden</button>
         <hr>
     </div>
     <div class="container registrieren">

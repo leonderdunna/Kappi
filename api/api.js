@@ -56,8 +56,9 @@ function addUser(name) {
     return pass
 }
 function überprüfePasswort(n,p){
-    console.log(user)
-    return database.user.n.passwort = p
+    if(userExists(n))
+    return database.user[n].passwort == p
+    else return false
 }
 
 module.exports = {

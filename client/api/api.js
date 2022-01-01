@@ -53,7 +53,11 @@ async function getThemen(fach) {
     t = await fetch(server + "themen/" + fach)
     t = t.json()
     return t
-
+}
+async function überprüfePasswort(n , p) {
+    a = await fetch(server + "anmelden/"+n +"/"+p)
+    a = a.json()
+    return a
 }
 
 api = {
