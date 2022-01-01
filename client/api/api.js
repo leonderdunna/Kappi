@@ -52,7 +52,6 @@ async function getFächer() {
 async function getThemen(fach) {
     t = await fetch(server + "themen/" + fach)
     t = t.json()
-    console.log(t)
     return t
 
 }

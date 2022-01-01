@@ -19,23 +19,25 @@ database.getAlleKarten().then((c) => {
 function getFächer() {
     let f = []
     for (c of cards) {
-        if (!f.indexOf(c.Fach) != -1) {
+        if (!(f.indexOf(c.Fach) != -1))
             f.push(c.Fach)
-        }
     }
     return f
 }
 
 function getThemen(fach) {
+
     let t = []
-    console.log(cards)
-    console.log(fach)
-    cs = cards.filter((c) => {console.log(c.Fach); return true })//TODO warum ist das Array cs immer Leer??????
-    console.log(cs)
+    cs = cards.filter((e) => {
+        return e.Fach == fach
+    })
+
     for (c of cs) {
-        if (!t.indexOf(c.Thema != -1))
-            r.push(c.Thema)
+
+        if (!(t.indexOf(c.Thema) != -1))
+            t.push(c.Thema)
     }
+
     return t
 }
 
@@ -48,11 +50,14 @@ function anmeldedatenÜberprüfen(name, password) {
 }
 
 function addUser(name) {
-    console.log(name)
     if (userExists(name)) return false;
     pass = newPassword()
     database.addUser(name, pass)
     return pass
+}
+function überprüfePasswort(n,p){
+    console.log(user)
+    return database.user.n.passwort = p
 }
 
 module.exports = {
@@ -60,5 +65,6 @@ module.exports = {
     "userExists": userExists,
     "addUser": addUser,
     "getFächer": getFächer,
-    "getThemen": getThemen
+    "getThemen": getThemen,
+    "überprüfePasswort":überprüfePasswort
 }
