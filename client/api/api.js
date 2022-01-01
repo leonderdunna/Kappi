@@ -1,5 +1,6 @@
-
-const server = "http://localhost:3000/"
+var server = "http://localhost:3000/"
+if (localStorage.getItem("server"))
+    server = localStorage.getItem("server")
 
 function getCard() {
     //card = await fetch()
@@ -26,6 +27,8 @@ async function userExists(user, registrieren = false) {
                 document.getElementById("registrierungAbschließen").style.display = "block"
                 angemeldet = true
                 localStorage.setItem("angemeldet", true)
+                localStorage.setItem("name", user)
+                localStorage.setItem("passwort", r)
             }
         )
     }
@@ -35,7 +38,22 @@ async function userExists(user, registrieren = false) {
 function registrieren() {
     //TODO ist der benutzer schon benutzt?
     userExists(benutzernameRegistrieren, true)
+}
 
+function speichern(variable, wert) {
+    localStorage.setItem(variable, wert)
+    location.reload()
+}
+async function getFächer() {
+    f = await fetch(server + "faecher")
+    f = f.json()
+    return f
+}
+async function getThemen(fach) {
+    t = await fetch(server + "themen/" + fach)
+    t = t.json()
+    console.log(t)
+    return t
 
 }
 
