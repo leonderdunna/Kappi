@@ -48,11 +48,13 @@
         <div class="input-group my-3">
             <span class="input-group-text">Name und Passwort</span>
             <input id="clientname" type="text" aria-label="First name" class="form-control">
-          
+
             <input id="clientpasswort" type="password" aria-label="Last name" class="form-control">
         </div>
         <p id="error"></p>
-        <button onclick="anmelden(document.getElementById('clientname').value,document.getElementById('clientpasswort').value)" type="button" class="btn btn-primary">Anmelden</button>
+        <button
+            onclick="anmelden(document.getElementById('clientname').value,document.getElementById('clientpasswort').value)"
+            type="button" class="btn btn-primary">Anmelden</button>
         <hr>
     </div>
     <div class="container registrieren">
@@ -62,48 +64,42 @@
             <input id="benutzernameinputregistrieren" type="text" class="form-control" aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-default">
         </div>
-     
+
         <p id="benutzernameSchonVergeben"></p>
-     
+
         <button onclick="registrieren()" type="button" class="btn btn-primary">Registrieren</button>
         </p>
     </div>
 
     <div class="container registrieren my-3" id="registrierungAbschließen">
-        <div class="card" >
-          
+        <div class="card">
+
             <div class="card-body">
-              <h5 class="card-title">Registrierung abgeschlossen</h5>
-              <p class="card-text">Das Passwort ist: <b id="passwort"></b>. Es kann für spätere Anmeldungen verwendet werden. </p>
-              <a href="./index.html" class="btn btn-primary">Ok</a>
+                <h5 class="card-title">Registrierung abgeschlossen</h5>
+                <p class="card-text">Das Passwort ist: <b id="passwort"></b>. Es kann für spätere Anmeldungen verwendet
+                    werden. </p>
+                <a onclick="location.reload()" class="btn btn-primary">Ok</a>
             </div>
-          </div>
+        </div>
+    </div>
+
+    <div class="container angemeldet my-3">
+        <div class="card">
+            <div class="card-header">
+                Benutzerdaten
+            </div>
+            <div class="card-body">
+                <!-- <h5 class="card-title">Benutzerdaten</h5> -->
+                <p class="card-text" id="nameLabel">Benutzername: </p>
+                <p class="card-text " id="passwortLabel">Passwort:
+                    <a onclick="passwortAnzeigen()" href="#" class="btn btn-primary my-3">Passwort anzeigen</a>
+                </p>
+                <a onclick="abmelden()" href="#" class="btn btn-primary ">Abmelden</a>
+            </div>
+        </div>
     </div>
 
 
-    <div class="container einstellungen">
-        <h1>Einstellungen</h1>
-
-        <div class="card">
-            <div class="card-header">
-              Server
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Benutzerdefinierter Server</h5>
-              <p class="card-text">Beispiel: "http://example:3000/"</p>
-            
-
-              <div class="input-group">
-                <span class="input-group-text">Server</span>
-                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
-              </div>
-              <a onclick="speichern('server',document.getElementById('benutzerserver').value)" href="#" class="btn btn-primary my-3">Speichern</a>
-            </div>
-          </div>
-
-
-           </div>
-    
     <script src="./api/api.js"></script>
     <script src="account.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

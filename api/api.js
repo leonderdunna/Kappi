@@ -55,9 +55,16 @@ function addUser(name) {
     database.addUser(name, pass)
     return pass
 }
-function überprüfePasswort(n,p){
-    if(userExists(n))
-    return database.user[n].passwort == p
+function überprüfePasswort(n, p) {
+    console.log("Passwort: "+p)
+    console.log("benutzername: "+n)
+    console.log("userExists: "+userExists(n))
+    console.log(database.user[n].passwort)
+    console.log(database.user)
+    if (userExists(n)) {
+      
+        return database.user[n].passwort == p
+    }
     else return false
 }
 
@@ -67,5 +74,5 @@ module.exports = {
     "addUser": addUser,
     "getFächer": getFächer,
     "getThemen": getThemen,
-    "überprüfePasswort":überprüfePasswort
+    "überprüfePasswort": überprüfePasswort
 }

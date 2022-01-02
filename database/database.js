@@ -19,7 +19,7 @@ client.authorize(
 );
 const gsapi = google.sheets({ version: 'v4', auth: client })
 
-function addUser(username, password) {
+function addUser(username, passwort) {
 
     // const sheets = google.sheets({ version: 'v4', auth });
     const request = {
@@ -55,7 +55,7 @@ function addUser(username, password) {
             console.log("User " + username + " wurde hinzugefügt")
         }
     });
-    user[username] = { "password": password }
+    user[username] = { "passwort": passwort }
     userSpeichern(user)
 
 }
@@ -109,7 +109,7 @@ async function getAlleUserNamen() {
     let userArray = res.data.values;
 
     for (u of userArray) {
-        user[u[0]] = { "password": u[1] }
+        user[u[0]] = { "passwort": u[1] }
     }
 
 }
@@ -134,7 +134,7 @@ async function userSpeichern(neueUser) {
     console.log(usernamen)
     u = []
     for (name of usernamen) {
-        u.push([name, neueUser[name].password])
+        u.push([name, "'"+neueUser[name].passwort])
     }
 
     var opt = {

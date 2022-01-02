@@ -16,19 +16,22 @@ async function userExists(user, registrieren = false) {
     if (registrieren && r) {
         fetch(server + "adduser/" + user).then(r => r.json()).then(
             (r) => {
+                if (r) {
+                    document.getElementById("passwort").textContent = r
 
-                document.getElementById("passwort").textContent = r
+                    for (e of document.getElementsByClassName("anmelden"))
+                        e.style.display = "none";
+                    for (e of document.getElementsByClassName("registrieren"))
+                        e.style.display = "none";
 
-                for (e of document.getElementsByClassName("anmelden"))
-                    e.style.display = "none";
-                for (e of document.getElementsByClassName("registrieren"))
-                    e.style.display = "none";
+                    document.getElementById("registrierungAbschließen").style.display = "block"
+                    angemeldet = true
+                    localStorage.setItem("angemeldet", true)
 
-                document.getElementById("registrierungAbschließen").style.display = "block"
-                angemeldet = true
-                localStorage.setItem("angemeldet", true)
-                localStorage.setItem("name", user)
-                localStorage.setItem("passwort", r)
+                    user = { "name": user, "passwort": r }
+                    localStorage.setItem("user", JSON.stringify(user))
+
+                }
             }
         )
     }
@@ -54,8 +57,8 @@ async function getThemen(fach) {
     t = t.json()
     return t
 }
-async function überprüfePasswort(n , p) {
-    a = await fetch(server + "anmelden/"+n +"/"+p)
+async function überprüfePasswort(n, p) {
+    a = await fetch(server + "anmelden/" + n + "/" + p)
     a = a.json()
     return a
 }

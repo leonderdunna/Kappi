@@ -1,21 +1,21 @@
 
 
-var clientname = null;
-
 function start() {
-    clientname = window.localStorage.getItem("angemeldet")
-    if (!clientname) {
+    
+    if (!window.localStorage.getItem("angemeldet")) {
        location.href="./account.html"
     } else {
         api.getCard()
     }
 }
-function anmelden() {
-    window.localStorage.setItem("name", document.getElementById("clientname").value)
-    document.getElementsByClassName("abfrage")[0].style.display = "block";
-    document.getElementById("anmelden").style.display = "none";
-    start()
-}
+
+//TODO: Was macht das hier
+// function anmelden() { 
+//     window.localStorage.setItem("name", document.getElementById("clientname").value)
+//     document.getElementsByClassName("abfrage")[0].style.display = "block";
+//     document.getElementById("anmelden").style.display = "none";
+//     start()
+// }
 
 function like() {
 
