@@ -1,5 +1,4 @@
-const { user } = require('../database/database.js');
-const database = require('../database/database.js')
+import database from '../database/database.js'
 
 
 
@@ -48,12 +47,12 @@ function getErledigteKarten(username, bedingungen) {
 }
 
 function getCardIds() {
-    return cards.map((e) => { return e.id })
+    return database.cards.map((e) => { return e.id })
 }
 
 function getFächer() {
     let f = []
-    for (c of cards) {
+    for (c of database.cards) {
         if (!(f.indexOf(c.Fach) != -1))
             f.push(c.Fach)
     }
@@ -63,7 +62,7 @@ function getFächer() {
 function getThemen(fach) {
 
     let t = []
-    cs = cards.filter((e) => {
+    cs = database.cards.filter((e) => {
         return e.Fach == fach
     })
 
@@ -78,36 +77,66 @@ function getThemen(fach) {
 
 function userExists(user) {
 
-    if (database.user[user]) return true; return false
+    if (_user[user]) return true; return false
 }
 
 
-function addUser(name) {
-    if (userExists(name)) return false;
+function addUser(username) {
+    if (userExists(username)) return false;
     pass = newPassword()
-    database.addUser(name, pass)
+    console.log("api adduser:")
+    console.log(user)
+    user[username] = { "passwort": pass }
+    generateUserStatus(username)
+    database.addUser(username, pass)
+
     return pass
+}
+
+async function generateUserStatus(username) {
+    let cardIds = database.cards.map((e) => { return e.id })
+    console.log("karten:")
+    console.log(cardIds)
+    user[username].status = []
+    for (id of cardIds) {
+        user[username].status.push({
+            "id": id,
+            "fällig": 0,
+            "leichtigkeit": DEFAULT_LEICHTIGKEIT,
+            "intervall": DEFAULT_START_INTERVALL,
+            "gelernt": []
+        })
+    }
+
 }
 function überprüfePasswort(n, p) {
     console.log("Passwort: " + p)
     console.log("benutzername: " + n)
     console.log("userExists: " + userExists(n))
-    console.log(database.user[n].passwort)
-    console.log(database.user)
+    console.log(_user[n].passwort)
+    console.log(_user)
     if (userExists(n)) {
 
-        return database.user[n].passwort == p
+        return _user[n].passwort == p
     }
     else return false
 }
 
-module.exports = {
-    "cards": cards,
+export default {
+    "cards": database.cards,
     "userExists": userExists,
     "addUser": addUser,
     "getFächer": getFächer,
     "getThemen": getThemen,
     "überprüfePasswort": überprüfePasswort,
     "DEFAULT_START_INTERVALL": DEFAULT_START_INTERVALL,
-    "DEFAULT_LEICHTIGKEIT": DEFAULT_LEICHTIGKEIT
+    "DEFAULT_LEICHTIGKEIT": DEFAULT_LEICHTIGKEIT,
+    "getFälligeKarten": getFälligeKarten
 }
+
+
+//TEST
+setTimeout(() => {
+    addUser("versuch")
+
+}, 5000)
