@@ -1,105 +1,158 @@
+/**
+ * Beschreibung: Die API. das Kernstück des Programms. Hier wird die gesamte Programmlogik
+ *  berechnet und von Hier aus werden alle teile des Programms (wie z.B. die Datenbank) 
+ *  angesteuert. 
+ * Autor: siehe git
+ * Datum: siehe git
+ * Version: sihe git
+ * 
+*/
+
+//Dierekte zugriffe auf die Datenbank werden aus der Datenbank Datei vorgenommen um Fehler zu verhindern 
+// und diese Datei übersichtlicher zu halten. Dazu wird die Datenbank importiert
 import database from '../database/database.js'
 
-
-
-//Standardwerte
+//Standardwerte.
 const DEFAULT_LEICHTIGKEIT = 250;
 const DEFAULT_START_INTERVALL = 1000 * 60 * 60
 const NEUE_KARTEN_PRO_TAG = 10
 
-
+//Das Passwort wird von diesem Programm erstellt, damit der benutzer nicht ein Passwort verwenden kann
+// welches er woanders schon nutzt, um im Falle eines Hacks dieses Programmes den Schaden zu minimieren
 function newPassword() {
-
     //Erstellt eine zufällige 5stellige zeichenkette
-    return (Math.random() + 1).toString(36).substring(7);
+    return (Math.random() + 1).toString(36).substring(7);//TODO die zeichenkette darf nicht "false" sein
 }
+
+//Diese funktion Filtert den Status des Benutzers, sodass nur noch Karten übrig bleiben, die zu dem zeitpunkt
+// zu dem diese Funktion aufgerufen wird Fällig sind.
 function getFälligeKarten(userName) {
     //TODO 
+    //cs sind die Karten die Fällig sind. 
     let cs = user[userName].status.filter((e) => {
         return e["fällig"] < Date.now()
     })
-    cs = cs.sort((a, b) => { if (a.fällig < b.fällig) return 1; else return -1 })
-    console.log(cs)
 
+    //Die Karten werden sortiert, um es zu vereinfachen herauszufinden wie viele neu sind etc. 
+    cs = cs.sort((a, b) => { if (a.fällig < b.fällig) return 1; else return -1 })//TODO test
 }
 
+//Diese funtion gibt alle Karten zurück die in den Letzten 24h beantwortet wurden, das Ermöglicht einen
+// Fortschritsbalken beim Lernen und ist wichtig für (möglicherweise später kommende) Statistiken
 function getErledigteKarten(username, bedingungen) {
+    //der früheste zeitpunkt und der Späteste zeitpunkt indem die Karte das Letzte mal beantwortet worden
+    // sein muss
     let startzeit = Date.now() - 1000 * 60 * 60 * 24
     let endzeit = Date.now()
+
+    //das Leere Array muss vorher als solches Definiert werden, da sonst keine Karten diesem hinzugefügt werden könnten
     cs = []
 
+    //Forschleife durch alle karten
     for (card of user[username].status) {
+        //Filtert schonmal alle Karten raus, die Überhaupt noch nie Gelernt wurden
         if (card.gelernt.length > 0)
+            //Alle karten im zufor definierten Zeitraum werden nun dem zuvor definierten Array hinzugefügt
             if (card.gelernt.at(-1) < endzeit && card.gelernt.at(-1) > startzeit)
                 cs.push(card)
     }
 
+    //Mögliche zusätzliche bedingungen
+
+    //Nach Neu gelernten Karten filtern um diese Zu begrenzen, um dem Benutzer regelmäßig neue und nicht ale
+    // neuen Karten aufeinmal zu geben
     if (bedingungen.neu) {
         cs.filter((e) => {
-            return e.fällig == 0
+            //Wenn die Karte nur einmal gelernt wurde ist sie Zwingend vorher neu gewesen :)
+            return e.gelernt.length == 1
         })
     }
 
     //TODO weitere bedingungen könnten kommen
 
+    //Rückgabe der Zuvor erstellten und (vielleicht) mehrfach gefilterten karten
     return cs
-
 }
 
-function getCardIds() {
-    return database.cards.map((e) => { return e.id })
+//Funktion die ein Array aus Allen kartenIDs zurückgiebt um Schneler zu vergleichen ob Datensätze übereinstimmen
+function getCardIds(cards = dataabase.cards) {
+    //Das cards Array wird einfach etwas Umgeschreiben, sodass die Karte durch ihre ID ersetzt wird
+    return cards.map((e) => { return e.id })
 }
 
+//Alle karten werden durchsucht und ihre Fächer zusammengetragen
 function getFächer() {
     let f = []
+    //Durchlauf für alle karten im Kartensatz
     for (c of database.cards) {
+        //Verhindern dass ein fach nicht mehrfach im Array steht
         if (!(f.indexOf(c.Fach) != -1))
+            // das Fach der Karte wird hinzugefügt
             f.push(c.Fach)
     }
+    //die Fächerliste wird als Array Zurückgegeben
     return f
 }
 
+//Alle Karten die zu dem Gegebenen fach gehören werden nach Themen durchsucht und das Ergebnis als Array zurückgegeben
 function getThemen(fach) {
-
     let t = []
+    //als erstes werden Alle karten die nicht zu dem Fach gehören rausgefiltert
     cs = database.cards.filter((e) => {
         return e.Fach == fach
     })
 
+    //für jede noch übrigbleibende Karte wird nun das Thema in das Array t (t steht für Themen) übernommen
     for (c of cs) {
-
+        //Verhindern, dass ein Thema mehrfach hinzugefügt wird
         if (!(t.indexOf(c.Thema) != -1))
             t.push(c.Thema)
     }
 
+    //Rückgabe der Themen als Array aus Strings
     return t
 }
 
-function userExists(user) {
-
-    if (_user[user]) return true; return false
+//einfache Funktion die Die Existenz eines Users in der datenbank herausfindet
+function userExists(username) {
+    //es kann nicht einfach database.user[user] zurückgegeben werden auch wenn dies im IF statement
+    // die bedingung ist, sonnst würde der ganze benutzer bei dessen existenz zurückgebeben werden
+    // undnicht nur, das dieser Existiert
+    if (database.user[username]) return true; return false
 }
 
-
+//Funktion die Den benutzer hinzufügt, und alles dazu notwendige als seiteneffeckt auslöst. bei Erfolg wird
+// das Passwort des Nutzers zurückgegeben, bei misserfolg "false"
 function addUser(username) {
+    //wenn der Benutzer schon existiert wird False zurückgegeben
     if (userExists(username)) return false;
+
+    //wenn nicht wird für ihn ein passwort erstellt, der benutzer in die datenbank geschrieben, dessen Status generiert
+    // d.h. alle Karten werden für ihn als neu markiert 
     pass = newPassword()
-    console.log("api adduser:")
-    console.log(user)
     user[username] = { "passwort": pass }
     generateUserStatus(username)
+    //Aufrufen der Databasefuntion, um Den nutzer zu speichern und alle notwendigen Tabellenblätter etc. zu ergenzen
     database.addUser(username, pass)
 
+    //Rückgabe des Passworts. bei misserfolg wäre die Funktion bereits vorher abgebrochen
     return pass
 }
 
+//Für einen neu erstellten Benutzer muss jede karte in den Status des Nutzers kopiert werden, mit den jeweiligen werten.
 async function generateUserStatus(username) {
+    //nur die IDs sind dafür relevant, der rest der Informationen auf einer Karte kann später geladen werden, wenn entscheiungen,
+    // wie z.b. welche karte fällig ist getroffen wurden
     let cardIds = database.cards.map((e) => { return e.id })
-    console.log("karten:")
-    console.log(cardIds)
-    user[username].status = []
-    for (id of cardIds) {
+
+    //Der Status wird ein Array aus objekten mit der ID der Karte
+    database.user[username].status = []
+
+    //For Loop über die IDs der Karten
+    for (let id of cardIds) {
         user[username].status.push({
+            //Die ID und alle wichtigen standardWerte müssen in das Objekt, 
+            // was den Status einer Karte beschreibt geschrieben werden
             "id": id,
             "fällig": 0,
             "leichtigkeit": DEFAULT_LEICHTIGKEIT,
@@ -109,21 +162,23 @@ async function generateUserStatus(username) {
     }
 
 }
-function überprüfePasswort(n, p) {
-    console.log("Passwort: " + p)
-    console.log("benutzername: " + n)
-    console.log("userExists: " + userExists(n))
-    console.log(_user[n].passwort)
-    console.log(_user)
-    if (userExists(n)) {
 
-        return _user[n].passwort == p
+//Funktion um ein Passwort zu überprüfen. sollte vor jeder Aktion mit der Datenbank passieren, um Fremdzugriffe zu verhindern
+function überprüfePasswort(n, p) {
+
+    //Fals der Benutzer existiert, wird das Passwort mit dem des Benutzers verglichen,
+    // wenn das passwort falsch ist, oder der Benutzer nicht existiert wird false zurückgegeben
+    if (userExists(n)) {
+        return database.user[n].passwort == p
     }
     else return false
 }
 
+//eine Liste aller Funktionen/variablen, die außerhalb dieser Datei genutzt werden können.
+// alle aktionen laufen über funktionen dierer Datei, um an einem zentralen ort Fehler zu vermeiden
 export default {
-    "cards": database.cards,
+    "cards": database.cards,//TODO das sollte irgendwann ein getCards() oder so werden, 
+                            // um dierekte datenbankzugriffe  zu verhindern
     "userExists": userExists,
     "addUser": addUser,
     "getFächer": getFächer,
@@ -133,10 +188,3 @@ export default {
     "DEFAULT_LEICHTIGKEIT": DEFAULT_LEICHTIGKEIT,
     "getFälligeKarten": getFälligeKarten
 }
-
-
-//TEST
-setTimeout(() => {
-    addUser("versuch")
-
-}, 5000)

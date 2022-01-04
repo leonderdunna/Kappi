@@ -1,4 +1,17 @@
+/**
+ * Beschreibung: Dierekte zugriffe auf die Datenbank (Google Tabelle), und Funktionen, um zu gewehrleisten, dass die Datenbank
+ *  keine größeren probleme bekommt. Kurzum ist das die Schnittstelle zu Google
+ * 
+ * Author: siehe git
+ * Datum: siehe git
+ * Version: siehe git
+ */
+
+//Die Google API wird importiert um die nötigen funktionen zu liefern um mit den Google servern Kontakt aufzunehmen
 import { google } from 'googleapis';
+
+//Der Schlüssel um für GoogleDrive eine autorisierung zu erlangen. Die identität unter der Datenbankzugriffe gemacht werden
+// Das objekt wurde von google generiert.
 const keys = {
     "type": "service_account",
     "project_id": "kareikarten",
@@ -12,13 +25,19 @@ const keys = {
     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/leonard-menzel%40kareikarten.iam.gserviceaccount.com"
 }
 
+//Neuer Klient wird angelegt für zugriff auf Google-Dienste
 const client = new google.auth.JWT(
     keys.client_email, null, keys.private_key, ['https://www.googleapis.com/auth/spreadsheets']
 );
+
+//Konstanten
 const datadocid = '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8'
+
+//Die Hauptvariablen dier Verwaltet werden
 var user = {}
 var cards = []
 
+//Verbinden Zu google um den Klient zu verifizieren.
 client.authorize(
     (err, tokens) => {
         if (err) {
@@ -31,12 +50,13 @@ client.authorize(
     }
 );
 
+//Das Objekt, was die Nötigen Funktionen beinhaltet GoogleTabellen zu bearbeiten
 const gsapi = google.sheets({ version: 'v4', auth: client })
 
+//Erstellen der Datenbankstruktur für einen Neuen Benutzer
 async function addUser(username, passwort) {
-
     const request = {
-        //Neues Tabellenblatt wird angelegt
+        //Die Eigenschaften des Neuen Tabellenblattes für den Nutzer
         "spreadsheetId": datadocid,
         "resource": {
             "requests": [{
@@ -49,10 +69,14 @@ async function addUser(username, passwort) {
         }
     };
 
+    //Hinzufügen des Tabellenblattes welches oben definiert wurde
     gsapi.spreadsheets.batchUpdate(request, (err, response) => {
         if (err) {
             console.log(err);
         } else {
+            //Wenn das erstelen des Tabellenblattes erfolgreih war wird Der in der API generierte Status des Nutzers
+            // in der Tabelle Gespieichert un schließlich auch der benutzername und dessen passwort in die User tabelle 
+            // geschrieben
             statusSpeichern(username).then(() => { console.log("status von " + username + " wurde gespieichert") })
             userSpeichern(user).then(() => {
                 console.log("User " + username + " wurde hinzugefügt");
@@ -63,8 +87,7 @@ async function addUser(username, passwort) {
 
 }
 
-
-
+//Funktion wird bald entfrnt... ist kopiert, um den umgang mit der Google API zu verstehen. dient noch als Vorlage
 async function gsrun(cl) {
 
     const opt = {
@@ -94,44 +117,63 @@ async function gsrun(cl) {
 
 }
 
+//Abruf der Ersten Spallte aus dem karten-Tabellenblatt, der Datenbank.
+// jede Zelle beinhaltet eine Karte im JSON-Format
 async function getAlleKarten() {
-    const gsapi = google.sheets({ version: 'v4', auth: client })
+    //Optionen werden definiert um die Abfrage zur GOOGLE API zu stellen. 
+    // hier die ID des dokuments und der Bereich in dem karten stehen
     const opt = {
         spreadsheetId: datadocid,
         range: 'Karten!A1:A'
     }
-    let res = await gsapi.spreadsheets.values.get(opt);
-    return res.data.values.map((e) => { return JSON.parse(e[0]) });
 
+    //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
+    let res = await gsapi.spreadsheets.values.get(opt);
+    //das Zweidimensionale Array muss in ein Eindimenisonales konvertiert werden.
+    // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
+    return res.data.values.map((e) => { return JSON.parse(e[0]) });
 }
+
+//abruf der ersten Spalte aus dem Jeweiligen Tabellenblattes des nutzers
+// Jede zelle beinhaltet wieder den status einer Karte
 async function loadStatus(name) {
-    const gsapi = google.sheets({ version: 'v4', auth: client })
+    //Optionen werden definiert um die Abfrage zur GOOGLE API zu stellen. 
+    // hier die ID des dokuments und der Bereich in dem karten stehen
     const opt = {
         spreadsheetId: datadocid,
         range: name + '!A1:A'
     }
+
+    //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
     let res = await gsapi.spreadsheets.values.get(opt);
-    console.log(res.data.values)
-    //  user[name].status = res.data.values.map((e) => {console.log(e[0]); return JSON.parse(e[0]) });
+    //das Zweidimensionale Array muss in ein Eindimenisonales konvertiert werden.
+    // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
+    user[name].status = res.data.values.map((e) => { console.log(e[0]); return JSON.parse(e[0]) });
 
 }
 
-
-
-
+//Da im Status des Nutzers nur die Informationen über eine karte gespeichert werden die den lernfortschritt,
+// beschreiben wird durch diese Funktion die Möglichkeit geboten eine abfrage der Tatsächlichen karte 
+// zu tätigen um Frage antwort etc. der karte herauszufinden
 function getCardById(id) {
-    return cards.filter((e) => { e.id == id })[0]
+    //Zurückgegeben wird die Erste Karte mit der entsprechenden ID
+    //Es dürfte nicht passieren dass mehrere karten mit einer ID existieren
+    return cards.filter((e) => { e.id == id })[0]//TODO: fehler ausgeben wenn es mehere karen mit der gleihen id gibt
 }
 
+//schreiben der Nutzer in die User Variable. abfragen des Name/Passworts und aufruf zum laden des Status
 async function getAlleUser() {
-    const gsapi = google.sheets({ version: 'v4', auth: client })
+  //Optionen werden definiert um die Abfrage zur GOOGLE API zu stellen. 
+    // hier die ID des dokuments und der Bereich in dem karten stehen
     const opt = {
         spreadsheetId: datadocid,
         range: 'User!A1:B'
     }
+      //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
     let res = await gsapi.spreadsheets.values.get(opt);
     let userArray = res.data.values;
 
+    // die benutzer werden in das richtige Format Formatiert und ihr status wird geladen
     for (let u of userArray) {
         user[u[0]] = { "passwort": u[1] }
         loadStatus(u[0])
@@ -139,25 +181,27 @@ async function getAlleUser() {
 
 }
 
+//schreiben der Karten in die Datenbank
 async function kartenSpeichern(neueKarten) {
-
-
+    //Optionen wie die ID des Dokuments, der Bereich für die Daten und natürlich der Inhalt
     var opt = {
         spreadsheetId: '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8',
         range: 'Karten!A1',
         valueInputOption: 'USER_ENTERED',
         resource: {
+            //Das was abgspeichert wird muss für die Google Tabelle in einem Zweidimensionalen Array stehen.
+            //in der Zweiten dimension dürfen nur Strings stehen, d.h. die Karten müssen im JSON Format als 
+            // Zeichenkette gespeichert werden
             values: neueKarten.map((r) => { return [JSON.stringify(r)] })
         }
-
     }
+    //Die anfrage an google die zuvor in opt definierten änderunen an der Tabelle durchzuführen
     gsapi.spreadsheets.values.update(opt)
 }
 
-
+//Speichern des Status eines Nutzers. Entspricht dem speichern der karten, nur mit dem entsprechend anderen
+// Tabellenblatt.
 async function statusSpeichern(userName) {
-
-
     var opt = {
         spreadsheetId: '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8',
         range: userName + '!A1',
@@ -165,19 +209,26 @@ async function statusSpeichern(userName) {
         resource: {
             values: user[userName].status.map((r) => { return [JSON.stringify(r)] })
         }
-
     }
     gsapi.spreadsheets.values.update(opt)
 }
 
+// Speichern der liste der Nutzer und deren Passwörter
+// in der Tabeelle stehen in der ersten spalte die Nutzernamen und in der zweitten die Passwörter
+// Die passwörter können im Klartext gespeichert werden, da die Passwörter durch das programm 
+// definiert wurden und keine nutzereingaben waren
 async function userSpeichern(neueUser) {
 
+    //Ein array aus allen nutzernamen wird angelegt
     usernamen = Object.getOwnPropertyNames(neueUser)
     u = []
-    for (name of usernamen) {
-        u.push([name, "'" + neueUser[name].passwort])
+    // in u wird in jeweils einem array der nutzername zu jedem nutzer und sein passwort angelegt.
+    // u wird dadurch ein zweidimensionales Array, welches so von google verarbeitet werden kann
+    for (uname of usernamen) {
+        u.push([uname, "'" + neueUser[uname].passwort])
     }
 
+    //Optionen zur veränderung des User - Tabelenblattes
     var opt = {
         spreadsheetId: datadocid,
         range: 'User!A1',
@@ -187,16 +238,22 @@ async function userSpeichern(neueUser) {
         }
 
     }
+
+    // Anfrage an google
     gsapi.spreadsheets.values.update(opt)
 }
 
 
 
 //INIT
+//zu programmstart müssen alle nutzer geladen werden und alle karten
 getAlleUser()
 getAlleKarten().then((r) => {
     cards = r
 })
+
+//Exportieren aller Funktionen, um sie für andere Dateien verfügbar zu machen und 
+// komplikationen durch aufrufe zur datenbank durch andere Dateien zu verhindern
 export default {
     "getAlleKarten": getAlleKarten,
     "addUser": addUser,
@@ -205,5 +262,3 @@ export default {
     "user": user,
     "cards": cards
 }
-
-//Testausgaben
