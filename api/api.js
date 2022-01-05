@@ -24,6 +24,12 @@ const RUBRIK_ERNEUT_LERNEN = 2;
 const RUBRIK_JUNG = 3;
 const RUBRIK_ALT = 4;
 
+//ANTWORTEN
+const ANTWORT_NOCHMAL = 0;
+const ANTWORT_SCHWIERIG = 1;
+const ANTWORT_GUT = 2;
+const ANTWORT_EINFACH = 3;
+
 //NEU
 const DEFAULT_LEICHTIGKEIT = 250;//%
 const NEUE_KARTEN_PRO_TAG = 10
@@ -40,7 +46,93 @@ const MAXIMUM_INTERVALL = 1000 * 60 * 60 * 24 * 365 * 10//ms
 const FAKTOR_NACH_ERNEUTEM_LERNEN = 75 //%
 const ERNEUT_LERNEN_SCHRITT_1 = 1000 * 60 * 10 //ms
 
+function lernen(id, antwort, username, passwort) {
+    if (!überprüfePasswort(username, passwort)) return false;
 
+    c = database.user[username].status.filter((e) => {
+        return e.id == id
+    })[0]
+
+    let startLeichtigkeit = database.user[username].einstellungen.startLeichtigkeit;
+    let startBeiEinfach = database.user[username].einstellungen.startBeiEinfach;
+    let startBeiGut = database.user[username].einstellungen.startBeiGut;
+    let lernenSchritte = database.user[username].einstellungen.lernenSchritte;
+    let erneutLernenSchritte = database.user[username].einstellungen.erneutLernenSchritte;
+
+    if (c.rubrik == RUBRIK_NEU) {
+        if (antwort == ANTWORT_EINFACH) {
+            c.rubrik = RUBRIK_JUNG
+            c.leichtigkeit = startLeichtigkeit;
+            c.intervall = startBeiEinfach;
+            c.fällig = Date.now() + c.intervall
+
+        } else if (antwort == ANTWORT_NOCHMAL) {
+            c.rubrik = RUBRIK_LERNEN;
+            c.stufe = 0;
+            c.fällig = Date.now() + lernenSchritte[0]
+        } else if (antwort == ANTWORT_GUT) {
+            c.rubrik = RUBRIK_LERNEN;
+            c.stufe = 1;
+            c.fällig = Date.now() + lernenSchritte[1]
+        } else { return false }
+    }
+
+    else if (c.rubrik == RUBRIK_LERNEN) {
+        if (antwort == ANTWORT_NOCHMAL) {
+            c.stufe = 0;
+            c.fällig = Date.now() + lernenSchritte[0]
+        } else if (antwort == ANTWORT_GUT) {
+            if (c.stufe < lernenSchritte.length - 1) {
+                c.stufe++
+                c.fällig = Date.now() + lernenSchritte[c.stufe]
+            } else {
+                c.stufe = undefined;
+                c.rubrik = RUBRIK_JUNG;
+                c.leichtigkeit = startLeichtigkeit;
+                c.intervall = startBeiGut;
+                c.fällig = Date.now() + c.intervall
+            }
+        } else if (antwort = ANTWORT_EINFACH) {
+            c.rubrik = RUBRIK_JUNG
+            c.leichtigkeit = startLeichtigkeit;
+            c.intervall = startBeiEinfach;
+            c.fällig = Date.now() + c.intervall
+        } else { return false }
+    }
+    else if (c.rubrik == RUBRIK_JUNG || c.rubrik == RUBRIK_ALT) {
+        if (antwort == ANTWORT_NOCHMAL) {
+            c.rubrik = RUBRIK_ERNEUT_LERNEN;
+            c.stufe = 0;
+            c.fällig = Date.now() + erneutLernenSchritte[0]
+        } else if (antwort == ANTWORT_SCHWIERIG) {
+            c.intervall = c.intervall * 1.2;
+
+            if (c.leichtigkeit >= 145) {
+                c.leichtigkeit -= 15;
+            } else {
+                c.leichtigkeit = 130;
+            }
+            c.fällig = Date.now() + c.intervall;
+
+        } else if (antwort == ANTWORT_GUT) {
+            //TODO
+        } else if (antwort == ANTWORT_EINFACH) {
+            //TODO
+        } else { return false }
+    } else if (c.rubrik == RUBRIK_ERNEUT_LERNEN) {
+        if (antwort == ANTWORT_NOCHMAL) {
+            //TODO
+        } else if (antwort == ANTWORT_GUT) {
+            //TODO
+        } else if (antwort == ANTWORT_EINFACH) {
+            //TODO
+        } else { return false }
+    } else if (c.rubrik == RUBRIK_ERNEUT_LERNEN) {
+        //TODO
+    } else { return false }
+
+    c.wiederholungen.push({ "zeit": Date.now(), "antwort": antwort })
+}
 
 //Das Passwort wird von diesem Programm erstellt, damit der benutzer nicht ein Passwort verwenden kann
 // welches er woanders schon nutzt, um im Falle eines Hacks dieses Programmes den Schaden zu minimieren
