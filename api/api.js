@@ -12,10 +12,35 @@
 // und diese Datei übersichtlicher zu halten. Dazu wird die Datenbank importiert
 import database from '../database/database.js'
 
-//Standardwerte.
-const DEFAULT_LEICHTIGKEIT = 250;
-const DEFAULT_START_INTERVALL = 1000 * 60 * 60
+//Standardwerte.  
+//TODO Sie müssen durch die Einstellungen bearbeitet werden können
+
+
+//RUBRIKEN
+//Rubriken werden erstmal als zahl gespeichert, macht es vielleicht einfacher in den Statistiken später diagramme zu erstellen
+const RUBRIK_NEU = 0;
+const RUBRIK_LERNEN = 1;
+const RUBRIK_ERNEUT_LERNEN = 2;
+const RUBRIK_JUNG = 3;
+const RUBRIK_ALT = 4;
+
+//NEU
+const DEFAULT_LEICHTIGKEIT = 250;//%
 const NEUE_KARTEN_PRO_TAG = 10
+const LERNEN_SCHRITT_1 = 1000 * 60;//ms
+const LERNEN_SCHRITT_2 = 1000 * 60 * 10;//ms
+const START_BEI_EINFACH = 1000 * 60 * 60 * 24 * 4;//ms
+const START_BEI_GUT = 1000 * 60 * 60 * 24;//ms
+
+//JUNG / ALT
+const WIEDERHOLUNGEN_PRO_TAG = 100;
+const BONUS = 130 //%
+const MINIMUM_INTERVALL = 1000 * 60 * 60 * 24;//ms
+const MAXIMUM_INTERVALL = 1000 * 60 * 60 * 24 * 365 * 10//ms
+const FAKTOR_NACH_ERNEUTEM_LERNEN = 75 //%
+const ERNEUT_LERNEN_SCHRITT_1 = 1000 * 60 * 10 //ms
+
+
 
 //Das Passwort wird von diesem Programm erstellt, damit der benutzer nicht ein Passwort verwenden kann
 // welches er woanders schon nutzt, um im Falle eines Hacks dieses Programmes den Schaden zu minimieren
@@ -145,6 +170,21 @@ async function generateUserStatus(username) {
     // wie z.b. welche karte fällig ist getroffen wurden
     let cardIds = database.cards.map((e) => { return e.id })
 
+    //Der nutzer braucht auch die nötigen standartwerte, auch wenn er sie später ändern könnte
+    database.user[username].einstellungen = {//TODO einstellungen speichern und im Frontend bearbeitbar machen
+        "startLeichtigkeit": DEFAULT_LEICHTIGKEIT,
+        "neueKartenProTag": NEUE_KARTEN_PRO_TAG,
+        "lernenSchritte": [LERNEN_SCHRITT_1, LERNEN_SCHRITT_2],
+        "startBeiEinfach": START_BEI_EINFACH,
+        "statBeiGut": START_BEI_GUT,
+        "wiederholungenProTag": WIEDERHOLUNGEN_PRO_TAG,
+        "bonus": BONUS,
+        "minimumIntervall": MINIMUM_INTERVALL,
+        "maximumIntervall": MAXIMUM_INTERVALL,
+        "faktorNachErneutemLernen": FAKTOR_NACH_ERNEUTEM_LERNEN,
+        "erneutLernenSchritte": [ERNEUT_LERNEN_SCHRITT_1]
+    }
+
     //Der Status wird ein Array aus objekten mit der ID der Karte
     database.user[username].status = []
 
@@ -154,10 +194,7 @@ async function generateUserStatus(username) {
             //Die ID und alle wichtigen standardWerte müssen in das Objekt, 
             // was den Status einer Karte beschreibt geschrieben werden
             "id": id,
-            "fällig": 0,
-            "leichtigkeit": DEFAULT_LEICHTIGKEIT,
-            "intervall": DEFAULT_START_INTERVALL,
-            "gelernt": []
+            "rubrik": RUBRIK_NEU
         })
     }
 
@@ -178,7 +215,7 @@ function überprüfePasswort(n, p) {
 // alle aktionen laufen über funktionen dierer Datei, um an einem zentralen ort Fehler zu vermeiden
 export default {
     "cards": database.cards,//TODO das sollte irgendwann ein getCards() oder so werden, 
-                            // um dierekte datenbankzugriffe  zu verhindern
+    // um dierekte datenbankzugriffe  zu verhindern
     "userExists": userExists,
     "addUser": addUser,
     "getFächer": getFächer,
