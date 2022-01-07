@@ -31,7 +31,7 @@ const ANTWORT_GUT = 2;
 const ANTWORT_EINFACH = 3;
 
 //NEU
-const DEFAULT_LEICHTIGKEIT = 250;//%
+const DEFAULT_LEICHTIGKEIT = 2.50;//%
 const NEUE_KARTEN_PRO_TAG = 10
 const LERNEN_SCHRITT_1 = 1000 * 60;//ms
 const LERNEN_SCHRITT_2 = 1000 * 60 * 10;//ms
@@ -40,10 +40,10 @@ const START_BEI_GUT = 1000 * 60 * 60 * 24;//ms
 
 //JUNG / ALT
 const WIEDERHOLUNGEN_PRO_TAG = 100;
-const BONUS = 130 //%
+const BONUS = 1.30 //%
 const MINIMUM_INTERVALL = 1000 * 60 * 60 * 24;//ms
 const MAXIMUM_INTERVALL = 1000 * 60 * 60 * 24 * 365 * 10//ms
-const FAKTOR_NACH_ERNEUTEM_LERNEN = 75 //%
+const FAKTOR_NACH_ERNEUTEM_LERNEN = 0.75 //%
 const ERNEUT_LERNEN_SCHRITT_1 = 1000 * 60 * 10 //ms
 
 function lernen(id, antwort, username, passwort) {
@@ -58,6 +58,10 @@ function lernen(id, antwort, username, passwort) {
     let startBeiGut = database.user[username].einstellungen.startBeiGut;
     let lernenSchritte = database.user[username].einstellungen.lernenSchritte;
     let erneutLernenSchritte = database.user[username].einstellungen.erneutLernenSchritte;
+    let bonus = database.user[username].einstellungen.bonus;
+    let faktorNachErneutemLernen = database.user[username].einstellungen.faktorNachErneutemLernen;
+    let zufall =  Math.random() * (1.05 - 0.95) + 0.95;
+
 
     if (c.rubrik == RUBRIK_NEU) {
         if (antwort == ANTWORT_EINFACH) {
@@ -107,31 +111,57 @@ function lernen(id, antwort, username, passwort) {
         } else if (antwort == ANTWORT_SCHWIERIG) {
             c.intervall = c.intervall * 1.2;
 
-            if (c.leichtigkeit >= 145) {
-                c.leichtigkeit -= 15;
-            } else {
-                c.leichtigkeit = 130;
-            }
+            if (c.leichtigkeit >= 1.45)
+                c.leichtigkeit -= 0.15;
+            else
+                c.leichtigkeit = 1.30;
+
             c.fällig = Date.now() + c.intervall;
 
         } else if (antwort == ANTWORT_GUT) {
-            //TODO
+            c.intervall = c.intervall * c.leichtigkeit *zufall;
+            c.fällig = Date.now() + c.intervall;
         } else if (antwort == ANTWORT_EINFACH) {
-            //TODO
-        } else { return false }
+            c.intervall = c.intervall * c.leichtigkeit * bonus *zufall;
+            c.leichtigkeit += 0.15;
+            c.fällig = Date.now() + c.intervall;
+        } else return false
     } else if (c.rubrik == RUBRIK_ERNEUT_LERNEN) {
         if (antwort == ANTWORT_NOCHMAL) {
-            //TODO
+            c.stufe = 0;
+            c.fällig = Date.now() + erneutLernenSchritte[0]
         } else if (antwort == ANTWORT_GUT) {
-            //TODO
-        } else if (antwort == ANTWORT_EINFACH) {
-            //TODO
-        } else { return false }
-    } else if (c.rubrik == RUBRIK_ERNEUT_LERNEN) {
-        //TODO
-    } else { return false }
+            if (c.stufe < erneutLernenSchritte.length - 1) {
+                c.stufe++
+                c.fällig = Date.now() + erneutLernenSchritte[c.stufe]
+            } else {
+                c.stufe = undefined;
+                c.rubrik = RUBRIK_JUNG;
+                if (c.leichtigkeit >= 1.50) {
+                    c.leichtigkeit -= 0.20
+                } else { c.leichtigkeit = 1.30 }
+                c.intervall = c.intervall * faktorNachErneutemLernen;
+                c.fällig = Date.now() + c.intervall
+            }
+        } else if (antwort = ANTWORT_EINFACH) {
+            c.rubrik = RUBRIK_JUNG
+            if (c.leichtigkeit >= 1.35) {
+                c.leichtigkeit -= 0.5
+            } else { c.leichtigkeit = 1.30 }
+            c.intervall = c.intervall * faktorNachErneutemLernen;
+            c.fällig = Date.now() + c.intervall
+        } else return false
+    } else return false
+
+    if (c.rubrik == RUBRIK_JUNG || c.rubrik == RUBRIK_ALT)
+        if (c.intervall >= 1000 * 60 * 60 * 24 * 30)
+            c.rubrik = RUBRIK_ALT;
+        else c.rubrik = RUBRIK_JUNG;
+
 
     c.wiederholungen.push({ "zeit": Date.now(), "antwort": antwort })
+    database.statusSpeichern();
+
 }
 
 //Das Passwort wird von diesem Programm erstellt, damit der benutzer nicht ein Passwort verwenden kann
@@ -315,5 +345,6 @@ export default {
     "überprüfePasswort": überprüfePasswort,
     "DEFAULT_START_INTERVALL": DEFAULT_START_INTERVALL,
     "DEFAULT_LEICHTIGKEIT": DEFAULT_LEICHTIGKEIT,
-    "getFälligeKarten": getFälligeKarten
+    "getFälligeKarten": getFälligeKarten,
+    "lernen":lernen
 }

@@ -67,7 +67,11 @@ app.get("/faecher", (req, res) => {
 //gibt ein Array mit allen Themen in einem Fach zurück
 app.get("/themen/:fach", (req, res) => {
     res.end(JSON.stringify(api.getThemen(req.params.fach)))
+})
 
+app.post("/lernen",(req,res)=>{
+    opt = req.body;
+    api.lernen(opt.id,opt.antwort,opt.username,opt.passwort)
 })
 
 //Die "app" wird nun gestartet und ist unter dem in Konstanten definierten Port erreichbar
