@@ -10,6 +10,7 @@
 //Imports von anderen Modulen. Express für einen einfacheren umgang mit HTTP und die 
 // api für eine bessere Struktur.
 import express from "express";
+import { redis_v1 } from "googleapis";
 import api from './api/api.js';
 
 //Implementierung von Konstanten für bessere Übersichtlichkeit und Wartbarkeit
@@ -18,11 +19,18 @@ const port = 3000
 //Erstelen der Express app. Dem Objekt was schlussendlich alle Anfragen verarbeitet
 const app = express();
 
+app.use((req,res, next)=>{
+    console.log("HTTP Anfrage auf "+req.url+" von "+req.ip+" Zeit: "+ new Date())
+    next()
+})
+
 //Aufrufen von Funktionen die mit Express mitgeliefert werden. Static um einfach die 
 // Dateien fürs Frontend durchzureichen und JSON um in eigenen Funktionen mit den 
 // Requests als Javascript objekte umgehen zu können
 app.use(express.static('./client'))
 app.use(express.json())
+
+
 
 //Hinzufügen von Karten durch den Client. Nötige informationen werden ergenzt 
 // und die Karte in den Status aller anderen Benutzer hinzugefügt
@@ -75,5 +83,5 @@ app.post("/lernen",(req,res)=>{
 })
 
 //Die "app" wird nun gestartet und ist unter dem in Konstanten definierten Port erreichbar
-app.listen(port, () => { console.log("server wird gestartet") })
+app.listen(port, () => { console.log("Server listening on port "+port) })
 

@@ -343,8 +343,6 @@ export default {
     "getFächer": getFächer,
     "getThemen": getThemen,
     "überprüfePasswort": überprüfePasswort,
-    "DEFAULT_START_INTERVALL": DEFAULT_START_INTERVALL,
-    "DEFAULT_LEICHTIGKEIT": DEFAULT_LEICHTIGKEIT,
     "getFälligeKarten": getFälligeKarten,
     "lernen":lernen
 }

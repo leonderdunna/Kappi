@@ -44,7 +44,7 @@ client.authorize(
             console.log(err);
             return;
         } else {
-            console.log('Connected!')
+            console.log('database: Bei Google Angemeldet')
             // gsrun(client)
         }
     }
@@ -131,7 +131,9 @@ async function getAlleKarten() {
     let res = await gsapi.spreadsheets.values.get(opt);
     //das Zweidimensionale Array muss in ein Eindimenisonales konvertiert werden.
     // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
-    return res.data.values.map((e) => { return JSON.parse(e[0]) });
+    let karten =res.data.values.map((e) => { return JSON.parse(e[0]) });
+    console.log("database: Karten werden abgerufen. "+karten.length+" Karten gefunden")
+    return karten;
 }
 
 //abruf der ersten Spalte aus dem Jeweiligen Tabellenblattes des nutzers
@@ -146,9 +148,11 @@ async function loadStatus(name) {
 
     //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
     let res = await gsapi.spreadsheets.values.get(opt);
+  
     //das Zweidimensionale Array muss in ein Eindimenisonales konvertiert werden.
     // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
-    user[name].status = res.data.values.map((e) => { console.log(e[0]); return JSON.parse(e[0]) });
+    user[name].status = res.data.values.map((e) => { return JSON.parse(e[0]) });
+    console.log("database: Der Status von "+name+" wurde geladen")
 
 }
 
@@ -158,21 +162,25 @@ async function loadStatus(name) {
 function getCardById(id) {
     //Zurückgegeben wird die Erste Karte mit der entsprechenden ID
     //Es dürfte nicht passieren dass mehrere karten mit einer ID existieren
+    console.log("database: Die Karte "+id+" wurde abgerufen")
     return cards.filter((e) => { e.id == id })[0]//TODO: fehler ausgeben wenn es mehere karen mit der gleihen id gibt
 }
 
 //schreiben der Nutzer in die User Variable. abfragen des Name/Passworts und aufruf zum laden des Status
 async function getAlleUser() {
-  //Optionen werden definiert um die Abfrage zur GOOGLE API zu stellen. 
+    //Optionen werden definiert um die Abfrage zur GOOGLE API zu stellen. 
     // hier die ID des dokuments und der Bereich in dem karten stehen
     const opt = {
         spreadsheetId: datadocid,
         range: 'User!A1:B'
     }
-      //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
+    //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
     let res = await gsapi.spreadsheets.values.get(opt);
     let userArray = res.data.values;
 
+    let usernamen = userArray.map((e)=>{return e[0]})
+    console.log("database: Die Benutzerliste wurde abgefragt. Folgende Benutzer wurden gefunden:")
+    console.log(usernamen)
     // die benutzer werden in das richtige Format Formatiert und ihr status wird geladen
     for (let u of userArray) {
         user[u[0]] = { "passwort": u[1] }
@@ -197,6 +205,7 @@ async function kartenSpeichern(neueKarten) {
     }
     //Die anfrage an google die zuvor in opt definierten änderunen an der Tabelle durchzuführen
     gsapi.spreadsheets.values.update(opt)
+    console.log("database: Karten werden in Google-Tabellen gesichert")
 }
 
 //Speichern des Status eines Nutzers. Entspricht dem speichern der karten, nur mit dem entsprechend anderen
@@ -211,6 +220,7 @@ async function statusSpeichern(userName) {
         }
     }
     gsapi.spreadsheets.values.update(opt)
+    console.log("database: Der Status des Bentzers "+userName+" wird in Google-Tabellen gesichert")
 }
 
 // Speichern der liste der Nutzer und deren Passwörter
@@ -241,6 +251,7 @@ async function userSpeichern(neueUser) {
 
     // Anfrage an google
     gsapi.spreadsheets.values.update(opt)
+    console.log("database: Die Liste aller Benutzer wird in Google-Tabellen gesichert")
 }
 
 

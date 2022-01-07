@@ -62,6 +62,9 @@ async function überprüfePasswort(n, p) {
     a = a.json()
     return a
 }
+async function lernen(id, antwort, username, passwort) {
+    await fetch("http://localhost:3000/lernen", { method: 'POST', body: JSON.stringify({ "id": 124, "antwort": 3, "username": "Leonard", "passwort": "leo1lando1" }) })
+}
 
 api = {
     "getCard": getCard,
