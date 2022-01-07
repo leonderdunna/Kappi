@@ -47,19 +47,20 @@ const FAKTOR_NACH_ERNEUTEM_LERNEN = 0.75 //%
 const ERNEUT_LERNEN_SCHRITT_1 = 1000 * 60 * 10 //ms
 
 function lernen(id, antwort, username, passwort) {
+    let user = database.getUser();
     if (!überprüfePasswort(username, passwort)) return false;
 
-    c = database.user[username].status.filter((e) => {
+    c = user[username].status.filter((e) => {
         return e.id == id
     })[0]
 
-    let startLeichtigkeit = database.user[username].einstellungen.startLeichtigkeit;
-    let startBeiEinfach = database.user[username].einstellungen.startBeiEinfach;
-    let startBeiGut = database.user[username].einstellungen.startBeiGut;
-    let lernenSchritte = database.user[username].einstellungen.lernenSchritte;
-    let erneutLernenSchritte = database.user[username].einstellungen.erneutLernenSchritte;
-    let bonus = database.user[username].einstellungen.bonus;
-    let faktorNachErneutemLernen = database.user[username].einstellungen.faktorNachErneutemLernen;
+    let startLeichtigkeit = user[username].einstellungen.startLeichtigkeit;
+    let startBeiEinfach = user[username].einstellungen.startBeiEinfach;
+    let startBeiGut =user[username].einstellungen.startBeiGut;
+    let lernenSchritte = user[username].einstellungen.lernenSchritte;
+    let erneutLernenSchritte = user[username].einstellungen.erneutLernenSchritte;
+    let bonus = user[username].einstellungen.bonus;
+    let faktorNachErneutemLernen = user[username].einstellungen.faktorNachErneutemLernen;
     let zufall =  Math.random() * (1.05 - 0.95) + 0.95;
 
 
@@ -160,6 +161,7 @@ function lernen(id, antwort, username, passwort) {
 
 
     c.wiederholungen.push({ "zeit": Date.now(), "antwort": antwort })
+    database.setUser(user)
     database.statusSpeichern();
 
 }
@@ -176,12 +178,20 @@ function newPassword() {
 function getFälligeKarten(userName) {
     //TODO 
     //cs sind die Karten die Fällig sind. 
+    let user = database.getUser()
     let cs = user[userName].status.filter((e) => {
         return e["fällig"] < Date.now()
     })
+    return cs
 
-    //Die Karten werden sortiert, um es zu vereinfachen herauszufinden wie viele neu sind etc. 
-    cs = cs.sort((a, b) => { if (a.fällig < b.fällig) return 1; else return -1 })//TODO test
+}
+
+function getCard(username){
+    let fällige = getFälligeKarten(username)
+    if(fällige.length > 0){
+        return fällige[Math.floor(Math.random() * fällige.length)]
+    }
+    //TODO falls noch neue da sind und noch neue gemacht werden dürfen...
 }
 
 //Diese funtion gibt alle Karten zurück die in den Letzten 24h beantwortet wurden, das Ermöglicht einen
@@ -229,9 +239,10 @@ function getCardIds(cards = dataabase.cards) {
 
 //Alle karten werden durchsucht und ihre Fächer zusammengetragen
 function getFächer() {
+    let cards = database.getCards()
     let f = []
     //Durchlauf für alle karten im Kartensatz
-    for (c of database.cards) {
+    for (c of cards) {
         //Verhindern dass ein fach nicht mehrfach im Array steht
         if (!(f.indexOf(c.Fach) != -1))
             // das Fach der Karte wird hinzugefügt
@@ -244,8 +255,9 @@ function getFächer() {
 //Alle Karten die zu dem Gegebenen fach gehören werden nach Themen durchsucht und das Ergebnis als Array zurückgegeben
 function getThemen(fach) {
     let t = []
+    let cards = database.getCards()
     //als erstes werden Alle karten die nicht zu dem Fach gehören rausgefiltert
-    cs = database.cards.filter((e) => {
+    cs = cards.filter((e) => {
         return e.Fach == fach
     })
 
@@ -262,22 +274,25 @@ function getThemen(fach) {
 
 //einfache Funktion die Die Existenz eines Users in der datenbank herausfindet
 function userExists(username) {
-    //es kann nicht einfach database.user[user] zurückgegeben werden auch wenn dies im IF statement
+    let user = database.getUser()
+    //es kann nicht einfach user[user] zurückgegeben werden auch wenn dies im IF statement
     // die bedingung ist, sonnst würde der ganze benutzer bei dessen existenz zurückgebeben werden
     // undnicht nur, das dieser Existiert
-    if (database.user[username]) return true; return false
+    if (user[username]) return true; return false
 }
 
 //Funktion die Den benutzer hinzufügt, und alles dazu notwendige als seiteneffeckt auslöst. bei Erfolg wird
 // das Passwort des Nutzers zurückgegeben, bei misserfolg "false"
 function addUser(username) {
+    let user = database.getUser()
     //wenn der Benutzer schon existiert wird False zurückgegeben
     if (userExists(username)) return false;
 
     //wenn nicht wird für ihn ein passwort erstellt, der benutzer in die datenbank geschrieben, dessen Status generiert
     // d.h. alle Karten werden für ihn als neu markiert 
-    pass = newPassword()
+    let pass = newPassword()
     user[username] = { "passwort": pass }
+    database.setUser(user)
     generateUserStatus(username)
     //Aufrufen der Databasefuntion, um Den nutzer zu speichern und alle notwendigen Tabellenblätter etc. zu ergenzen
     database.addUser(username, pass)
@@ -288,12 +303,15 @@ function addUser(username) {
 
 //Für einen neu erstellten Benutzer muss jede karte in den Status des Nutzers kopiert werden, mit den jeweiligen werten.
 async function generateUserStatus(username) {
+    let cards = database.getCards()
+    let user = database.getUser()
     //nur die IDs sind dafür relevant, der rest der Informationen auf einer Karte kann später geladen werden, wenn entscheiungen,
     // wie z.b. welche karte fällig ist getroffen wurden
-    let cardIds = database.cards.map((e) => { return e.id })
+    let cardIds = cards.map((e) => { return e.id })
+
 
     //Der nutzer braucht auch die nötigen standartwerte, auch wenn er sie später ändern könnte
-    database.user[username].einstellungen = {//TODO einstellungen speichern und im Frontend bearbeitbar machen
+    user[username].einstellungen = {//TODO einstellungen speichern und im Frontend bearbeitbar machen
         "startLeichtigkeit": DEFAULT_LEICHTIGKEIT,
         "neueKartenProTag": NEUE_KARTEN_PRO_TAG,
         "lernenSchritte": [LERNEN_SCHRITT_1, LERNEN_SCHRITT_2],
@@ -306,9 +324,10 @@ async function generateUserStatus(username) {
         "faktorNachErneutemLernen": FAKTOR_NACH_ERNEUTEM_LERNEN,
         "erneutLernenSchritte": [ERNEUT_LERNEN_SCHRITT_1]
     }
+    console.log("api: Einstellungen für "+username+" wurden generiert")
 
     //Der Status wird ein Array aus objekten mit der ID der Karte
-    database.user[username].status = []
+    user[username].status = []
 
     //For Loop über die IDs der Karten
     for (let id of cardIds) {
@@ -319,16 +338,19 @@ async function generateUserStatus(username) {
             "rubrik": RUBRIK_NEU
         })
     }
-
+    console.log("api: Alle karten wurden in den Status von "+ username+"kopiert.")
+    
+database.setUser(user)
 }
 
 //Funktion um ein Passwort zu überprüfen. sollte vor jeder Aktion mit der Datenbank passieren, um Fremdzugriffe zu verhindern
 function überprüfePasswort(n, p) {
+    let user = database.getUser()
 
     //Fals der Benutzer existiert, wird das Passwort mit dem des Benutzers verglichen,
     // wenn das passwort falsch ist, oder der Benutzer nicht existiert wird false zurückgegeben
     if (userExists(n)) {
-        return database.user[n].passwort == p
+        return user[n].passwort == p
     }
     else return false
 }
@@ -336,7 +358,7 @@ function überprüfePasswort(n, p) {
 //eine Liste aller Funktionen/variablen, die außerhalb dieser Datei genutzt werden können.
 // alle aktionen laufen über funktionen dierer Datei, um an einem zentralen ort Fehler zu vermeiden
 export default {
-    "cards": database.cards,//TODO das sollte irgendwann ein getCards() oder so werden, 
+   
     // um dierekte datenbankzugriffe  zu verhindern
     "userExists": userExists,
     "addUser": addUser,

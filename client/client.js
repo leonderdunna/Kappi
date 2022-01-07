@@ -1,13 +1,8 @@
+//Konstanten
 
 
-function start() {
-    
-    if (!window.localStorage.getItem("angemeldet")) {
-       location.href="./account.html"
-    } else {
-        api.getCard()
-    }
-}
+
+
 
 //TODO: Was macht das hier
 // function anmelden() { 
@@ -65,27 +60,7 @@ console.log(card[1])
     }
 }
 
-async function antworten(schwierigkeit) {
-    if (schwierigkeit == "Nochmal") {
-        stat.Leichtigkeit = stat.Leichtigkeit * 0.8
-        stat.Intervall = 3600000;
-        stat.Fällig = Date.now();
-    } else if (schwierigkeit == "Schwierig") {
-        stat.Leichtigkeit = stat.Leichtigkeit * 0.9
-        stat.Fällig = Date.now() + stat.Intervall
-    } else if (schwierigkeit == "Gut") {
-        stat.Leichtigkeit = stat.Leichtigkeit * 1.1
-        stat.Intervall = stat.Intervall * stat.Leichtigkeit
-        stat.Fällig = Date.now() + stat.Intervall
-    } else if (schwierigkeit == "Einfach") {
-        stat.Leichtigkeit = stat.Leichtigkeit * 1.3
-        stat.Intervall = stat.Intervall * stat.Leichtigkeit
-        stat.Fällig = Date.now() + stat.Intervall
-    }
-    //fetch(set/status/id POST stat{})
-    api.getCard()
 
-}
 
 
 function zeigeAntwort() {

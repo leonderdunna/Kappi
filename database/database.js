@@ -77,9 +77,10 @@ async function addUser(username, passwort) {
             //Wenn das erstelen des Tabellenblattes erfolgreih war wird Der in der API generierte Status des Nutzers
             // in der Tabelle Gespieichert un schließlich auch der benutzername und dessen passwort in die User tabelle 
             // geschrieben
-            statusSpeichern(username).then(() => { console.log("status von " + username + " wurde gespieichert") })
+            console.log("database: Das Tabellenblatt für "+username + " wurde angelegt.")
+            statusSpeichern(username)
             userSpeichern(user).then(() => {
-                console.log("User " + username + " wurde hinzugefügt");
+                console.log("database: User " + username + " wurde hinzugefügt.");
             })
         }
     });
@@ -133,7 +134,7 @@ async function getAlleKarten() {
     // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
     let karten =res.data.values.map((e) => { return JSON.parse(e[0]) });
     console.log("database: Karten werden abgerufen. "+karten.length+" Karten gefunden")
-    return karten;
+    return karten
 }
 
 //abruf der ersten Spalte aus dem Jeweiligen Tabellenblattes des nutzers
@@ -219,6 +220,7 @@ async function statusSpeichern(userName) {
             values: user[userName].status.map((r) => { return [JSON.stringify(r)] })
         }
     }
+    
     gsapi.spreadsheets.values.update(opt)
     console.log("database: Der Status des Bentzers "+userName+" wird in Google-Tabellen gesichert")
 }
@@ -230,11 +232,11 @@ async function statusSpeichern(userName) {
 async function userSpeichern(neueUser) {
 
     //Ein array aus allen nutzernamen wird angelegt
-    usernamen = Object.getOwnPropertyNames(neueUser)
-    u = []
+    let usernamen = Object.getOwnPropertyNames(neueUser)
+    let u = []
     // in u wird in jeweils einem array der nutzername zu jedem nutzer und sein passwort angelegt.
     // u wird dadurch ein zweidimensionales Array, welches so von google verarbeitet werden kann
-    for (uname of usernamen) {
+    for (let uname of usernamen) {
         u.push([uname, "'" + neueUser[uname].passwort])
     }
 
@@ -263,6 +265,23 @@ getAlleKarten().then((r) => {
     cards = r
 })
 
+function getCards(){
+return cards
+}
+function setCards(cs){
+cards = cs
+kartenSpeichern(cs)
+}
+
+function getUser(){
+    return user 
+}
+function setUser(u){
+    user = u
+    //TODO gucken was verändert wurde und das abspeichern
+
+}
+
 //Exportieren aller Funktionen, um sie für andere Dateien verfügbar zu machen und 
 // komplikationen durch aufrufe zur datenbank durch andere Dateien zu verhindern
 export default {
@@ -270,6 +289,8 @@ export default {
     "addUser": addUser,
     "kartenSpeichern": kartenSpeichern,
     "statusSpeichern": statusSpeichern,
-    "user": user,
-    "cards": cards
+    "getCards":getCards,
+    "setCards":setCards,
+    "getUser":getUser,
+    "setUser":setUser
 }

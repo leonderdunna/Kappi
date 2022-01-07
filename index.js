@@ -43,9 +43,7 @@ app.post("/add", (req, res) => {//TODO auslagern in api.js && add in andere user
 
 //Die Funktion soll einfach eine zufällige fällige karte zurückgeben.
 app.get("/card/:user", (req, res) => {//TODO fällige karten des benutzers... und auslagern in api.js
-    if (cards.length < 1)
-        res.end(JSON.stringify({ "stat": "fertig" }))
-    res.end(JSON.stringify(cards[0]))
+    res.send(JSON.stringify(api.getCard(req.params.user)))
 })
 
 //Abfrage ob ein benutzer Existiert, um bei der Registrierung Komplikationen zu verhindern und
