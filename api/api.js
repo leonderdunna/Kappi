@@ -47,22 +47,25 @@ const FAKTOR_NACH_ERNEUTEM_LERNEN = 0.75 //%
 const ERNEUT_LERNEN_SCHRITT_1 = 1000 * 60 * 10 //ms
 
 function lernen(id, antwort, username, passwort) {
+    console.log("api Testausgabe lernen wurde gestartet")
+    console.log(""+id + antwort+ username+passwort)
     let user = database.getUser();
     if (!überprüfePasswort(username, passwort)) return false;
 
-    c = user[username].status.filter((e) => {
+    let c = user[username].status.filter((e) => {
         return e.id == id
     })[0]
 
     let startLeichtigkeit = user[username].einstellungen.startLeichtigkeit;
     let startBeiEinfach = user[username].einstellungen.startBeiEinfach;
-    let startBeiGut =user[username].einstellungen.startBeiGut;
+    let startBeiGut = user[username].einstellungen.startBeiGut;
     let lernenSchritte = user[username].einstellungen.lernenSchritte;
     let erneutLernenSchritte = user[username].einstellungen.erneutLernenSchritte;
     let bonus = user[username].einstellungen.bonus;
     let faktorNachErneutemLernen = user[username].einstellungen.faktorNachErneutemLernen;
-    let zufall =  Math.random() * (1.05 - 0.95) + 0.95;
+    let zufall = Math.random() * (1.05 - 0.95) + 0.95;
 
+    console.log(c)
 
     if (c.rubrik == RUBRIK_NEU) {
         if (antwort == ANTWORT_EINFACH) {
@@ -120,10 +123,10 @@ function lernen(id, antwort, username, passwort) {
             c.fällig = Date.now() + c.intervall;
 
         } else if (antwort == ANTWORT_GUT) {
-            c.intervall = c.intervall * c.leichtigkeit *zufall;
+            c.intervall = c.intervall * c.leichtigkeit * zufall;
             c.fällig = Date.now() + c.intervall;
         } else if (antwort == ANTWORT_EINFACH) {
-            c.intervall = c.intervall * c.leichtigkeit * bonus *zufall;
+            c.intervall = c.intervall * c.leichtigkeit * bonus * zufall;
             c.leichtigkeit += 0.15;
             c.fällig = Date.now() + c.intervall;
         } else return false
@@ -159,10 +162,12 @@ function lernen(id, antwort, username, passwort) {
             c.rubrik = RUBRIK_ALT;
         else c.rubrik = RUBRIK_JUNG;
 
-
-    c.wiederholungen.push({ "zeit": Date.now(), "antwort": antwort })
+    if (c.gelernt)
+        c.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
+    else c.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
     database.setUser(user)
-    database.statusSpeichern();
+    database.statusSpeichern(user);
+
 
 }
 
@@ -179,6 +184,8 @@ function getFälligeKarten(userName) {
     //TODO 
     //cs sind die Karten die Fällig sind. 
     let user = database.getUser()
+    //   console.log("api:testausgabe status bei getfällige karten")
+    //   console.log(user[userName])
     let cs = user[userName].status.filter((e) => {
         return e["fällig"] < Date.now()
     })
@@ -186,13 +193,37 @@ function getFälligeKarten(userName) {
 
 }
 
-function getCard(username){
+function getNeueKarten(userName) {
+    //TODO 
+    //cs sind die Karten die Fällig sind.
+    let user = database.getUser()
+    // console.log("api gentneuekarten testausgabe")
+    // console.log(user)
+    // console.log(userName)
+    // console.log(user[userName])
+    let cs = user[userName].status.filter((e) => {
+        return e.rubrik == RUBRIK_NEU
+    })
+    return cs
+
+}
+function getCard(username) {
+    let user = database.getUser()
     let fällige = getFälligeKarten(username)
-    if(fällige.length > 0){
+    if (fällige.length > 0) {
         return fällige[Math.floor(Math.random() * fällige.length)]
     }
     //TODO falls noch neue da sind und noch neue gemacht werden dürfen...
+
+    let gelernteKarten = getErledigteKarten(username, { "neu": true });
+
+    if (gelernteKarten.length < user[username].einstellungen.neueKartenProTag) {
+        let neueKarten = getNeueKarten(username)
+        return neueKarten[Math.floor(Math.random() * neueKarten.length)]
+    }
+    return false
 }
+
 
 //Diese funtion gibt alle Karten zurück die in den Letzten 24h beantwortet wurden, das Ermöglicht einen
 // Fortschritsbalken beim Lernen und ist wichtig für (möglicherweise später kommende) Statistiken
@@ -201,16 +232,17 @@ function getErledigteKarten(username, bedingungen) {
     // sein muss
     let startzeit = Date.now() - 1000 * 60 * 60 * 24
     let endzeit = Date.now()
+    let user = database.getUser()
 
     //das Leere Array muss vorher als solches Definiert werden, da sonst keine Karten diesem hinzugefügt werden könnten
-    cs = []
+    let cs = []
 
     //Forschleife durch alle karten
-    for (card of user[username].status) {
+    for (let card of user[username].status) {
         //Filtert schonmal alle Karten raus, die Überhaupt noch nie Gelernt wurden
-        if (card.gelernt.length > 0)
+        if (card.gelernt)
             //Alle karten im zufor definierten Zeitraum werden nun dem zuvor definierten Array hinzugefügt
-            if (card.gelernt.at(-1) < endzeit && card.gelernt.at(-1) > startzeit)
+            if (card.gelernt.at(-1).zeit < endzeit && card.gelernt.at(-1).zeit > startzeit)
                 cs.push(card)
     }
 
@@ -219,9 +251,9 @@ function getErledigteKarten(username, bedingungen) {
     //Nach Neu gelernten Karten filtern um diese Zu begrenzen, um dem Benutzer regelmäßig neue und nicht ale
     // neuen Karten aufeinmal zu geben
     if (bedingungen.neu) {
-        cs.filter((e) => {
-            //Wenn die Karte nur einmal gelernt wurde ist sie Zwingend vorher neu gewesen :)
-            return e.gelernt.length == 1
+        cs = cs.filter((e) => {
+            //Wenn die Karte das erste mal in diesem zeitraum gelernt wurde ist sie neu
+            return card.gelernt.at(0).zeit < endzeit && card.gelernt.at(0).zeit > startzeit
         })
     }
 
@@ -324,7 +356,7 @@ async function generateUserStatus(username) {
         "faktorNachErneutemLernen": FAKTOR_NACH_ERNEUTEM_LERNEN,
         "erneutLernenSchritte": [ERNEUT_LERNEN_SCHRITT_1]
     }
-    console.log("api: Einstellungen für "+username+" wurden generiert")
+    console.log("api: Einstellungen für " + username + " wurden generiert")
 
     //Der Status wird ein Array aus objekten mit der ID der Karte
     user[username].status = []
@@ -338,9 +370,9 @@ async function generateUserStatus(username) {
             "rubrik": RUBRIK_NEU
         })
     }
-    console.log("api: Alle karten wurden in den Status von "+ username+"kopiert.")
-    
-database.setUser(user)
+    console.log("api: Alle karten wurden in den Status von " + username + "kopiert.")
+
+    database.setUser(user)
 }
 
 //Funktion um ein Passwort zu überprüfen. sollte vor jeder Aktion mit der Datenbank passieren, um Fremdzugriffe zu verhindern
@@ -358,7 +390,7 @@ function überprüfePasswort(n, p) {
 //eine Liste aller Funktionen/variablen, die außerhalb dieser Datei genutzt werden können.
 // alle aktionen laufen über funktionen dierer Datei, um an einem zentralen ort Fehler zu vermeiden
 export default {
-   
+
     // um dierekte datenbankzugriffe  zu verhindern
     "userExists": userExists,
     "addUser": addUser,
@@ -366,5 +398,7 @@ export default {
     "getThemen": getThemen,
     "überprüfePasswort": überprüfePasswort,
     "getFälligeKarten": getFälligeKarten,
-    "lernen":lernen
+    "lernen": lernen,
+    "getCard": getCard,
+    "getCardById": database.getCardById
 }

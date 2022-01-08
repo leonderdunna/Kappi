@@ -30,7 +30,7 @@ console.log(card)
 console.log(card.Frage)
 console.log(Object.getOwnPropertyNames(card))
 console.log(card[1])
-    if (card.stat == "fertig") {
+    if (!card) {
         document.getElementsByClassName("abfrage")[0].style.display = "none";
         document.getElementById("cardfertig").style.display = "block";
         document.getElementById("cardfertigbody").appendChild(document.getElementById("filter"))
@@ -43,7 +43,7 @@ console.log(card[1])
         document.getElementById("cardfach").textContent = "Fach: " + card.Fach + ", Autor: " + card.Autor
         document.getElementById("gefälltmir").textContent = "Gefällt mir: " + card.Like.length
 
-        if (!card.Like.includes(clientname)) {
+        if (!card.Like.includes(user.name)) {
             document.getElementById("gefälltmir").classList.remove("btn-primary")
             document.getElementById("gefälltmir").classList.add("btn-outline-primary")
         } else {
@@ -69,7 +69,10 @@ function zeigeAntwort() {
     for (element of antwortElements) {
         element.style.display = "block";
     }
+    console.log(card)
+    if(card.status.rubrik ==RUBRIK_NEU){
+        document.getElementById("schwierig").style.display="none";
+    }
     document.getElementById("zeigeAntwort").style.display = "none"
 }
 
-start()

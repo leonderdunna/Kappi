@@ -19,8 +19,8 @@ const port = 3000
 //Erstelen der Express app. Dem Objekt was schlussendlich alle Anfragen verarbeitet
 const app = express();
 
-app.use((req,res, next)=>{
-    console.log("HTTP Anfrage auf "+req.url+" von "+req.ip+" Zeit: "+ new Date())
+app.use((req, res, next) => {
+    console.log("HTTP Anfrage auf " + req.url + " von " + req.ip + " Zeit: " + new Date())
     next()
 })
 
@@ -44,6 +44,12 @@ app.post("/add", (req, res) => {//TODO auslagern in api.js && add in andere user
 //Die Funktion soll einfach eine zufällige fällige karte zurückgeben.
 app.get("/card/:user", (req, res) => {//TODO fällige karten des benutzers... und auslagern in api.js
     res.send(JSON.stringify(api.getCard(req.params.user)))
+})
+
+app.get("/cardById/:id", (req, res) => {//TODO fällige karten des benutzers... und auslagern in api.js
+    // console.log("testausgabe indexjs cardbyid")
+    // console.log(api.getCardById(req.params.id))
+    res.send(JSON.stringify(api.getCardById(req.params.id)))
 })
 
 //Abfrage ob ein benutzer Existiert, um bei der Registrierung Komplikationen zu verhindern und
@@ -75,11 +81,12 @@ app.get("/themen/:fach", (req, res) => {
     res.end(JSON.stringify(api.getThemen(req.params.fach)))
 })
 
-app.post("/lernen",(req,res)=>{
-    opt = req.body;
-    api.lernen(opt.id,opt.antwort,opt.username,opt.passwort)
+app.post("/lernen", (req, res) => {
+    let opt = req.body;
+    console.log(opt)
+    api.lernen(opt.id, opt.antwort, opt.username, opt.passwort)
 })
 
 //Die "app" wird nun gestartet und ist unter dem in Konstanten definierten Port erreichbar
-app.listen(port, () => { console.log("Server listening on port "+port) })
+app.listen(port, () => { console.log("Server listening on port " + port) })
 

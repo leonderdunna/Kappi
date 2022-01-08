@@ -34,12 +34,30 @@ async function getCard(manuell) {
     }
     fetch(server + 'card/' + user.name)//TODO user.name nötigenfalls ändern
         .then(response => response.json())
-        .then(data => { console.log(data); card = data; refreschUI(); console.log(card) })
+        .then(status => {
+            fetch(server + 'cardById/' + status.id).then(r2 => r2.json()).then((data) => {
+                card = data
+                card.status = status;
+                refreschUI()
+                console.log("api: testausgabe card nach getcard")
+                console.log(card)
+            })
+        })
         .catch(err => console.error(err));
 }
 
-async function lernen(id, antwort) {
-    await fetch(server + "lernen", { method: 'POST', body: JSON.stringify({ "id": id, "antwort": antwort, "username": user.name, "passwort": user.passwort }) })
+async function lernen(antwort) {
+    fetch(server + "lernen", {
+        method: 'POST', headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }, body: JSON.stringify({
+            "id": card.id,
+            "antwort": antwort,
+            "username": user.name,
+            "passwort": user.passwort
+        })
+    })
     getCard()
 }
 
@@ -97,8 +115,3 @@ async function überprüfePasswort(n, p) {
     return a
 }
 
-api = {
-    "getCard": getCard,
-    "userExists": userExists,
-    "registrieren": registrieren
-}

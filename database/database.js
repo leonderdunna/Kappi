@@ -79,6 +79,7 @@ async function addUser(username, passwort) {
             // geschrieben
             console.log("database: Das Tabellenblatt für "+username + " wurde angelegt.")
             statusSpeichern(username)
+            einstellungenSpeichern(username)
             userSpeichern(user).then(() => {
                 console.log("database: User " + username + " wurde hinzugefügt.");
             })
@@ -156,6 +157,23 @@ async function loadStatus(name) {
     console.log("database: Der Status von "+name+" wurde geladen")
 
 }
+async function loadEinstellungen(name) {
+    //Optionen werden definiert um die Abfrage zur GOOGLE API zu stellen. 
+    // hier die ID des dokuments und der Bereich in dem karten stehen
+    const opt = {
+        spreadsheetId: datadocid,
+        range: name + '!B1:B'
+    }
+
+    //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
+    let res = await gsapi.spreadsheets.values.get(opt);
+  
+    //das Zweidimensionale Array muss in ein Eindimenisonales konvertiert werden.
+    // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
+    user[name].einstellungen = res.data.values.map((e) => { return JSON.parse(e[0]) })[0];
+    console.log("database: Die Einstellungen von "+name+" wurde geladen")
+
+}
 
 //Da im Status des Nutzers nur die Informationen über eine karte gespeichert werden die den lernfortschritt,
 // beschreiben wird durch diese Funktion die Möglichkeit geboten eine abfrage der Tatsächlichen karte 
@@ -164,7 +182,9 @@ function getCardById(id) {
     //Zurückgegeben wird die Erste Karte mit der entsprechenden ID
     //Es dürfte nicht passieren dass mehrere karten mit einer ID existieren
     console.log("database: Die Karte "+id+" wurde abgerufen")
-    return cards.filter((e) => { e.id == id })[0]//TODO: fehler ausgeben wenn es mehere karen mit der gleihen id gibt
+   // console.log("database testausgabe karte die abgerufen wird")
+   // console.log(cards.filter((e)=>{return e.id==id}))
+    return cards.filter((e) => { return e.id == id })[0]//TODO: fehler ausgeben wenn es mehere karen mit der gleihen id gibt
 }
 
 //schreiben der Nutzer in die User Variable. abfragen des Name/Passworts und aufruf zum laden des Status
@@ -186,6 +206,7 @@ async function getAlleUser() {
     for (let u of userArray) {
         user[u[0]] = { "passwort": u[1] }
         loadStatus(u[0])
+        loadEinstellungen(u[0])
     }
 
 }
@@ -223,6 +244,20 @@ async function statusSpeichern(userName) {
     
     gsapi.spreadsheets.values.update(opt)
     console.log("database: Der Status des Bentzers "+userName+" wird in Google-Tabellen gesichert")
+}
+
+async function einstellungenSpeichern(userName) {
+    var opt = {
+        spreadsheetId: '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8',
+        range: userName + '!B1',
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+            values:[[JSON.stringify( user[userName].einstellungen)]]
+        }
+    }
+    
+    gsapi.spreadsheets.values.update(opt)
+    console.log("database: Die Einstellungen des Bentzers "+userName+" wird in Google-Tabellen gesichert")
 }
 
 // Speichern der liste der Nutzer und deren Passwörter
@@ -289,8 +324,10 @@ export default {
     "addUser": addUser,
     "kartenSpeichern": kartenSpeichern,
     "statusSpeichern": statusSpeichern,
+    "einstellungenSpeichern":einstellungenSpeichern,
     "getCards":getCards,
     "setCards":setCards,
     "getUser":getUser,
-    "setUser":setUser
+    "setUser":setUser,
+    "getCardById":getCardById
 }
