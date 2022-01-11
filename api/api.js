@@ -47,11 +47,13 @@ const FAKTOR_NACH_ERNEUTEM_LERNEN = 0.75 //%
 const ERNEUT_LERNEN_SCHRITT_1 = 1000 * 60 * 10 //ms
 
 function lernen(id, antwort, username, passwort) {
-    console.log("api Testausgabe lernen wurde gestartet")
-    console.log(""+id + antwort+ username+passwort)
+   // console.log("api Testausgabe lernen wurde gestartet")
+   // console.log("" + id + antwort + username + passwort)
     let user = database.getUser();
-    if (!überprüfePasswort(username, passwort)) return false;
-
+    if (!überprüfePasswort(username, passwort)){
+        console.log("api: lernen wird abgebrochen; passort ist falsch")
+        return false;
+    }
     let c = user[username].status.filter((e) => {
         return e.id == id
     })[0]
@@ -65,7 +67,7 @@ function lernen(id, antwort, username, passwort) {
     let faktorNachErneutemLernen = user[username].einstellungen.faktorNachErneutemLernen;
     let zufall = Math.random() * (1.05 - 0.95) + 0.95;
 
-    console.log(c)
+    //console.log(c)
 
     if (c.rubrik == RUBRIK_NEU) {
         if (antwort == ANTWORT_EINFACH) {
@@ -166,7 +168,7 @@ function lernen(id, antwort, username, passwort) {
         c.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
     else c.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
     database.setUser(user)
-    database.statusSpeichern(user);
+    database.statusSpeichern(username);
 
 
 }
@@ -216,12 +218,12 @@ function getCard(username) {
     //TODO falls noch neue da sind und noch neue gemacht werden dürfen...
 
     let gelernteKarten = getErledigteKarten(username, { "neu": true });
-
-    if (gelernteKarten.length < user[username].einstellungen.neueKartenProTag) {
-        let neueKarten = getNeueKarten(username)
+ let neueKarten = getNeueKarten(username)
+    if (gelernteKarten.length < user[username].einstellungen.neueKartenProTag&& neueKarten.length >0)  {
+       
         return neueKarten[Math.floor(Math.random() * neueKarten.length)]
     }
-    return false
+    return {"fertig":true}
 }
 
 
@@ -253,7 +255,7 @@ function getErledigteKarten(username, bedingungen) {
     if (bedingungen.neu) {
         cs = cs.filter((e) => {
             //Wenn die Karte das erste mal in diesem zeitraum gelernt wurde ist sie neu
-            return card.gelernt.at(0).zeit < endzeit && card.gelernt.at(0).zeit > startzeit
+            return e.gelernt.at(0).zeit < endzeit && e.gelernt.at(0).zeit > startzeit
         })
     }
 

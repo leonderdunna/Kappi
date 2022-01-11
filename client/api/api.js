@@ -35,13 +35,15 @@ async function getCard(manuell) {
     fetch(server + 'card/' + user.name)//TODO user.name nötigenfalls ändern
         .then(response => response.json())
         .then(status => {
-            fetch(server + 'cardById/' + status.id).then(r2 => r2.json()).then((data) => {
-                card = data
-                card.status = status;
-                refreschUI()
-                console.log("api: testausgabe card nach getcard")
-                console.log(card)
-            })
+            if (!status.fertig)
+                fetch(server + 'cardById/' + status.id).then(r2 => r2.json()).then((data) => {
+                    card = data
+                    card.status = status;
+                    refreschUI()
+                    console.log("api: testausgabe card nach getcard")
+                    console.log(card)
+                })
+            else refreschUI(true)
         })
         .catch(err => console.error(err));
 }

@@ -24,19 +24,16 @@ function like() {
 }
 
 
-function refreschUI() {
+function refreschUI(c) {
 
-console.log(card)
-console.log(card.Frage)
-console.log(Object.getOwnPropertyNames(card))
-console.log(card[1])
-    if (!card) {
+
+    if (c) {
         document.getElementsByClassName("abfrage")[0].style.display = "none";
         document.getElementById("cardfertig").style.display = "block";
         document.getElementById("cardfertigbody").appendChild(document.getElementById("filter"))
     }
 
-    else{
+    else {
         document.getElementById("cardfrage").innerHTML = card.Frage
         document.getElementById("cardantwort").innerHTML = card.Antwort
         document.getElementById("cardid").textContent = "Karte " + card.ID
@@ -70,8 +67,8 @@ function zeigeAntwort() {
         element.style.display = "block";
     }
     console.log(card)
-    if(card.status.rubrik ==RUBRIK_NEU){
-        document.getElementById("schwierig").style.display="none";
+    if (card.status.rubrik == RUBRIK_NEU || card.status.rubrik == RUBRIK_LERNEN || card.status.rubrik == RUBRIK_ERNEUT_LERNEN) {
+        document.getElementById("schwierig").style.display = "none";
     }
     document.getElementById("zeigeAntwort").style.display = "none"
 }
