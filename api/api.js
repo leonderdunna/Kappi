@@ -169,8 +169,6 @@ function lernen(id, antwort, username, passwort) {
     else c.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
     database.setUser(user)
     database.statusSpeichern(username);
-
-
 }
 
 //Das Passwort wird von diesem Programm erstellt, damit der benutzer nicht ein Passwort verwenden kann

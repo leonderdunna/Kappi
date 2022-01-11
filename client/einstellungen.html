@@ -32,6 +32,9 @@
                         <a class="nav-link disabled">Statistiken</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link " href="./account.html">Mein Account</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active">Einstellungen</a>
                     </li>
                 </ul>
@@ -42,7 +45,82 @@
     <div class="container einstellungen">
         <h1>Einstellungen</h1>
 
-        <div class="card">
+      
+
+          <div class="card my-3">
+            <div class="card-header">
+              Neue Karten
+            </div>
+            <div class="card-body">
+           <!--  <h5 class="card-title">Benutzerdefinierter Server</h5>--> 
+              <p class="card-text">Werte, die den Einstieg neuer Karten in den Algorhitmus beeinflussen</p>
+            
+
+              <div class="input-group my-3	">
+                <span class="input-group-text">Neue Karten pro Tag</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+
+              
+              <div class="input-group my-3">
+                <span class="input-group-text">Schritte</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+
+              
+              <div class="input-group my-3">
+                <span class="input-group-text">Anfängliche Leichtigkeit</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+
+              
+              <div class="input-group  my-3">
+                <span class="input-group-text">Startintervall</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+              <div class="input-group my-3">
+                <span class="input-group-text">Startintervall bei Einfach</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+              <a onclick="speichern('server',document.getElementById('benutzerserver').value)" href="#" class="btn btn-primary my-3">Speichern</a>
+            </div>
+        </div>
+
+
+        <div class="card my-3">
+            <div class="card-header">
+              Alte Karten
+            </div>
+            <div class="card-body">
+            <!--  <h5 class="card-title">Benutzerdefinierter Server</h5>-->
+              <p class="card-text">Werte die den Algorhitmus im Allgemeinen beeinflussen</p>
+            
+
+              <div class="input-group my-3">
+                <span class="input-group-text">Karten pro Tag</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+              <div class="input-group my-3">
+                <span class="input-group-text">Bonus bei Einfach</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+              <div class="input-group my-3">
+                <span class="input-group-text">Leichtigkeitsbonus</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+              <div class="input-group my-3">
+                <span class="input-group-text">Minimales Intervall</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+              <div class="input-group my-3">
+                <span class="input-group-text">Maximales Intervall</span>
+                <input id="benutzerserver" type="text" class="form-control" aria-label="Sizing example input"></input>
+              </div>
+              <a onclick="speichern('server',document.getElementById('benutzerserver').value)" href="#" class="btn btn-primary my-3">Speichern</a>
+            </div>
+        </div>
+
+        <div class="card my-3 server">
             <div class="card-header">
               Server
             </div>
@@ -57,10 +135,9 @@
               </div>
               <a onclick="speichern('server',document.getElementById('benutzerserver').value)" href="#" class="btn btn-primary my-3">Speichern</a>
             </div>
-          </div>
+        </div>
 
-
-           </div>
+    </div>
 
 
     <!-- Scripts -->

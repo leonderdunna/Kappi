@@ -1,5 +1,9 @@
 //TODO erstelen der karten ID über zufälligen string ähnlich dem Benutzertoken vielleicht übernimmt das aber auch das Backend
 
+//angemeldet Prüfen
+if(!localStorage.getItem("angemeldet")){
+    location.href= "./account.html"
+}
 
 function vorschlagen() {
     let frage = document.getElementById("frageinput").value;

@@ -1,10 +1,9 @@
 
 
-var angemeldet = localStorage.getItem('angemeldet')
 var benutzernameRegistrieren
 var user;
 
-if (angemeldet) {
+if ( localStorage.getItem('angemeldet')) {
     for (e of document.getElementsByClassName("anmelden"))
         e.style.display = "none";
     for (e of document.getElementsByClassName("registrieren"))
@@ -23,7 +22,7 @@ if (angemeldet) {
     setInterval(() => {
         if (benutzernameRegistrieren != document.getElementById("benutzernameinputregistrieren").value && document.getElementById("benutzernameinputregistrieren").value != "") {
             benutzernameRegistrieren = document.getElementById("benutzernameinputregistrieren").value;
-            api.userExists(benutzernameRegistrieren).then((r) => {
+            userExists(benutzernameRegistrieren).then((r) => {
                 if (r) {
                     document.getElementById("benutzernameinputregistrieren").style.color = "red"
                     document.getElementById("benutzernameSchonVergeben").textContent = "Der Benutzername " + benutzernameRegistrieren + " ist schon vergeben."
@@ -35,6 +34,7 @@ if (angemeldet) {
                 }
             })
         }
+      
     }, 200)
 }
 

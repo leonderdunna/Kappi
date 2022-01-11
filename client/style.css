@@ -11,3 +11,10 @@
 #registrierungAbschließen{
     display:none
 }
+
+.einstellungen .card {
+    display: none;
+}
+.einstellungen .server {
+    display: block;
+}

@@ -10,7 +10,6 @@
 //Imports von anderen Modulen. Express für einen einfacheren umgang mit HTTP und die 
 // api für eine bessere Struktur.
 import express from "express";
-import { redis_v1 } from "googleapis";
 import api from './api/api.js';
 
 //Implementierung von Konstanten für bessere Übersichtlichkeit und Wartbarkeit
