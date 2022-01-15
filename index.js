@@ -82,8 +82,11 @@ app.get("/themen/:fach", (req, res) => {
 
 app.post("/lernen", (req, res) => {
     let opt = req.body;
-    console.log(opt)
     api.lernen(opt.id, opt.antwort, opt.username, opt.passwort)
+})
+
+app.get("/einstellungen/:user", (req, res) => {
+    res.end(JSON.stringify(api.getEinstellungen(req.params.user)))
 })
 
 //Die "app" wird nun gestartet und ist unter dem in Konstanten definierten Port erreichbar

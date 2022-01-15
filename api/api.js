@@ -348,7 +348,7 @@ async function generateUserStatus(username) {
         "neueKartenProTag": NEUE_KARTEN_PRO_TAG,
         "lernenSchritte": [LERNEN_SCHRITT_1, LERNEN_SCHRITT_2],
         "startBeiEinfach": START_BEI_EINFACH,
-        "statBeiGut": START_BEI_GUT,
+        "startBeiGut": START_BEI_GUT,
         "wiederholungenProTag": WIEDERHOLUNGEN_PRO_TAG,
         "bonus": BONUS,
         "minimumIntervall": MINIMUM_INTERVALL,
@@ -387,6 +387,11 @@ function überprüfePasswort(n, p) {
     else return false
 }
 
+function getEinstellungen(username){
+    let user = database.getUser()
+    return user[username].einstellungen
+}
+
 //eine Liste aller Funktionen/variablen, die außerhalb dieser Datei genutzt werden können.
 // alle aktionen laufen über funktionen dierer Datei, um an einem zentralen ort Fehler zu vermeiden
 export default {
@@ -400,5 +405,6 @@ export default {
     "getFälligeKarten": getFälligeKarten,
     "lernen": lernen,
     "getCard": getCard,
-    "getCardById": database.getCardById
+    "getCardById": database.getCardById,
+    "getEinstellungen":getEinstellungen
 }
