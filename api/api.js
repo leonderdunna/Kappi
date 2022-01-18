@@ -391,6 +391,12 @@ function getEinstellungen(username){
     let user = database.getUser()
     return user[username].einstellungen
 }
+function setEinstellungen(username, einstellungen){
+    let user = database.getUser()
+    user[username].einstellungen = einstellungen
+    database.setUser(user)
+    database.einstellungenSpeichern(username)
+}
 
 //eine Liste aller Funktionen/variablen, die außerhalb dieser Datei genutzt werden können.
 // alle aktionen laufen über funktionen dierer Datei, um an einem zentralen ort Fehler zu vermeiden
@@ -406,5 +412,6 @@ export default {
     "lernen": lernen,
     "getCard": getCard,
     "getCardById": database.getCardById,
-    "getEinstellungen":getEinstellungen
+    "getEinstellungen":getEinstellungen,
+    "setEinstellungen":setEinstellungen
 }

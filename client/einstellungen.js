@@ -8,17 +8,22 @@ if (localStorage.getItem("angemeldet")) {
 async function loadEinstellungen() {
     if (localStorage.getItem("angemeldet")) {
 
-        fetch(server + "einstellungen/" + user.name).then(r =>r.json() ).then((einstellungen) => {
+        fetch(server + "einstellungen/" + user.name).then(r => r.json()).then((einstellungen) => {
 
-console.log(einstellungen)
+            console.log(einstellungen)
             document.getElementById("neueProTag").value = einstellungen.neueKartenProTag
-            document.getElementById("lernenSchritte").value = einstellungen.lernenSchritte
-            document.getElementById("startLeichtigkeit").value = einstellungen.startLeichtigkeit
-            document.getElementById("startBeiEinfach").value = einstellungen.startBeiEinfach
-            document.getElementById("startBeiGut").value = einstellungen.startBeiGut
 
+            lernenSchritte = einstellungen.lernenSchritte.map((e) => { return e / 60000 })
 
+            document.getElementById("lernenSchritte").value = JSON.stringify(lernenSchritte)
+            document.getElementById("startLeichtigkeit").value = einstellungen.startLeichtigkeit * 100
+            document.getElementById("startBeiEinfach").value = einstellungen.startBeiEinfach / (1000 * 60 * 60 * 24)
+            document.getElementById("startBeiGut").value = einstellungen.startBeiGut / (60000 * 60 * 24)
 
+            document.getElementById("kartenProTag").value = einstellungen.wiederholungenProTag
+            document.getElementById("bonusBeiEinfach").value = einstellungen.bonus * 100
+            document.getElementById("maxIntervall").value = einstellungen.maximumIntervall / (60000 * 60 * 24)
+            document.getElementById("minIntervall").value = einstellungen.minimumIntervall / (60000 * 60 * 24)
 
             // "startLeichtigkeit": DEFAULT_LEICHTIGKEIT,
             // "neueKartenProTag": NEUE_KARTEN_PRO_TAG,
@@ -35,5 +40,28 @@ console.log(einstellungen)
 
         })
     }
+}
+function speichern() {
+    fetch(server + "einstellungen/" + user.name).then(r => r.json()).then((einstellungen) => {
+
+        einstellungen.minimumIntervall = (document.getElementById("minIntervall").value - 0) * 60000 * 60 * 24
+        einstellungen.maximumIntervall = (document.getElementById("maxIntervall").value - 0) * 60000 * 60 * 24
+        einstellungen.bonus = (document.getElementById("bonusBeiEinfach").value - 0) / 100
+        einstellungen.wiederholungenProTag = document.getElementById("kartenProTag").value - 0
+        einstellungen.startBeiGut = (document.getElementById("startBeiGut").value - 0) * 60000 * 60 * 24
+        einstellungen.startBeiEinfach = (document.getElementById("startBeiEinfach").value - 0) * 1000 * 60 * 60 * 24
+        einstellungen.startLeichtigkeit = (document.getElementById("startLeichtigkeit").value - 0) / 100
+        lernenSchritte = JSON.parse(document.getElementById("lernenSchritte").value)
+        einstellungen.lernenSchritte = lernenSchritte.map((e) => { return e * 60000 })
+        einstellungen.neueKartenProTag=document.getElementById("neueProTag").value -0
+
+
+        fetch(server + "set/einstellungen"+user.name, {
+            method: 'POST', headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }, body: einstellungen
+        })
+    })
 }
 loadEinstellungen()

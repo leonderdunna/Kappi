@@ -97,10 +97,11 @@ function registrieren() {
     userExists(benutzernameRegistrieren, true)
 }
 
-function speichern(variable, wert) {
+function serverSpeichern(variable, wert) {
     localStorage.setItem(variable, wert)
     location.reload()
 }
+
 async function getFächer() {
     f = await fetch(server + "faecher")
     f = f.json()

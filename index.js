@@ -88,6 +88,9 @@ app.post("/lernen", (req, res) => {
 app.get("/einstellungen/:user", (req, res) => {
     res.end(JSON.stringify(api.getEinstellungen(req.params.user)))
 })
+app.post("/set/einstellungen/:user", (req, res) => {
+    res.end(JSON.stringify(api.setEinstellungen(req.params.user, req.body.einstellungen)))
+})
 
 //Die "app" wird nun gestartet und ist unter dem in Konstanten definierten Port erreichbar
 app.listen(port, () => { console.log("Server listening on port " + port) })
