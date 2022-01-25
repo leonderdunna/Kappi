@@ -43,11 +43,21 @@ app.post("/add", (req, res) => {//TODO auslagern in api.js && add in andere user
     console.log("index: neue karte:")
     console.log(req.body)
     let cards = database.getCards()
+    let user = database.getUser()
+    console.log(user)
    let card = req.body
    card.id= hashCode(JSON.stringify(card))
     card.Like = []
     cards.push(card);
     database.setCards(cards)
+    for (let u in user){
+        console.log(u)
+        user[u].status.push({
+            "id":card.id,
+            "rubrik":0
+        })
+    }
+    database.setUser(user)
     res.send("true")
 })
 

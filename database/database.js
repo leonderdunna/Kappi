@@ -7,6 +7,9 @@
  * Version: siehe git
  */
 
+
+//TODO fehler beim erstellen von nutzern
+
 //Die Google API wird importiert um die nötigen funktionen zu liefern um mit den Google servern Kontakt aufzunehmen
 import { google } from 'googleapis';
 
@@ -311,8 +314,13 @@ kartenSpeichern(cs)
 function getUser(){
     return user 
 }
-function setUser(u){
+function setUser(u, speichern = true){
     user = u
+
+    if(speichern)
+    for ( let name in user){
+        statusSpeichern(name)
+    }
     //TODO gucken was verändert wurde und das abspeichern
 
 }

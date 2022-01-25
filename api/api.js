@@ -324,7 +324,7 @@ function addUser(username) {
     // d.h. alle Karten werden für ihn als neu markiert 
     let pass = newPassword()
     user[username] = { "passwort": pass }
-    database.setUser(user)
+    database.setUser(user,false)
     generateUserStatus(username)
     //Aufrufen der Databasefuntion, um Den nutzer zu speichern und alle notwendigen Tabellenblätter etc. zu ergenzen
     database.addUser(username, pass)
