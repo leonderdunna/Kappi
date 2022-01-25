@@ -56,11 +56,13 @@ function speichern() {
         einstellungen.neueKartenProTag=document.getElementById("neueProTag").value -0
 
 
-        fetch(server + "set/einstellungen"+user.name, {
+        console.log("einstellungen.js: neue eintellungen werden gesendet")
+        console.log(einstellungen)
+        fetch(server + "set/einstellungen/"+user.name, {
             method: 'POST', headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }, body: einstellungen
+            }, body: JSON.stringify(einstellungen)
         })
     })
 }

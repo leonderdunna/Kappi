@@ -86,10 +86,14 @@ app.post("/lernen", (req, res) => {
 })
 
 app.get("/einstellungen/:user", (req, res) => {
+    console.log("index: Einstellungen werden gesendet:")
+    console.log(api.getEinstellungen(req.params.user))
     res.end(JSON.stringify(api.getEinstellungen(req.params.user)))
 })
 app.post("/set/einstellungen/:user", (req, res) => {
-    res.end(JSON.stringify(api.setEinstellungen(req.params.user, req.body.einstellungen)))
+    console.log("index: einstellungen setzen:")
+    console.log(req.body)
+    res.end(JSON.stringify(api.setEinstellungen(req.params.user, req.body)))
 })
 
 //Die "app" wird nun gestartet und ist unter dem in Konstanten definierten Port erreichbar
