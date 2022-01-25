@@ -27,14 +27,13 @@ function hinzufügen() {
     let antwort = document.getElementById("antwortinput").value;
     let fach = document.getElementById("fachselect").value;
     let thema = document.getElementById("themaselect").value;
-    let korrekturen = ["authr"];//TODO  den benutzer hinzufügen
-
+  
     send({
         "Frage": frage,
         "Antwort": antwort,
         "Fach": fach,
         "Thema": thema,
-        "Korrekturen": korrekturen
+        "author":user.name 
     })
     verwerfen()
 }
@@ -46,7 +45,7 @@ function verwerfen() {
 }
 
 async function send(card) {
-    let rawResponse = await fetch('http://localhost:3000/add', {
+await fetch('http://localhost:3000/add', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',

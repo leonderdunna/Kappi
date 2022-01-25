@@ -11,6 +11,7 @@
 // api für eine bessere Struktur.
 import express from "express";
 import api from './api/api.js';
+import database from './database/database.js';
 
 //Implementierung von Konstanten für bessere Übersichtlichkeit und Wartbarkeit
 const port = 3000
@@ -34,10 +35,20 @@ app.use(express.json())
 //Hinzufügen von Karten durch den Client. Nötige informationen werden ergenzt 
 // und die Karte in den Status aller anderen Benutzer hinzugefügt
 app.post("/add", (req, res) => {//TODO auslagern in api.js && add in andere user
-    card = req.body
+
+   let hashCode = (s) => {
+        return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+      }
+
+    console.log("index: neue karte:")
+    console.log(req.body)
+    let cards = database.getCards()
+   let card = req.body
+   card.id= hashCode(JSON.stringify(card))
     card.Like = []
     cards.push(card);
-    api.karteSpeichern(cards)
+    database.setCards(cards)
+    res.send("true")
 })
 
 //Die Funktion soll einfach eine zufällige fällige karte zurückgeben.
