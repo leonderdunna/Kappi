@@ -264,8 +264,8 @@ async function einstellungenSpeichern(userName) {
     }
 
     try {
-      //TODO  gsapi.spreadsheets.values.update(opt)
-    } catch { console.log("beim speichern der einstellungen ist ein fehler aufgetreten") }
+        gsapi.spreadsheets.values.update(opt)
+    } catch (e) { console.log("beim speichern der einstellungen ist ein fehler aufgetreten") }
     console.log("database: Die Einstellungen des Bentzers " + userName + " wird in Google-Tabellen gesichert")
 }
 
@@ -323,10 +323,12 @@ function getUser() {
 function setUser(u, speichern = true) {
     user = u
 
-    if (speichern)
+    if (speichern) {
+        console.log("setUser in database: alle nutzer werden gespeichert")
         for (let name in user) {
             statusSpeichern(name)
         }
+    }
     //TODO gucken was verändert wurde und das abspeichern
 
 }
