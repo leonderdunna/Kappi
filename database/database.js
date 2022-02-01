@@ -80,7 +80,7 @@ async function addUser(username, passwort) {
             //Wenn das erstelen des Tabellenblattes erfolgreih war wird Der in der API generierte Status des Nutzers
             // in der Tabelle Gespieichert un schließlich auch der benutzername und dessen passwort in die User tabelle 
             // geschrieben
-            console.log("database: Das Tabellenblatt für "+username + " wurde angelegt.")
+            console.log("database: Das Tabellenblatt für " + username + " wurde angelegt.")
             statusSpeichern(username)
             einstellungenSpeichern(username)
             userSpeichern(user).then(() => {
@@ -136,8 +136,8 @@ async function getAlleKarten() {
     let res = await gsapi.spreadsheets.values.get(opt);
     //das Zweidimensionale Array muss in ein Eindimenisonales konvertiert werden.
     // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
-    let karten =res.data.values.map((e) => { return JSON.parse(e[0]) });
-    console.log("database: Karten werden abgerufen. "+karten.length+" Karten gefunden")
+    let karten = res.data.values.map((e) => { return JSON.parse(e[0]) });
+    console.log("database: Karten werden abgerufen. " + karten.length + " Karten gefunden")
     return karten
 }
 
@@ -153,11 +153,11 @@ async function loadStatus(name) {
 
     //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
     let res = await gsapi.spreadsheets.values.get(opt);
-  
+
     //das Zweidimensionale Array muss in ein Eindimenisonales konvertiert werden.
     // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
     user[name].status = res.data.values.map((e) => { return JSON.parse(e[0]) });
-    console.log("database: Der Status von "+name+" wurde geladen")
+    console.log("database: Der Status von " + name + " wurde geladen")
 
 }
 async function loadEinstellungen(name) {
@@ -170,11 +170,11 @@ async function loadEinstellungen(name) {
 
     //die tatsächliche anfrage an Google. giebt ein zweidimensionales Array aus [spalte [zeile]] zurück.
     let res = await gsapi.spreadsheets.values.get(opt);
-  
+
     //das Zweidimensionale Array muss in ein Eindimenisonales konvertiert werden.
     // nebenbei wird der string der Von der Api zurückkommt wieder ind gültige JSON format konvertiert
     user[name].einstellungen = res.data.values.map((e) => { return JSON.parse(e[0]) })[0];
-    console.log("database: Die Einstellungen von "+name+" wurde geladen")
+    console.log("database: Die Einstellungen von " + name + " wurde geladen")
 
 }
 
@@ -184,9 +184,9 @@ async function loadEinstellungen(name) {
 function getCardById(id) {
     //Zurückgegeben wird die Erste Karte mit der entsprechenden ID
     //Es dürfte nicht passieren dass mehrere karten mit einer ID existieren
-    console.log("database: Die Karte "+id+" wurde abgerufen")
-   // console.log("database testausgabe karte die abgerufen wird")
-   // console.log(cards.filter((e)=>{return e.id==id}))
+    console.log("database: Die Karte " + id + " wurde abgerufen")
+    // console.log("database testausgabe karte die abgerufen wird")
+    // console.log(cards.filter((e)=>{return e.id==id}))
     return cards.filter((e) => { return e.id == id })[0]//TODO: fehler ausgeben wenn es mehere karen mit der gleihen id gibt
 }
 
@@ -202,7 +202,7 @@ async function getAlleUser() {
     let res = await gsapi.spreadsheets.values.get(opt);
     let userArray = res.data.values;
 
-    let usernamen = userArray.map((e)=>{return e[0]})
+    let usernamen = userArray.map((e) => { return e[0] })
     console.log("database: Die Benutzerliste wurde abgefragt. Folgende Benutzer wurden gefunden:")
     console.log(usernamen)
     // die benutzer werden in das richtige Format Formatiert und ihr status wird geladen
@@ -244,9 +244,13 @@ async function statusSpeichern(userName) {
             values: user[userName].status.map((r) => { return [JSON.stringify(r)] })
         }
     }
-    
-    gsapi.spreadsheets.values.update(opt)
-    console.log("database: Der Status des Bentzers "+userName+" wird in Google-Tabellen gesichert")
+
+    try {
+        gsapi.spreadsheets.values.update(opt)
+    } catch {
+        console.log("database: FEHLER beim speichern des nutzers. Die Tabelle für " + userName + " existiert noch nicht")
+    }
+    console.log("database: Der Status des Bentzers " + userName + " wird in Google-Tabellen gesichert")
 }
 
 async function einstellungenSpeichern(userName) {
@@ -255,12 +259,14 @@ async function einstellungenSpeichern(userName) {
         range: userName + '!B1',
         valueInputOption: 'USER_ENTERED',
         resource: {
-            values:[[JSON.stringify( user[userName].einstellungen)]]
+            values: [[JSON.stringify(user[userName].einstellungen)]]
         }
     }
-    
-    gsapi.spreadsheets.values.update(opt)
-    console.log("database: Die Einstellungen des Bentzers "+userName+" wird in Google-Tabellen gesichert")
+
+    try {
+      //TODO  gsapi.spreadsheets.values.update(opt)
+    } catch { console.log("beim speichern der einstellungen ist ein fehler aufgetreten") }
+    console.log("database: Die Einstellungen des Bentzers " + userName + " wird in Google-Tabellen gesichert")
 }
 
 // Speichern der liste der Nutzer und deren Passwörter
@@ -303,24 +309,24 @@ getAlleKarten().then((r) => {
     cards = r
 })
 
-function getCards(){
-return cards
+function getCards() {
+    return cards
 }
-function setCards(cs){
-cards = cs
-kartenSpeichern(cs)
+function setCards(cs) {
+    cards = cs
+    kartenSpeichern(cs)
 }
 
-function getUser(){
-    return user 
+function getUser() {
+    return user
 }
-function setUser(u, speichern = true){
+function setUser(u, speichern = true) {
     user = u
 
-    if(speichern)
-    for ( let name in user){
-        statusSpeichern(name)
-    }
+    if (speichern)
+        for (let name in user) {
+            statusSpeichern(name)
+        }
     //TODO gucken was verändert wurde und das abspeichern
 
 }
@@ -332,10 +338,10 @@ export default {
     "addUser": addUser,
     "kartenSpeichern": kartenSpeichern,
     "statusSpeichern": statusSpeichern,
-    "einstellungenSpeichern":einstellungenSpeichern,
-    "getCards":getCards,
-    "setCards":setCards,
-    "getUser":getUser,
-    "setUser":setUser,
-    "getCardById":getCardById
+    "einstellungenSpeichern": einstellungenSpeichern,
+    "getCards": getCards,
+    "setCards": setCards,
+    "getUser": getUser,
+    "setUser": setUser,
+    "getCardById": getCardById
 }

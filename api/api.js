@@ -209,6 +209,9 @@ function getNeueKarten(userName) {
 }
 function getCard(username) {
     let user = database.getUser()
+
+    if(!user[username]) return {status:404}
+
     let fällige = getFälligeKarten(username)
     if (fällige.length > 0) {
         return fällige[Math.floor(Math.random() * fällige.length)]

@@ -103,6 +103,7 @@ app.get("/themen/:fach", (req, res) => {
 
 app.post("/lernen", (req, res) => {
     let opt = req.body;
+    console.log(opt)
     api.lernen(opt.id, opt.antwort, opt.username, opt.passwort)
 })
 
