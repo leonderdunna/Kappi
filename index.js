@@ -30,6 +30,7 @@ app.use(express.json())
 //Hinzufügen von Karten durch den Client. Nötige informationen werden ergenzt 
 // und die Karte in den Status aller anderen Benutzer hinzugefügt
 app.post("/add", (req, res) => {//TODO auslagern in api.js && add in andere user
+    
 
     //Jede Karte bekommt eine ID um bei berechnungen nur mit ihenen und nicht mit der karte selbst 
     //rechnen zu müssen. // spaart speicher und leistung

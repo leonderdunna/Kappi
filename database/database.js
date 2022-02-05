@@ -320,9 +320,9 @@ function setCards(cs) {
 function getUser() {
     return user
 }
-function setUser(u, speichern = true) {
+function setUser(u, speichern) {
     user = u
-
+   
     if (speichern) {
         console.log("setUser in database: alle nutzer werden gespeichert")
         for (let name in user) {

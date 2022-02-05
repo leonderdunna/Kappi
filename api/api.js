@@ -167,7 +167,7 @@ function lernen(id, antwort, username, passwort) {
     if (c.gelernt)
         c.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
     else c.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
-    database.setUser(user)
+    database.setUser(user, true)
     database.statusSpeichern(username);
 }
 
@@ -327,7 +327,7 @@ function addUser(username) {
     // d.h. alle Karten werden für ihn als neu markiert 
     let pass = newPassword()
     user[username] = { "passwort": pass }
-    database.setUser(user,false)
+    database.setUser(user, false)
     generateUserStatus(username)
     //Aufrufen der Databasefuntion, um Den nutzer zu speichern und alle notwendigen Tabellenblätter etc. zu ergenzen
     database.addUser(username, pass)
@@ -375,7 +375,7 @@ async function generateUserStatus(username) {
     }
     console.log("api: Alle karten wurden in den Status von " + username + "kopiert.")
 
-    database.setUser(user)
+    database.setUser(user, false)
 }
 
 //Funktion um ein Passwort zu überprüfen. sollte vor jeder Aktion mit der Datenbank passieren, um Fremdzugriffe zu verhindern
@@ -397,7 +397,7 @@ function getEinstellungen(username){
 function setEinstellungen(username, einstellungen){
     let user = database.getUser()
     user[username].einstellungen = einstellungen
-    database.setUser(user)
+    database.setUser(user, true)
     database.einstellungenSpeichern(username)
 }
 

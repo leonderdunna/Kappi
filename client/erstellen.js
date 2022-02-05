@@ -24,7 +24,7 @@ function vorschlagen() {
     })
     verwerfen()
 }
-function hinzufügen() {
+function hinzufügen() { //TODO rückmeldung ob die karte hinzugefügt wurde
     let frage = document.getElementById("frageinput").value;
     let antwort = document.getElementById("antwortinput").value;
     let fach = document.getElementById("fachselect").value;
