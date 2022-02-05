@@ -46,7 +46,7 @@ async function getCard(manuell) {
                     card = data
                     card.status = status;
                     refreschUI()
-                   
+
                 })
             else refreschUI(true)
         })

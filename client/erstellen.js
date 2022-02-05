@@ -18,7 +18,9 @@ function vorschlagen() {
         "Antwort": antwort,
         "Fach": fach,
         "Thema": thema,
-        "Korrekturen": korrekturen
+        "Korrekturen": korrekturen,
+        "author":user.name,
+        "Zustand": "vorschlag"
     })
     verwerfen()
 }
