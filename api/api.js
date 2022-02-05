@@ -13,7 +13,7 @@
 import database from '../database/database.js'
 
 //Standardwerte.  
-//TODO Sie müssen durch die Einstellungen bearbeitet werden können
+
 
 
 //RUBRIKEN
@@ -47,10 +47,10 @@ const FAKTOR_NACH_ERNEUTEM_LERNEN = 0.75 //%
 const ERNEUT_LERNEN_SCHRITT_1 = 1000 * 60 * 10 //ms
 
 function lernen(id, antwort, username, passwort) {
-   // console.log("api Testausgabe lernen wurde gestartet")
-   // console.log("" + id + antwort + username + passwort)
+    // console.log("api Testausgabe lernen wurde gestartet")
+    // console.log("" + id + antwort + username + passwort)
     let user = database.getUser();
-    if (!überprüfePasswort(username, passwort)){
+    if (!überprüfePasswort(username, passwort)) {
         console.log("api: lernen wird abgebrochen; passort ist falsch")
         return false;
     }
@@ -175,13 +175,16 @@ function lernen(id, antwort, username, passwort) {
 // welches er woanders schon nutzt, um im Falle eines Hacks dieses Programmes den Schaden zu minimieren
 function newPassword() {
     //Erstellt eine zufällige 5stellige zeichenkette
-    return (Math.random() + 1).toString(36).substring(7);//TODO die zeichenkette darf nicht "false" sein
+
+    while (passwort == false) {
+        passwort = (Math.random() + 1).toString(36).substring(7);
+    }
+    return passwort
 }
 
 //Diese funktion Filtert den Status des Benutzers, sodass nur noch Karten übrig bleiben, die zu dem zeitpunkt
 // zu dem diese Funktion aufgerufen wird Fällig sind.
 function getFälligeKarten(userName) {
-    //TODO 
     //cs sind die Karten die Fällig sind. 
     let user = database.getUser()
     //   console.log("api:testausgabe status bei getfällige karten")
@@ -194,7 +197,7 @@ function getFälligeKarten(userName) {
 }
 
 function getNeueKarten(userName) {
-    //TODO 
+
     //cs sind die Karten die Fällig sind.
     let user = database.getUser()
     // console.log("api gentneuekarten testausgabe")
@@ -210,21 +213,22 @@ function getNeueKarten(userName) {
 function getCard(username) {
     let user = database.getUser()
 
-    if(!user[username]) return {status:404}
+    if (!user[username]) return { status: 404 }
 
     let fällige = getFälligeKarten(username)
     if (fällige.length > 0) {
-        return fällige[Math.floor(Math.random() * fällige.length)]
+        let gelernteKarten = getErledigteKarten(username, { "neu": true });
+        if (gelernteKarten.length < user[username].einstellungen.neueKartenProTag)
+            return fällige[Math.floor(Math.random() * fällige.length)]
     }
-    //TODO falls noch neue da sind und noch neue gemacht werden dürfen...
 
-    let gelernteKarten = getErledigteKarten(username, { "neu": true });
- let neueKarten = getNeueKarten(username)
-    if (gelernteKarten.length < user[username].einstellungen.neueKartenProTag&& neueKarten.length >0)  {
-       
+    gelernteKarten = getErledigteKarten(username, {});
+    let neueKarten = getNeueKarten(username)
+    if (gelernteKarten.length < user[username].einstellungen.neueKartenProTag && neueKarten.length > 0) {
+
         return neueKarten[Math.floor(Math.random() * neueKarten.length)]
     }
-    return {"fertig":true}
+    return { "fertig": true }
 }
 
 
@@ -346,7 +350,7 @@ async function generateUserStatus(username) {
 
 
     //Der nutzer braucht auch die nötigen standartwerte, auch wenn er sie später ändern könnte
-    user[username].einstellungen = {//TODO einstellungen speichern und im Frontend bearbeitbar machen
+    user[username].einstellungen = {
         "startLeichtigkeit": DEFAULT_LEICHTIGKEIT,
         "neueKartenProTag": NEUE_KARTEN_PRO_TAG,
         "lernenSchritte": [LERNEN_SCHRITT_1, LERNEN_SCHRITT_2],
@@ -390,11 +394,11 @@ function überprüfePasswort(n, p) {
     else return false
 }
 
-function getEinstellungen(username){
+function getEinstellungen(username) {
     let user = database.getUser()
     return user[username].einstellungen
 }
-function setEinstellungen(username, einstellungen){
+function setEinstellungen(username, einstellungen) {
     let user = database.getUser()
     user[username].einstellungen = einstellungen
     database.setUser(user, true)
@@ -415,6 +419,6 @@ export default {
     "lernen": lernen,
     "getCard": getCard,
     "getCardById": database.getCardById,
-    "getEinstellungen":getEinstellungen,
-    "setEinstellungen":setEinstellungen
+    "getEinstellungen": getEinstellungen,
+    "setEinstellungen": setEinstellungen
 }

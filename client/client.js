@@ -3,15 +3,6 @@
 
 
 
-
-//TODO: Was macht das hier
-// function anmelden() { 
-//     window.localStorage.setItem("name", document.getElementById("clientname").value)
-//     document.getElementsByClassName("abfrage")[0].style.display = "block";
-//     document.getElementById("anmelden").style.display = "none";
-//     start()
-// }
-
 function like() {
 
     if (!card.Like.includes(clientname)) {

@@ -1,4 +1,4 @@
-//TODO erstelen der karten ID über zufälligen string ähnlich dem Benutzertoken vielleicht übernimmt das aber auch das Backend
+
 
 //angemeldet Prüfen
 if(!localStorage.getItem("angemeldet")){
@@ -11,7 +11,6 @@ function vorschlagen() {
     let fach = document.getElementById("fachselect").value;
     let thema = document.getElementById("themaselect").value;
     let korrekturen = [] // bleibt leer ... leere korrekturen gibt an, dass es sich bis auf weiteres nur um einenvorschlag handelt
-    //TODO fetch POST
 
     send({
         "Frage": frage,

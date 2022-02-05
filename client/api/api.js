@@ -98,7 +98,7 @@ async function userExists(user, registrieren = false) {
 }
 
 function registrieren() {
-    //TODO ist der benutzer schon benutzt?
+    
     userExists(benutzernameRegistrieren, true)
 }
 
