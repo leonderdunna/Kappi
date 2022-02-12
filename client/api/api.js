@@ -52,6 +52,10 @@ async function getCard(manuell) {
         })
         .catch(err => console.error(err));
 }
+async function löschen(id){
+   await fetch(server+"delete/"+id,{method: 'DELETE'})
+   location.reload()
+}
 
 async function lernen(antwort) {
     fetch(server + "lernen", {

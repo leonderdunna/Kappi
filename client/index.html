@@ -94,10 +94,10 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div class="card karte">
                     <div class="card-body">
-                        <h5 id="cardid" class="card-title">Karte: ID</h5>
-                        <h6 id="cardfach" class="card-subtitle mb-2 text-muted">Fach</h6>
+                        <h5 id="cardfach" class="card-title"></h5>
+                        <h6 id="cardid" class="card-subtitle mb-2 text-muted"></h6>
                         <p id="cardfrage" class="card-text">Frage</p>
                         <hr>
                         <p id="cardantwort" class="card-text antwort">Antwort</p>
@@ -120,7 +120,7 @@
             <div class="col">
                 <div class="container">
                     <div class="row"><button type="button" class="btn my-3 btn-primary ">Bearbeiten</button></div>
-                    <div class="row"><button type="button" class="btn my-3 btn-primary ">Löschen</button></div>
+                    <div class="row"><button type="button" onclick="löschen(card.id)" class="btn my-3 btn-primary ">Löschen</button></div>
                 </div>
             </div>
         </div>
@@ -129,7 +129,7 @@
     <div id="cardfertig" class="container my-3">
         <div id="cardfertigbody" class="card-body">
             <h5 class="card-title">Fertig!!</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Im moment sind keine Karten fällig. Die nächste karte ist in ... sekunden/stunden/jahren fällig.</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Im moment sind keine Karten fällig. <!-- Die nächste karte ist in ... sekunden/stunden/jahren fällig.--></h6> 
             <p class="card-text">Vielleicht sin in anderen fächern noch karten fällig.</p>
             <hr>
             <button onclick="location.reload()" type="button" class="btn btn-primary">Aktualisieren</button>

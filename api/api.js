@@ -160,6 +160,7 @@ function lernen(id, antwort, username, passwort) {
     } else return false
 
     if (c.rubrik == RUBRIK_JUNG || c.rubrik == RUBRIK_ALT)
+        //wenn intervall über einen monat ist wird die rubrik alt... hat nur einfluss auf eventuelle statistiken
         if (c.intervall >= 1000 * 60 * 60 * 24 * 30)
             c.rubrik = RUBRIK_ALT;
         else c.rubrik = RUBRIK_JUNG;
@@ -167,7 +168,7 @@ function lernen(id, antwort, username, passwort) {
     if (c.gelernt)
         c.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
     else c.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
-    database.setUser(user, true)
+    database.setUser(user, false)
     database.statusSpeichern(username);
 }
 
@@ -175,10 +176,11 @@ function lernen(id, antwort, username, passwort) {
 // welches er woanders schon nutzt, um im Falle eines Hacks dieses Programmes den Schaden zu minimieren
 function newPassword() {
     //Erstellt eine zufällige 5stellige zeichenkette
-
-    while (passwort == false) {
+    let passwort;
+    do {
         passwort = (Math.random() + 1).toString(36).substring(7);
     }
+    while (passwort == false)
     return passwort
 }
 
@@ -217,12 +219,12 @@ function getCard(username) {
 
     let fällige = getFälligeKarten(username)
     if (fällige.length > 0) {
-        let gelernteKarten = getErledigteKarten(username, { "neu": true });
-        if (gelernteKarten.length < user[username].einstellungen.neueKartenProTag)
+        let gelernteKarten = getErledigteKarten(username, {});
+        if (gelernteKarten.length < user[username].einstellungen.wiederholungenProTag)
             return fällige[Math.floor(Math.random() * fällige.length)]
     }
 
-    gelernteKarten = getErledigteKarten(username, {});
+    let gelernteKarten = getErledigteKarten(username, { "neu": true });
     let neueKarten = getNeueKarten(username)
     if (gelernteKarten.length < user[username].einstellungen.neueKartenProTag && neueKarten.length > 0) {
 

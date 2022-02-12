@@ -216,7 +216,19 @@ async function getAlleUser() {
 
 //schreiben der Karten in die Datenbank
 async function kartenSpeichern(neueKarten) {
+
+    let nk = neueKarten.map((r) => { return [JSON.stringify(r)] })
+nk.pusch [[""]]
+nk.pusch [[""]]
+
+nk.pusch [[""]]
+nk.pusch [[""]]
+nk.pusch [[""]]
+nk.pusch [[""]]
+
     //Optionen wie die ID des Dokuments, der Bereich für die Daten und natürlich der Inhalt
+
+
     var opt = {
         spreadsheetId: '1xLP93_fIY3i6Uf9RjqcxD6Hfa4bkrl7mu6wOCQ6wdR8',
         range: 'Karten!A1',
@@ -225,9 +237,10 @@ async function kartenSpeichern(neueKarten) {
             //Das was abgspeichert wird muss für die Google Tabelle in einem Zweidimensionalen Array stehen.
             //in der Zweiten dimension dürfen nur Strings stehen, d.h. die Karten müssen im JSON Format als 
             // Zeichenkette gespeichert werden
-            values: neueKarten.map((r) => { return [JSON.stringify(r)] })
+            values: nk
         }
     }
+   
     //Die anfrage an google die zuvor in opt definierten änderunen an der Tabelle durchzuführen
     gsapi.spreadsheets.values.update(opt)
     console.log("database: Karten werden in Google-Tabellen gesichert")

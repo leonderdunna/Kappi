@@ -21,13 +21,13 @@ function refreschUI(c) {
     if (c) {
         document.getElementsByClassName("abfrage")[0].style.display = "none";
         document.getElementById("cardfertig").style.display = "block";
-        document.getElementById("cardfertigbody").appendChild(document.getElementById("filter"))
+       // document.getElementById("cardfertigbody").appendChild(document.getElementById("filter"))
     }
 
     else {
         document.getElementById("cardfrage").innerHTML = card.Frage
         document.getElementById("cardantwort").innerHTML = card.Antwort
-        document.getElementById("cardid").textContent = "Karte " + card.ID
+        document.getElementById("cardid").textContent = "Karte " + card.id
         document.getElementById("cardfach").textContent = "Fach: " + card.Fach + ", Autor: " + card.Autor
         document.getElementById("gefälltmir").textContent = "Gefällt mir: " + card.Like.length
 

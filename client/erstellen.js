@@ -18,7 +18,7 @@ function vorschlagen() {
         "Fach": fach,
         "Thema": thema,
         "Korrekturen": korrekturen,
-        "author":user.name,
+        "Autor":user.name,
         "Zustand": "vorschlag"
     })
     verwerfen()
@@ -34,8 +34,9 @@ function hinzufügen() { //TODO rückmeldung ob die karte hinzugefügt wurde
         "Antwort": antwort,
         "Fach": fach,
         "Thema": thema,
-        "author":user.name 
+        "Autor":user.name 
     })
+    alert("Karte wurde erfolgreich hinzugefügt"+user.name)
     verwerfen()
 }
 function verwerfen() {

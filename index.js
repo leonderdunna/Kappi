@@ -9,6 +9,7 @@
 
 //Imports von anderen Modulen. Express für einen einfacheren umgang mit HTTP und die 
 // api für eine bessere Struktur.
+import e from "express";
 import express from "express";
 import api from './api/api.js';
 import database from './database/database.js';
@@ -42,7 +43,7 @@ app.post("/add", (req, res) => {//TODO auslagern in api.js && add in andere user
     let card = req.body
 
     //Ausgabe in der konsole --> für fehlerbehebung
-    console.log("POST: /add von " + card.author)
+    console.log("POST: /add von " + card.Autor)
 
     //Hohlen aller Daten aus der Datenbank
     let cards = database.getCards()
@@ -70,10 +71,27 @@ app.post("/add", (req, res) => {//TODO auslagern in api.js && add in andere user
     }
 
     //alle benutzer werden gespeichert
-    database.setUser(user)
+    database.setUser(user, true)
 
     //Dumme antwort, damit der client weiß dass die karte erzeugt wurde
     res.send("true")
+})
+app.delete("/delete/:id", (req,res)=>{
+  let  id = req.params.id
+    let cards = database.getCards()
+    let user = database.getUser()
+
+    cards = cards.filter((e)=>{return e.id !=id})
+    console.log(cards)
+    database.setCards(cards)
+
+ for (let u in user) {
+        user[u].status = user[u].status.filter((e)=>{return e.id != id})
+       
+    }
+    database.setUser(user,true)
+
+    res.end()
 })
 
 //Die Funktion soll einfach eine zufällige fällige karte zurückgeben.
