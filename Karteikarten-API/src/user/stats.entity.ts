@@ -3,6 +3,7 @@ import { Stat } from './stat.model';
 
 @Entity('Stats')
 export class Stats extends BaseEntity {
-    @ObjectIdColumn() id:ObjectID;
-    @Column() stats : Stat[];
+    @ObjectIdColumn() id: ObjectID;
+    @Column() stats: Stat[];
+    @Column() user: string;
 }

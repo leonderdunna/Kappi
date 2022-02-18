@@ -38,4 +38,11 @@ export class UserService {
         this.userRepository.delete(u.id)
         return success
     }
+    async getId(username:string):Promise<ObjectID>{
+        let u = await this.userRepository.findOne({name:username})
+        return u.id
+    }
+    async updateUser(id:ObjectID,password:string):Promise<any>{
+       return this.userRepository.update(id,{password:password})
+    }
 }

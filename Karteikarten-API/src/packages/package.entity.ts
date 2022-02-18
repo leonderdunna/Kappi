@@ -1,10 +1,12 @@
-import { PrimaryGeneratedColumn, BaseEntity,Entity, Column } from "typeorm"
+import { BaseEntity, Entity, Column, ObjectIdColumn, ObjectID } from "typeorm"
+import { Stapel } from "./stapel.model"
 
 @Entity('packages')
 export class Package extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id:number
 
-    @Column()
-    packages: Package[]
+    @ObjectIdColumn() id: ObjectID
+    @Column() name: string;
+    @Column() stapel: Stapel[]
+    @Column() user: string[];
+
 }
