@@ -1,0 +1,16 @@
+<mat-card>
+    <mat-card-title>{{fach}}</mat-card-title>
+    <mat-card-subtitle>Id: {{id}}, Autor: {{autor}}</mat-card-subtitle>
+    <mat-card-content>
+        <mat-card>{{frage}}</mat-card>
+        <mat-card *ngIf="zeigeAntwort">{{antwort}}</mat-card>
+    </mat-card-content>
+    <mat-card-actions>
+        <button *ngIf="zeigeAntwort" mat-button>Nochmal</button>
+        <button *ngIf="((rubrik !=0) && zeigeAntwort)" mat-button>Schwer</button>
+        <button *ngIf="zeigeAntwort" mat-button>Gut</button>
+        <button *ngIf="zeigeAntwort" mat-button>Einfach</button>
+        <button (click)="antwortZeigen()" *ngIf="!zeigeAntwort" mat-button>Antwort anzeigen</button>
+        
+    </mat-card-actions>
+</mat-card>
