@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from '../user.model';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-account',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccountComponent implements OnInit {
 
-  constructor() { }
+  
+  constructor(private userService:UserService) {}
 
+  user?:User;
+  allusers?:string[];
   ngOnInit(): void {
+    this.userService.getAllUsers().subscribe(data=>{this.allusers = data})
   }
 
   angemeldet:boolean= false;
