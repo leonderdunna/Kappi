@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { MatTableModule} from '@angular/material/table';
 import { EditComponent } from './edit/edit.component'
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { EditComponent } from './edit/edit.component'
      MatFormFieldModule,
      MatInputModule,
      MatTableModule,
-     HttpClientModule
+     HttpClientModule,
+     FormsModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -4,9 +4,10 @@
         <p>
             <mat-form-field appearance="standard">
                 <mat-label>Benutzername</mat-label>
-                <input matInput placeholder="Benutzername">
-                <!-- <mat-hint>Hint</mat-hint> -->
-            </mat-form-field>
+                <input [(ngModel)]="anmeldenUsername" matInput placeholder="Benutzername">
+              <mat-hint *ngIf="(allusers.indexOf( anmeldenUsername)!=-1)">Der Benutzername ist vergeben</mat-hint> <!-- TODO: Ist an der falschen stelle-->
+
+            </mat-form-field> 
         </p>
         <p>
             <mat-form-field appearance="standard">
