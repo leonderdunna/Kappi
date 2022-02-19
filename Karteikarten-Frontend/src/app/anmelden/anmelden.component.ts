@@ -31,7 +31,11 @@ export class AnmeldenComponent implements OnInit {
         this.userService.userSpeichern({name:this.anmeldenUsername,password:this.anmeldenPasswort})
         this.onSignin.emit(true)
       }
-      console.log(data)
+      else{
+        this.anmeldenUsername = '';
+        this.anmeldenPasswort = '';
+        alert('Etwas hat nicht geklappt (Sind Benutzername und Passwort korrekt?). Bitte versuchen Sie es erneut')
+      }
     })
   }
 
