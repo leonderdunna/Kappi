@@ -20,14 +20,25 @@ export class UserService {
 
   userSpeichern(user: User): void {
     window.localStorage.setItem('user', JSON.stringify(user))
-    this.user=user
+    this.user = user
+  }
+
+  changePasswort(p:string){
+    return this.http.put('http://localhost:3000/users/'+this.user.name+'/'+this.user.password+'/'+p,{})
   }
 
   getAllUsers(): Observable<any> {
     return this.http.get('http://localhost:3000/users')
   }
-  testPassword(user:User):Observable<any>{
-    return this.http.get('http://localhost:3000/users/'+user.name+'/'+user.password)
+  testPassword(user: User): Observable<any> {
+    return this.http.get('http://localhost:3000/users/' + user.name + '/' + user.password)
   }
 
+  addUser(user: User): Observable<any> {
+    return this.http.post('http://localhost:3000/users',
+      { user: user })
+  }
+  deleteAccount(){
+    return this.http.delete('http://localhost:3000/users/' + this.user.name + '/' + this.user.password)
+  }
 }

@@ -26,6 +26,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { MatTableModule} from '@angular/material/table';
 import { EditComponent } from './edit/edit.component'
 import { FormsModule } from '@angular/forms';
+import { MatBadgeModule} from '@angular/material/badge'
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { FormsModule } from '@angular/forms';
      MatInputModule,
      MatTableModule,
      HttpClientModule,
-     FormsModule 
+     FormsModule,
+     MatBadgeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

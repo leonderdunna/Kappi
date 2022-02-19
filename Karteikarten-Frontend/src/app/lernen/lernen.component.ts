@@ -9,6 +9,9 @@ export class LernenComponent implements OnInit {
 
   constructor() { }
 
+frage='Wie hoch ist der Eifelturm?'
+antwort='ca. 300m'
+antwortSichtbar=false;
   ngOnInit(): void {
   }
 

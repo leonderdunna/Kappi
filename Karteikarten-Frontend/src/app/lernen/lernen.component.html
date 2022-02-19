@@ -1,1 +1,16 @@
-<app-card></app-card>
+<!-- wird später bestimmt app-card-module verwenden -->
+<div class="wrapper">
+<mat-card>{{frage}}</mat-card>
+<mat-card *ngIf="antwortSichtbar">{{antwort}}</mat-card>
+</div>
+<div class="antworten" *ngIf="antwortSichtbar">
+    
+    <button mat-button>Nochmal</button>
+    <button mat-button>Schwer</button>
+    <button mat-button>Gut</button>
+    <button mat-button>Einfach</button>
+</div>
+<div class="antworten" *ngIf="!antwortSichtbar">
+    <button mat-button>Antowrt zeigen</button>
+  
+</div>

@@ -14,8 +14,8 @@ export class UsersController {
     }
 
     @Get(':username/:password')
-    testPassword(@Param() params):Promise<boolean>{
-        return this.userService.testPassword(params.username,params.password)
+    testPassword(@Param() params): Promise<boolean> {
+        return this.userService.testPassword(params.username, params.password)
     }
 
     @Post()
@@ -24,20 +24,21 @@ export class UsersController {
     }
     @Delete(':username/:password')
     async deleteUser(@Param() params): Promise<boolean> {
-        let test = await this.userService.testPassword(params.username,params.password)
-        if(test){
-         return   this.userService.deleteUser(params.username)
+        let test = await this.userService.testPassword(params.username, params.password)
+        if (test) {
+            this.userService.deleteUser(params.username)
+            return true
         }
         return false;
     }
 
     @Put(':username/:password/:newpasswort')
-    async updateUser(@Param() params):Promise<boolean>{
-        let test = await this.userService.testPassword(params.username,params.password)
+    async updateUser(@Param() params): Promise<boolean> {
+        let test = await this.userService.testPassword(params.username, params.password)
         let id = await this.userService.getId(params.username)
-        if(test){
-            this.userService.updateUser(id,params.newpasswort)
-         return   true
+        if (test) {
+            this.userService.updateUser(id, params.newpasswort)
+            return true
         }
         return false;
     }
