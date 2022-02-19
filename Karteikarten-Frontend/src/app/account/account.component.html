@@ -1,2 +1,3 @@
-<app-anmelden *ngIf="!angemeldet"></app-anmelden> 
-<app-account-settings *ngIf="angemeldet"></app-account-settings>
+
+<app-anmelden (onSignin)="changeUser()" *ngIf="(user?.name == 'public')"></app-anmelden>
+<app-account-settings *ngIf="!(user?.name == 'public')"></app-account-settings>

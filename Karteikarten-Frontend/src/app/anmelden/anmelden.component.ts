@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { User } from '../user.model';
 import { UserService } from '../user.service';
+import { RouterModule } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-anmelden',
@@ -8,14 +12,27 @@ import { UserService } from '../user.service';
   styleUrls: ['./anmelden.component.scss']
 })
 export class AnmeldenComponent implements OnInit {
+ 
+  constructor(private userService: UserService,private router :Router) { }
+  allusers: string[] = [];
 
-  constructor(private userService:UserService) { }
-allusers:string[] = [] ;
+  anmeldenUsername = '';
+  anmeldenPasswort = '';
+  registrierenUsername = '';
 
-  anmeldenUsername= '';
   ngOnInit(): void {
-    this.userService.getAllUsers().subscribe(data=>{this.allusers = data})
-  
+    this.userService.getAllUsers().subscribe(data => { this.allusers = data })
+
+  }
+  @Output() onSignin = new EventEmitter<boolean>()
+  anmelden(){
+    this.userService.testPassword({name:this.anmeldenUsername,password:this.anmeldenPasswort}).subscribe(data =>{
+      if(data){
+        this.userService.userSpeichern({name:this.anmeldenUsername,password:this.anmeldenPasswort})
+        this.onSignin.emit(true)
+      }
+      console.log(data)
+    })
   }
 
 }

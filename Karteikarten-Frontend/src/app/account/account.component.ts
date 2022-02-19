@@ -12,11 +12,14 @@ export class AccountComponent implements OnInit {
   
   constructor(private userService:UserService) {}
 
-  user?:User;
+user?:User;
   allusers?:string[];
   ngOnInit(): void {
     this.userService.getAllUsers().subscribe(data=>{this.allusers = data})
+    this.user= this.userService.getUser()
+  }
+  changeUser(){
+   this.user= this.userService.getUser()
   }
 
-  angemeldet:boolean= false;
 }

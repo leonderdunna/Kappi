@@ -7,17 +7,27 @@ import { User } from './user.model';
   providedIn: 'root'
 })
 export class UserService {
-  
-  user?:User;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.user = JSON.parse(window.localStorage.getItem("user") ?? '{"name": "public",   "password": "public" } ')
+  }
 
-  getUser():User|undefined{
+  user: User;
+
+  getUser(): User {
     return this.user
   }
 
-  getAllUsers():Observable<any>{
+  userSpeichern(user: User): void {
+    window.localStorage.setItem('user', JSON.stringify(user))
+    this.user=user
+  }
+
+  getAllUsers(): Observable<any> {
     return this.http.get('http://localhost:3000/users')
+  }
+  testPassword(user:User):Observable<any>{
+    return this.http.get('http://localhost:3000/users/'+user.name+'/'+user.password)
   }
 
 }

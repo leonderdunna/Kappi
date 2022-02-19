@@ -1,4 +1,10 @@
 <mat-card>
+    <mat-card-title>{{user?.name}}</mat-card-title> 
+    <mat-card-actions>
+        <button mat-raised-button color="primary">Abmelden</button>
+    </mat-card-actions>
+</mat-card>
+<mat-card>
     <mat-card-title>Passwort ändern</mat-card-title>
     <p>
         <mat-form-field appearance="standard">
@@ -16,11 +22,5 @@
     </p>
     <mat-card-actions>
         <button mat-raised-button color="primary">Passwort ändern</button>
-    </mat-card-actions>
-</mat-card>
-<mat-card>
-    <mat-card-title>Abmelden</mat-card-title>
-    <mat-card-actions>
-        <button mat-raised-button color="primary">Abmelden</button>
     </mat-card-actions>
 </mat-card>

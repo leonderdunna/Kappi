@@ -12,6 +12,12 @@ export class UsersController {
     getUsers(): Promise<string[]> {
         return this.userService.findAll()
     }
+
+    @Get(':username/:password')
+    testPassword(@Param() params):Promise<boolean>{
+        return this.userService.testPassword(params.username,params.password)
+    }
+
     @Post()
     addUser(@Body() body): Promise<boolean> {
         return this.userService.addUser(body.user.name, body.user.password)
