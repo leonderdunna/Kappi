@@ -1,15 +1,15 @@
-<form >
+<div >
 
     <mat-form-field appearance="standard">
         <mat-label>Frage</mat-label>
-        <textarea matInput placeholder="Beispiel: Wie hoch ist der Eifelturm?"></textarea>
+        <textarea [(ngModel)]="frage" matInput placeholder="Beispiel: Wie hoch ist der Eifelturm?"></textarea>
     </mat-form-field>
     <mat-form-field appearance="standard">
         <mat-label>Antwort</mat-label>
-        <textarea matInput placeholder="Beispiel: ca. 300m"></textarea>
+        <textarea [(ngModel)]="antwort" matInput placeholder="Beispiel: ca. 300m"></textarea>
     </mat-form-field>
 
     <button mat-raised-button color="primary" >Verwerfen</button>
-    <button mat-raised-button color="accent" >Hinzufügen</button>
+    <button mat-raised-button (click)="add()" color="accent" >Hinzufügen</button>
 
-</form>
+</div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CardsService } from '../cards.service';
 
 @Component({
   selector: 'app-karten',
@@ -7,40 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class KartenComponent implements OnInit {
 
-  constructor() { }
 
+  constructor(private cardsService:CardsService) {
+    this.karten = cardsService.getCards()
+   }
+
+ 
   ngOnInit(): void {
   }
 
   displayedColumns:string[] = ["frage",'Bearbeiten','antwort']
-  karten = [
-    {
-      frage: "Dies ist eine Tolle Beispielfrage lol wie hoch ist denn der Eifelturm",
-      antwort: "antwort: nunja der Eifelturm ist ja schon echt hoch lol"
-    }, {
-      frage: "hallo",
-      antwort: "antwort"
-    }, {
-      frage: "hallo",
-      antwort: "antwort"
-    }, {
-      frage: "hallo",
-      antwort: "antwort"
-    }, {
-      frage: "hallo",
-      antwort: "antwort"
-    }, {
-      frage: "hallo",
-      antwort: "antwort"
-    }, {
-      frage: "hallo",
-      antwort: "antwort"
-    }, {
-      frage: "hallo",
-      antwort: "antwort"
-    }, {
-      frage: "hallo",
-      antwort: "antwort"
-    },
-  ]
+  karten = []
 }

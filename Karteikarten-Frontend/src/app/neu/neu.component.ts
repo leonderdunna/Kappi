@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CardsService } from '../cards.service';
 
 @Component({
   selector: 'app-neu',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NeuComponent implements OnInit {
 
-  constructor() { }
+  constructor(private cardsService: CardsService) { }
 
   ngOnInit(): void {
+  }
+  frage = '';
+  antwort = '';
+
+  add() {
+    if (this.frage != '' && this.antwort != '') {
+      this.cardsService.addCard({ frage: this.frage, antwort: this.antwort })
+      this.frage = ''
+      this.antwort = ''
+    }
   }
 
 }

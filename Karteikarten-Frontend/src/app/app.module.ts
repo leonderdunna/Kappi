@@ -26,7 +26,8 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { MatTableModule} from '@angular/material/table';
 import { EditComponent } from './edit/edit.component'
 import { FormsModule } from '@angular/forms';
-import { MatBadgeModule} from '@angular/material/badge'
+import { MatBadgeModule} from '@angular/material/badge';
+import { AboutComponent } from './about/about.component'
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { MatBadgeModule} from '@angular/material/badge'
      AnmeldenComponent,
      AccountSettingsComponent,
      EditComponent,
+     AboutComponent,
 
   ],
   imports: [

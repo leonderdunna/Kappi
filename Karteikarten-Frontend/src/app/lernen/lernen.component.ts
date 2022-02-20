@@ -12,6 +12,9 @@ export class LernenComponent implements OnInit {
 frage='Wie hoch ist der Eifelturm?'
 antwort='ca. 300m'
 antwortSichtbar=false;
+zeigeAntwort(){
+  this.antwortSichtbar=true;
+}
   ngOnInit(): void {
   }
 
