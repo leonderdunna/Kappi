@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Stats } from './stats.entity';
 import { ObjectID, Repository } from 'typeorm';
 import { User } from './user.entity';
+import { Stat } from './stat.model';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        private readonly statsRepository: Repository<Stats>
     ) { }
     async testPassword(username: string, password: string): Promise<boolean> {
         let u = await this.userRepository.findOne({ name: username })
@@ -31,18 +34,27 @@ export class UserService {
         }
         return false
     }
-    async deleteUser(username: string):Promise<boolean> {
-        let success:boolean;
+    async deleteUser(username: string): Promise<boolean> {
+        let success: boolean;
         let u = await this.userRepository.findOne({ "name": username })
-        if(u) success=true;
+        if (u) success = true;
         this.userRepository.delete(u.id)
         return success
     }
-    async getId(username:string):Promise<ObjectID>{
-        let u = await this.userRepository.findOne({name:username})
+    async getId(username: string): Promise<ObjectID> {
+        let u = await this.userRepository.findOne({ name: username })
         return u.id
     }
-    async updateUser(id:ObjectID,password:string):Promise<any>{
-       return this.userRepository.update(id,{password:password})
+    async updateUser(id: ObjectID, password: string): Promise<any> {
+        return this.userRepository.update(id, { password: password })
     }
+
+    async getStats(username: string): Promise<Stats> {
+        return await this.statsRepository.findOne({ "user": username })
+    }
+
+    //TODO: Abspeichern es status höchstwarscheinlich in einer separaten datenbank
+    // async updateStats(user:string,card:ObjectID, stat:Stat):Promise<boolean>{
+    //     this.statsRepository.update
+    // }
 }

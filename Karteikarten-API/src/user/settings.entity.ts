@@ -3,6 +3,9 @@ import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn, PrimaryGeneratedC
 @Entity('Settings')
 export class Settings extends BaseEntity {
     @ObjectIdColumn() id: ObjectID;
+
+    @Column() user:string;
+
     @Column() startLeichtigkeit: number;
     @Column() neueKartenProTag: number;
     @Column() lernenSchritte: number[];
