@@ -7,7 +7,7 @@ import { PackagesController } from './packages.controller';
 import { PackagesService } from './packages.service';
 
 @Module({
-    imports:[TypeOrmModule.forFeature([Package,User])],
+    imports:[TypeOrmModule.forFeature([Package]),TypeOrmModule.forFeature([User])],
     providers:[PackagesService,UserService],
     controllers:[PackagesController]
 })

@@ -25,8 +25,9 @@ export class CardsService {
   getCards(){
     return this.cards;
   }
-  addCard(card:Card){
-    this.http.post('http://localhost:3000/cards/public/public',{card:card})
+ async addCard(card:any){
+    await this.http.post<any>('http://localhost:3000/cards/public/public',{"card":card}).subscribe(data=>{console.log(data)})
+    console.log(card)
   }
 
 }

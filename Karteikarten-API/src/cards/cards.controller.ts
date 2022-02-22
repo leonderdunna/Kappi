@@ -21,6 +21,7 @@ export class CardsController {
 
     @Post(':username/:password')
     addCard(@Body() body): void {
+        console.log(body.card)
         this.cardsService.add(body.card)
     }
 

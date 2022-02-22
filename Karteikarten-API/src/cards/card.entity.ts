@@ -6,13 +6,13 @@ export class Cards extends BaseEntity {
     id: ObjectID
 
     @Column()
-    package: number[];
+    package?: number[];
 
     @Column()
     level?: number;
 
     @Column()
-    autor: string;
+    autor?: string;
 
     @Column()
     frage: string;

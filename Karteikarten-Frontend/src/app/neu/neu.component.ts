@@ -21,6 +21,9 @@ export class NeuComponent implements OnInit {
       this.frage = ''
       this.antwort = ''
     }
+    else{
+      console.log('du bist dumm')
+    }
   }
 
 }

@@ -1,9 +1,14 @@
 import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { Stat } from './stat.model';
 
-@Entity('Stats')
+
+@Entity('stats')
 export class Stats extends BaseEntity {
     @ObjectIdColumn() id: ObjectID;
-    @Column() stats: Stat[];
+    @Column() card: string;
     @Column() user: string;
+    @Column() rubrik: number;
+    @Column() leichtigkeit?: number;
+    @Column() intervall?: number;
+    @Column() fällig?: number;
+    @Column() stufe?: number;
 }

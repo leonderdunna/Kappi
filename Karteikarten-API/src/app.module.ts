@@ -15,6 +15,7 @@ import { PackagesModule } from './packages/packages.module';
 import { UserModule } from './user/user.module';
 import { User } from './user/user.entity';
 import { UsersModule } from './users/users.module';
+import { Stats } from './user/stats.entity';
 
 
 @Module({
@@ -24,13 +25,14 @@ import { UsersModule } from './users/users.module';
       host: 'localhost',
       port: 27017,
       database: 'karteikarten',
-      entities: [Cards, Package,User],
+      entities: [Cards, Package,User,Stats],
       synchronize: true
     }),
     CardsModule,
     PackagesModule,
     UserModule,
     UsersModule,
+    
   ],
 
 })
