@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CardsService } from '../cards.service';
 
 @Component({
@@ -9,14 +10,18 @@ import { CardsService } from '../cards.service';
 export class KartenComponent implements OnInit {
 
 
-  constructor(private cardsService:CardsService) {
-    this.karten = cardsService.getCards()
+  constructor(private cardsService:CardsService, private router:Router) {
+    this.cardsService.getCards().then(data =>{this.karten = data})
    }
 
  
   ngOnInit(): void {
   }
+  edit(id:any){
+    console.log(id)
+    this.router.navigate([`edit/${id}`]);
+  }
 
   displayedColumns:string[] = ["frage",'Bearbeiten','antwort']
-  karten = []
+  karten =  []
 }

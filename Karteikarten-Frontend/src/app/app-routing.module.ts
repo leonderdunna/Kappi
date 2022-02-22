@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'statistiken', component: StatistikenComponent },
   { path: 'account', component: AccountComponent },
   { path: 'einstellungen', component: SettingsComponent },
-  { path: 'edit',component:EditComponent},
+  { path: 'edit/:id',component:EditComponent},
   {path: 'about',component:AboutComponent}
 ];
 
