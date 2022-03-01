@@ -1,8 +1,7 @@
 import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-
 @Entity('stats')
-export class Stats extends BaseEntity {
+export class Stats {
     @ObjectIdColumn() id: ObjectID;
     @Column() card: string;
     @Column() user: string;

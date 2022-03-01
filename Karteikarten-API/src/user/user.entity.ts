@@ -3,8 +3,6 @@ import { Column, Entity, ObjectID, ObjectIdColumn, PrimaryGeneratedColumn } from
 @Entity('user')
 export class User {
     @ObjectIdColumn() id:ObjectID;
-    @Column()
-    name:string;
-    @Column()
-    password:string;
+    @Column() name:string;
+    @Column() password:string;
 }

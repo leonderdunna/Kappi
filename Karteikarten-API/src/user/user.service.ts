@@ -3,16 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { ObjectID, Repository } from 'typeorm';
 import { User } from './user.entity';
-import { Stats } from './stats.entity';
 
 @Injectable()
 export class UserService {
     constructor(
+
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-        // @InjectRepository(Stats)
-        // private readonly statsRepository: Repository<Stats>
-    ) { }
+) { }
     async testPassword(username: string, password: string): Promise<boolean> {
         let u = await this.userRepository.findOne({ name: username })
         console.log(username)
@@ -50,9 +48,9 @@ export class UserService {
         return this.userRepository.update(id, { password: password })
     }
 
-    // async getStats(username: string): Promise<Stats> {
-    //     return await this.statsRepository.findOne({ "user": username })
-    // }
+    //  async getStats(username: string): Promise<Stats> {
+    //      return await this.statsRepository.findOne({ "user": username })
+    //  }
 
     //TODO: Abspeichern es status höchstwarscheinlich in einer separaten datenbank
     // async updateStats(user:string,card:ObjectID, stat:Stat):Promise<boolean>{
