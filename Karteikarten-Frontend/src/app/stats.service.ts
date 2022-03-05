@@ -1,0 +1,21 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { User } from './user.model';
+import { UserService } from './user.service';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class StatsService {
+
+  constructor(private http: HttpClient,private userService:UserService) {
+    this.user = userService.getUser();
+  }
+  user:User;
+
+ async getStats():Promise<any>{
+    return await this.http.get('http://localhost:3000/stats/'+this.user.name)
+  }
+
+}
