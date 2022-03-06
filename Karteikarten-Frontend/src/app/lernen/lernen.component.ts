@@ -11,13 +11,25 @@ import { StatsService } from '../stats.service';
 })
 export class LernenComponent implements OnInit {
   constructor(private cardsService: CardsService, private router: Router, private statsService: StatsService) {
-    this.cardsService.getCards().then(data => { data.subscribe((c: any) => { this.karten = c; console.log(c);this.neueKarte() }) });
+    this.cardsService.getCards().then(data => { data.subscribe((c: any) => { this.karten = c; console.log(c); this.neueKarte() }) });
     this.statsService.getStats().then(data => { data.subscribe((s: any) => { this.stats = s; console.log(s) }) });
 
   }
 
-  karten:any[] = [];
-  stats = [];
+  karten: any[] = [];
+  stats: any[] = [];
+
+  settings = { //TODO: müssen später aus dem backend gehohlt werden
+    startLeichtigkeit: 2.5, // relative einheiten
+    neueProTag: 10,
+    lernenSchritte: [1000 * 60, 1000 * 60 * 10],
+    startEinfach: 1000 * 60 * 60 * 24 * 4,
+    startGut: 1000 * 60 * 60 * 24,
+    minIntervall: 1000 * 60 * 60 * 24,
+    maxIntervall: 1000 * 60 * 60 * 24 * 365 * 10,
+    faktorErneut: 0.75,  //relative einheiten
+    erneutSchritte: [1000 * 60 * 10]
+  }
 
   frage = ''
   antwort = ''
@@ -26,11 +38,14 @@ export class LernenComponent implements OnInit {
   antwortSichtbar = false;
 
 
-  neueKarte(){
-    // auswahl nach status  kommt níhc vorrübergehend zufällige karte
-    let c = this.karten[Math.floor(Math.random() * this.karten.length)]; 
+  neueKarte() {
+    //TODO auswahl nach status  kommt leider noch vorrübergehend zufällige karte
 
-    this.activeCard = c.id;
+    let fs = this.stats.filter(e=> {if (e.rubrik = 0|| e.fällig < Date.now()) return true;return false}) //fs steht für gefilterter status NICHT für filesystem
+    let s = fs[Math.floor(Math.random() * fs.length)]; // s ist aktiver status
+    let c =this.karten[ this.karten.findIndex(e => e.id === s.card) ]
+
+    this.activeCard = s.card;
     this.frage = c.frage;
     this.antwort = c.antwort
     this.antwortSichtbar = false;

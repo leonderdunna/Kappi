@@ -31,7 +31,7 @@ const ANTWORT_GUT = 2;
 const ANTWORT_EINFACH = 3;
 
 //NEU
-const DEFAULT_LEICHTIGKEIT = 2.50;//%
+const DEFAULT_LEICHTIGKEIT = 2.50;//relative einheiten
 const NEUE_KARTEN_PRO_TAG = 10
 const LERNEN_SCHRITT_1 = 1000 * 60;//ms
 const LERNEN_SCHRITT_2 = 1000 * 60 * 10;//ms

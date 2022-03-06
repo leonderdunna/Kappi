@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { Stats } from './stats/stats.entity';
 
 import { StatsModule } from './stats/stats.module';
+import { SettingsController } from './settings/settings.controller';
 
 
 
@@ -31,6 +32,7 @@ import { StatsModule } from './stats/stats.module';
     
   ],
   providers: [],
+  controllers: [SettingsController],
 
 })
 export class AppModule { }
