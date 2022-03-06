@@ -9,13 +9,19 @@ import { Observable } from 'rxjs';
 })
 export class StatsService {
 
-  constructor(private http: HttpClient,private userService:UserService) {
+  constructor(private http: HttpClient, private userService: UserService) {
     this.user = userService.getUser();
   }
-  user:User;
+  user: User;
 
- async getStats():Promise<any>{
-    return await this.http.get('http://localhost:3000/stats/'+this.user.name)
+  async getStats(): Promise<any> {
+    return await this.http.get('http://localhost:3000/stats/' + this.user.name)
   }
 
+  async addStatus(stat:any):Promise<any>{
+    return await this.http.post('http://localhost/:3000/status',{"stat":stat})
+  }
+  async removeStat(id:any):Promise<any>{
+    return await this.http.delete('http://localhost/:3000/status/'+id)
+  }
 }

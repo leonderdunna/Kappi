@@ -41,13 +41,13 @@ export class LernenComponent implements OnInit {
   neueKarte() {
     //TODO auswahl nach status  kommt leider noch vorrübergehend zufällige karte
 
-    let fs = this.stats.filter(e=> {if (e.rubrik = 0|| e.fällig < Date.now()) return true;return false}) //fs steht für gefilterter status NICHT für filesystem
+    let fs = this.stats.filter(e => { if (e.rubrik = 0 || e.fällig < Date.now()) return true; return false }) //fs steht für gefilterter status NICHT für filesystem
     let s = fs[Math.floor(Math.random() * fs.length)]; // s ist aktiver status
-    let c =this.karten[ this.karten.findIndex(e => e.id === s.card) ]
+    let c = this.karten[this.karten.findIndex(e => e.id === s.card)]
 
     this.activeCard = s.card;
     this.frage = c.frage;
-    this.antwort = c.antwort
+    this.antwort = c.antwort;
     this.antwortSichtbar = false;
 
   }
