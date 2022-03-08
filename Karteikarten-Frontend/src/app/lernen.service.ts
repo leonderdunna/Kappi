@@ -21,6 +21,8 @@ export class LernenService {
 
   lernen(antwort: number, c: any, settings: any): any {
     let zufall = 1;//TODO ist noch kein echter zufall ... sollte später zwischen 0.95 und 1.05 liegen
+    if(c.rubrik == false)
+      c.rubrik = 0;
 
     if (c.rubrik == this.RUBRIK_NEU) {
       if (antwort == this.ANTWORT_EINFACH) {

@@ -1,16 +1,22 @@
 <!-- wird später bestimmt app-card-module verwenden -->
-<div class="wrapper">
-<mat-card>{{frage}}</mat-card>
-<mat-card *ngIf="antwortSichtbar">{{antwort}}</mat-card>
+<div class="wrapper" *ngIf="!fertig">
+    <mat-card>{{frage}}</mat-card>
+    <mat-card *ngIf="antwortSichtbar">{{antwort}}</mat-card>
 </div>
 <div class="antworten" *ngIf="antwortSichtbar">
-    
+
     <button (click)="neueKarte()" mat-button>Nochmal</button>
     <button mat-button>Schwer</button>
     <button mat-button>Gut</button>
     <button mat-button>Einfach</button>
 </div>
-<div class="antworten" *ngIf="!antwortSichtbar">
+<div class="antworten" *ngIf="(!antwortSichtbar && !fertig) ">
     <button mat-button (click)="zeigeAntwort()">Antowrt zeigen</button>
-  
+
+</div>
+<div class="fertig" *ngIf="fertig">
+    <mat-card>
+        Sie sind für Heute fertig.
+        <mat-icon>thumb_up</mat-icon>
+    </mat-card>
 </div>

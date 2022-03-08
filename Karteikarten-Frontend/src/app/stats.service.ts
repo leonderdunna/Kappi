@@ -19,9 +19,9 @@ export class StatsService {
   }
 
   async addStatus(stat:any):Promise<any>{
-    return await this.http.post('http://localhost/:3000/status',{"stat":stat})
+    return await this.http.post('http://localhost:3000/stats/',{"stats":stat})
   }
   async removeStat(id:any):Promise<any>{
-    return await this.http.delete('http://localhost/:3000/status/'+id)
+    return await this.http.delete('http://localhost:3000/stats/'+id)
   }
 }
