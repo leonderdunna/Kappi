@@ -13,6 +13,7 @@ export class StatsService {
     ) { }
 
     async getStatus(user: string): Promise<Stats[]> {
+        
         return this.statsRepository.find({ user: user })
     }
 
@@ -35,7 +36,10 @@ export class StatsService {
 
         return this.statsRepository.update(id, stat)
     }
-    async deleteByCard(card){
+    async deleteByCard(card:any){
         this.statsRepository.delete({"card":card})
+    }
+    async deleteByUser(user:any){
+        this.statsRepository.delete({"user":user})
     }
 }

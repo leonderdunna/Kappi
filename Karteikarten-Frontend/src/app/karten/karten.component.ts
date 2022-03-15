@@ -28,6 +28,6 @@ export class KartenComponent implements OnInit {
 
   }
 
-  displayedColumns: string[] = ["frage", 'Bearbeiten', 'löschen', 'antwort']
+  displayedColumns: string[] = ["frage", 'löschen', 'antwort']
   karten = []
 }

@@ -7,8 +7,10 @@ export class StatsController {
 
     constructor(private statsService: StatsService) { }
     @Get(':user')
-    getStats(@Param() params): Promise<Stats[]> {
+    getStats(@Param() params): Promise<Stats[]> | [] {
+      
         return this.statsService.getStatus(params.user)
+       
     }
 
 

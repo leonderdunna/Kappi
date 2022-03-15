@@ -75,7 +75,7 @@ export class LernenComponent implements OnInit {
     console.log(cardIds)
 
     //KEINE ENDLÖSUNG aber erstmal reichts
-    if(änderung)
+    if (änderung)
       location.reload();
 
   }
@@ -92,7 +92,16 @@ export class LernenComponent implements OnInit {
   }
 
   neueKarte() {
-    console.log(this.stats)
+
+    if (this.user.name == 'public') {
+      let c = this.karten[Math.floor(Math.random() * this.karten.length)]
+
+      this.frage = c.frage;
+      this.antwort = c.antwort;
+      this.antwortSichtbar = false;
+      return;
+    }
+
     let fs = this.stats.filter(e => {
       if (e.rubrik == 0 || e.rubrik == false || e.fällig < Date.now()) return true; return false
     }) //fs steht für gefilterter status NICHT für filesystem
@@ -103,18 +112,9 @@ export class LernenComponent implements OnInit {
       return;
     }
 
-    let s = fs[Math.floor(Math.random() * fs.length)]; // s ist aktiver status
-
-    console.log("aktiver status: neueKarte():") //TODO test
-    console.log(s)
-
-    let c = this.karten[this.karten.findIndex(e => e.id === s.card)]
-
-    console.log("karte und frage in neueKarte():")
-    console.log(c)
-    console.log(s)
-
+    let s = fs[Math.floor(Math.random() * fs.length)]; // s ist aktiver status 
     this.activeCard = s.card;
+    let c = this.karten[this.karten.findIndex(e => e.id === s.card)]
     this.frage = c.frage;
     this.antwort = c.antwort;
     this.antwortSichtbar = false;
@@ -131,24 +131,28 @@ export class LernenComponent implements OnInit {
   }
 
   lernen(antwort: number) {
+    if (this.user.name == 'public') {
+      this.neueKarte()
+    } else {
 
-    let newStat = this.lernenService.lernen(
-      antwort,
-      this.stats.filter(e => {
+      let newStat = this.lernenService.lernen(
+        antwort,
+        this.stats.filter(e => {
+          if (e.card == this.activeCard)
+            return true;
+          return false
+        })[0], this.settings)
+
+      this.stats = this.stats.filter(e => {
         if (e.card == this.activeCard)
-          return true;
-        return false
-      })[0], this.settings)
+          return false;
+        return true
+      })
+      this.stats.push(newStat)
 
-    this.stats = this.stats.filter(e => {
-      if (e.card == this.activeCard)
-        return false;
-      return true
-    })
-    this.stats.push(newStat)
-
-    this.statsService.updateStat(newStat.id, newStat).then(data => data.subscribe((d: any) => console.log(d)))
-    this.neueKarte()
+      this.statsService.updateStat(newStat.id, newStat).then(data => data.subscribe((d: any) => console.log(d)))
+      this.neueKarte()
+    }
   }
 
   ngOnInit(): void {

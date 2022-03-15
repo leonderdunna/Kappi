@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Post, Param, Put } from '@nestjs/common';
+import { StatsService } from 'src/stats/stats.service';
 import { User } from 'src/user/user.entity';
 
 import { UserService } from 'src/user/user.service';
@@ -6,7 +7,7 @@ import { UserService } from 'src/user/user.service';
 @Controller('users')
 export class UsersController {
 
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService,private statsService:StatsService) { }
 
     @Get()
     getUsers(): Promise<string[]> {
@@ -27,6 +28,7 @@ export class UsersController {
         let test = await this.userService.testPassword(params.username, params.password)
         if (test) {
             this.userService.deleteUser(params.username)
+            this.statsService.deleteByUser(params.username)
             return true
         }
         return false;
