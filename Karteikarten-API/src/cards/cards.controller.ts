@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Param, Body, Put, Delete } from '@nestjs/common';
+import { StatsService } from 'src/stats/stats.service';
 import { UserService } from 'src/user/user.service';
 import { Cards } from './card.entity';
 import { CardsService } from './cards.service';
@@ -7,7 +8,7 @@ import { CardsService } from './cards.service';
 export class CardsController {
 
     constructor(private cardsService: CardsService,
-    private userService:UserService) { }
+    private userService:UserService, private statsService: StatsService) { }
 
     @Get()
     getCards(): Promise<Cards[]> {
@@ -33,6 +34,7 @@ export class CardsController {
     @Delete(':username/:password/:id')
     deleteCard(@Param() params): void {
         this.cardsService.deleteCard(params.id)
+        this.statsService.deleteByCard(params.id)
     }
 
 }

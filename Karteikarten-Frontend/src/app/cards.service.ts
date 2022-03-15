@@ -21,13 +21,17 @@ export class CardsService {
   }
 
   getCard(id: any): Observable<any> {
-    return this.http.get('http://localhost/cards/public/public/' + id)
+    return this.http.get('http://localhost:3000/cards/public/public/' + id)
   }
 
   async addCard(card: any) {
     await this.http.post<any>('http://localhost:3000/cards/public/public', { "card": card }).subscribe(data => { console.log(data) })
     console.log("neue karte bei addCard in cardsService:")
     console.log(card)
+  }
+  async delete(id:any):Promise<Observable<any>>{
+    return this.http.delete('http://localhost:3000/cards/public/public/' + id)
+ 
   }
 
 }

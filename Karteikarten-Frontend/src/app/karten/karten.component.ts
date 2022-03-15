@@ -10,19 +10,24 @@ import { CardsService } from '../cards.service';
 export class KartenComponent implements OnInit {
 
 
-  constructor(private cardsService:CardsService, private router:Router) {
-    this.cardsService.getCards().then(data =>{this.karten = data})
-   }
+  constructor(private cardsService: CardsService, private router: Router) {
+    this.cardsService.getCards().then(data => { this.karten = data })
+  }
 
- 
+
   ngOnInit(): void {
   }
-  edit(id:any){
+  edit(id: any) {
     console.log("karte deren editor geöffnet wird ( edit() )")
     console.log(id)
     this.router.navigate([`edit/${id}`]);
   }
+  async delete(id: any) {
+     this.cardsService.delete(id).then(d => d.subscribe((e:any)=>{location.reload()}))
+    console.log(`karte ${id} wird gelöscht`)
 
-  displayedColumns:string[] = ["frage",'Bearbeiten','antwort']
-  karten =  []
+  }
+
+  displayedColumns: string[] = ["frage", 'Bearbeiten', 'löschen', 'antwort']
+  karten = []
 }

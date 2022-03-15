@@ -35,4 +35,7 @@ export class StatsService {
 
         return this.statsRepository.update(id, stat)
     }
+    async deleteByCard(card){
+        this.statsRepository.delete({"card":card})
+    }
 }
