@@ -24,4 +24,9 @@ export class StatsService {
   async removeStat(id:any):Promise<any>{
     return await this.http.delete('http://localhost:3000/stats/'+id)
   }
+  async updateStat(id:any,stat:any):Promise<any>{
+    return await this.http.put('http://localhost:3000/stats/'+id,{"stat":stat})
+ 
+  }
+
 }

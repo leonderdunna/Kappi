@@ -18,6 +18,7 @@ export class KartenComponent implements OnInit {
   ngOnInit(): void {
   }
   edit(id:any){
+    console.log("karte deren editor geöffnet wird ( edit() )")
     console.log(id)
     this.router.navigate([`edit/${id}`]);
   }

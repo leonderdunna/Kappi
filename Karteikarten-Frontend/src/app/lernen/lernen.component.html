@@ -5,10 +5,10 @@
 </div>
 <div class="antworten" *ngIf="antwortSichtbar">
 
-    <button (click)="neueKarte()" mat-button>Nochmal</button>
-    <button mat-button>Schwer</button>
-    <button mat-button>Gut</button>
-    <button mat-button>Einfach</button>
+    <button (click)="lernen(0)" mat-button>Nochmal</button>
+    <button (click)="lernen(1)" mat-button>Schwer</button>
+    <button (click)="lernen(2)" mat-button>Gut</button>
+    <button (click)="lernen(3)" mat-button>Einfach</button>
 </div>
 <div class="antworten" *ngIf="(!antwortSichtbar && !fertig) ">
     <button mat-button (click)="zeigeAntwort()">Antowrt zeigen</button>

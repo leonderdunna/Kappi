@@ -26,6 +26,7 @@ export class CardsService {
 
   async addCard(card: any) {
     await this.http.post<any>('http://localhost:3000/cards/public/public', { "card": card }).subscribe(data => { console.log(data) })
+    console.log("neue karte bei addCard in cardsService:")
     console.log(card)
   }
 

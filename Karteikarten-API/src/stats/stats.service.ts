@@ -17,7 +17,7 @@ export class StatsService {
     }
 
     async addStats(user: string, card: string, status: any): Promise<boolean> {
-        let u = await this.statsRepository.find({ "card": card })
+        let u = await this.statsRepository.find({ "card": card, "user":user })
         if (u.length == 0) {
             this.statsRepository.insert(status) //TODO
             return true

@@ -12,20 +12,21 @@ export class EditComponent implements OnInit {
     private route: ActivatedRoute,
   ) {
     this.route.params.subscribe(params => {
-    this.id = params['id'];
-    this.cardsService.getCard(this.id).subscribe(card => {
-      this.frage = card.frage;
-      this.antwort = card.antwort;
-      console.log(card)
-    })
-  });
+      this.id = params['id'];
+      this.cardsService.getCard(this.id).subscribe(card => {
+        this.frage = card.frage;
+        this.antwort = card.antwort;
+        console.log("zu editierende karte (im konstruktoer)")
+        console.log(card)
+      })
+    });
   }
-id = '';
-ngOnInit(): void {
-}
-frage: string = '';
-antwort: string = '';
-update(id: any) {
+  id = '';
+  ngOnInit(): void {
+  }
+  frage: string = '';
+  antwort: string = '';
+  update(id: any) {
 
-}
+  }
 }

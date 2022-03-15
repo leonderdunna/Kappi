@@ -20,6 +20,7 @@ user?:User;
   }
   changeUser(){
    this.user= this.userService.getUser()
+  location.reload();
   }
 
 }

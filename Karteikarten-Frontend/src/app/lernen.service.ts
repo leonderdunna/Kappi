@@ -20,18 +20,24 @@ export class LernenService {
   constructor() { }
 
   lernen(antwort: number, c: any, settings: any): any {
+
+
+    console.log("vorher:")//TODO nur für testzwecke
+    console.log(c)
+
+
     let zufall = 1;//TODO ist noch kein echter zufall ... sollte später zwischen 0.95 und 1.05 liegen
-    if(c.rubrik == false)
+    if (c.rubrik == false)
       c.rubrik = 0;
 
     if (c.rubrik == this.RUBRIK_NEU) {
       if (antwort == this.ANTWORT_EINFACH) {
         c.rubrik = this.RUBRIK_JUNG
         c.leichtigkeit = settings.startLeichtigkeit;
-        c.intervall = settings.startBeiEinfach;
+        c.intervall = settings.startEinfach;
         c.fällig = Date.now() + c.intervall
 
-      } else if (antwort == this.ANTWORT_NOCHMAL) {
+      } else if (antwort == this.ANTWORT_NOCHMAL || antwort == this.ANTWORT_SCHWIERIG) {
         c.rubrik = this.RUBRIK_LERNEN;
         c.stufe = 0;
         c.fällig = Date.now() + settings.lernenSchritte[0]
@@ -39,6 +45,7 @@ export class LernenService {
         c.rubrik = this.RUBRIK_LERNEN;
         c.stufe = 1;
         c.fällig = Date.now() + settings.lernenSchritte[1]
+
       } else { return false }
     }
 
@@ -54,7 +61,7 @@ export class LernenService {
           c.stufe = undefined;
           c.rubrik = this.RUBRIK_JUNG;
           c.leichtigkeit = settings.startLeichtigkeit;
-          c.intervall = settings.startBeiGut;
+          c.intervall = settings.startGut;
           c.fällig = Date.now() + c.intervall
         }
       } else if (antwort = this.ANTWORT_EINFACH) {
@@ -123,6 +130,10 @@ export class LernenService {
     if (c.gelernt)
       c.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
     else c.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
+
+
+    console.log("nachher:")//TODO nur für testzwecke
+    console.log(c)
 
     return c
   }

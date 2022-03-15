@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { CardsService } from '../cards.service';
 import { KartenComponent } from '../karten/karten.component';
+import { LernenService } from '../lernen.service';
 import { StatsService } from '../stats.service';
 import { User } from '../user.model';
 import { UserService } from '../user.service';
@@ -14,8 +15,8 @@ import { UserService } from '../user.service';
 })
 export class LernenComponent implements OnInit {
   constructor(private cardsService: CardsService, private router: Router, private statsService: StatsService,
-    private userService : UserService) {
-      this.user = this.userService.getUser();
+    private userService: UserService, private lernenService: LernenService) {
+    this.user = this.userService.getUser();
 
     this.statsService.getStats().then(data => {
       data.subscribe((s: any) => {
@@ -32,7 +33,8 @@ export class LernenComponent implements OnInit {
 
   }
 
-  user:User;
+
+  user: User;
   karten: any[] = [];
   stats: any[] = [];
 
@@ -56,30 +58,25 @@ export class LernenComponent implements OnInit {
   fertig = false;
 
   neueKartenHinzufügen() {
+    let änderung = false
     let statIds = this.stats.map(e => { return e.card })
     let cardIds = this.karten.map(e => { return e.id })
 
-    for(let id of cardIds){
-      if(!(statIds.indexOf(id)!== -1)){
+    for (let id of cardIds) {
+      if ((statIds.indexOf(id) == -1)) {
         this.addStatus(id)
+        änderung = true;
       }
     }
+
+    console.log("karten die übernommen wurden: neueKartenHinzufügen():")
     console.log(statIds)
+    console.log("alle kartenids neueKartenHinzufügen():")
     console.log(cardIds)
 
     //KEINE ENDLÖSUNG aber erstmal reichts
-    this.statsService.getStats().then(data => {
-      data.subscribe((s: any) => {
-        this.stats = s;
-
-        this.cardsService.getCards().then(data => {
-          data.subscribe((c: any) => {
-            this.karten = c; console.log(c);
-            //this.neueKarte()
-          })
-        });
-      })
-    });
+    if(änderung)
+      location.reload();
 
   }
 
@@ -87,8 +84,11 @@ export class LernenComponent implements OnInit {
     this.statsService.addStatus({
       "card": card,
       "rubrik": 0,
-      "user":this.user.name
-    }).then(data=>data.subscribe((d:any)=>console.log(d)))
+      "user": this.user.name
+    }).then(data => data.subscribe((d: any) => {
+      console.log("erfolg addStatus():")
+      console.log(d)
+    }))
   }
 
   neueKarte() {
@@ -104,8 +104,13 @@ export class LernenComponent implements OnInit {
     }
 
     let s = fs[Math.floor(Math.random() * fs.length)]; // s ist aktiver status
+
+    console.log("aktiver status: neueKarte():") //TODO test
     console.log(s)
+
     let c = this.karten[this.karten.findIndex(e => e.id === s.card)]
+
+    console.log("karte und frage in neueKarte():")
     console.log(c)
     console.log(s)
 
@@ -123,6 +128,27 @@ export class LernenComponent implements OnInit {
   keineKartenFällig() {
     this.antwortSichtbar = false;
     this.fertig = true;
+  }
+
+  lernen(antwort: number) {
+
+    let newStat = this.lernenService.lernen(
+      antwort,
+      this.stats.filter(e => {
+        if (e.card == this.activeCard)
+          return true;
+        return false
+      })[0], this.settings)
+
+    this.stats = this.stats.filter(e => {
+      if (e.card == this.activeCard)
+        return false;
+      return true
+    })
+    this.stats.push(newStat)
+
+    this.statsService.updateStat(newStat.id, newStat).then(data => data.subscribe((d: any) => console.log(d)))
+    this.neueKarte()
   }
 
   ngOnInit(): void {
