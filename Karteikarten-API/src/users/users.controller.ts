@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Post, Param, Put } from '@nestjs/common';
 import { StatsService } from 'src/stats/stats.service';
-import { User } from 'src/user/user.entity';
 
 import { UserService } from 'src/user/user.service';
 

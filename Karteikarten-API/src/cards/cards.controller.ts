@@ -8,7 +8,7 @@ import { CardsService } from './cards.service';
 export class CardsController {
 
     constructor(private cardsService: CardsService,
-    private userService:UserService, private statsService: StatsService) { }
+        private userService: UserService, private statsService: StatsService) { }
 
     @Get()
     getCards(): Promise<Cards[]> {
