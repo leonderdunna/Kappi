@@ -21,8 +21,7 @@ export class AccountSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.userService.getUser()
-
-  }
+ }
   changePasswort() {
     if (this.passwort == this.wpasswort) {
       this.userService.changePasswort(this.passwort).subscribe(

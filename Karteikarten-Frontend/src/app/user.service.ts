@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from './user.model';
-import {server} from './server'
+import { server } from './server'
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,20 @@ export class UserService {
   }
 
   user: User;
+  passwortwurdegeändert:boolean = false;
 
   getUser(): User {
+    //  return this.user
+    if(this.user.name != "public")
+    this.testPassword(this.user).subscribe(data => {
+      if (!data && !this.passwortwurdegeändert) {
+        this.passwortwurdegeändert= true
+        this.userSpeichern({ "name": "public", "password": "public" })
+        
+        alert("Ihr Passwort wurde auf einem anderen Gerät geändert. Bitte melden sie sich erneut an")
+        location.reload()
+      }
+    })
     return this.user
   }
 
@@ -24,22 +36,22 @@ export class UserService {
     this.user = user
   }
 
-  changePasswort(p:string){
-    return this.http.put(server+'users/'+this.user.name+'/'+this.user.password+'/'+p,{})
+  changePasswort(p: string) {
+    return this.http.put(server + 'users/' + this.user.name + '/' + this.user.password + '/' + p, {})
   }
 
   getAllUsers(): Observable<any> {
-    return this.http.get(server+'users')
+    return this.http.get(server + 'users')
   }
   testPassword(user: User): Observable<any> {
-    return this.http.get(server+'users/' + user.name + '/' + user.password)
+    return this.http.get(server + 'users/' + user.name + '/' + user.password)
   }
 
   addUser(user: User): Observable<any> {
-    return this.http.post(server+'users',
+    return this.http.post(server + 'users',
       { user: user })
   }
-  deleteAccount(){
-    return this.http.delete(server+'users/' + this.user.name + '/' + this.user.password)
+  deleteAccount() {
+    return this.http.delete(server + 'users/' + this.user.name + '/' + this.user.password)
   }
 }
