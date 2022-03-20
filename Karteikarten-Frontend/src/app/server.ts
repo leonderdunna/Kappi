@@ -1,0 +1,1 @@
+export const server:string = "https://yellow-chipmunk-3.loca.lt/"
