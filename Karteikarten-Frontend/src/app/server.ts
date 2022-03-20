@@ -1,1 +1,1 @@
-export const server:string = "https://yellow-chipmunk-3.loca.lt/"
+export const server:string = "https://karteikarten-online.loca.lt/"

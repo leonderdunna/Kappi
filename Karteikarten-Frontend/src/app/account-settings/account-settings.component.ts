@@ -29,11 +29,13 @@ export class AccountSettingsComponent implements OnInit {
         data => {
           if (data) {
             alert('Passwort wurde erfolgreich geändert')
+            location.reload()
           } else
             alert('Passwort konnte nicht geändert werden')
+            
         })
       this.userService.userSpeichern({ name: this.user?.name ?? 'public', password: this.passwort })
-      this.onSignin.emit(true)
+     // this.onSignin.emit(true)
     } else {
       alert('Bitte stellen Sie sicher, dass Sie das Passwort richtig eingegeben haben')
     }
