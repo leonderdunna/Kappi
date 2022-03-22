@@ -1,8 +1,14 @@
 <!-- wird später bestimmt app-card-module verwenden -->
 <div class="wrapper" *ngIf="!fertig">
+    <div class="wrapper" *ngIf="user.name=='public'">
+        <p>Sie befinden sich im Demo-Modus. Angezeigte Karten sind zufällig. Melden Sie sich an, um den Algorithmus zu
+            verwenden</p>
+    </div>
+
     <mat-card>{{frage}}</mat-card>
     <mat-card *ngIf="antwortSichtbar">{{antwort}}</mat-card>
 </div>
+
 <div class="antworten" *ngIf="antwortSichtbar">
 
     <button (click)="lernen(0)" mat-button>Nochmal</button>
