@@ -27,7 +27,10 @@ import { MatTableModule} from '@angular/material/table';
 import { EditComponent } from './edit/edit.component'
 import { FormsModule } from '@angular/forms';
 import { MatBadgeModule} from '@angular/material/badge';
-import { AboutComponent } from './about/about.component'
+import { AboutComponent } from './about/about.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -62,7 +65,10 @@ import { AboutComponent } from './about/about.component'
      MatTableModule,
      HttpClientModule,
      FormsModule,
-     MatBadgeModule
+     MatBadgeModule,
+     MatProgressBarModule,
+     MatProgressSpinnerModule,
+     MatChipsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

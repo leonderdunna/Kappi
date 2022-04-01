@@ -1,25 +1,28 @@
-.antworten{
-    position:fixed;
-    bottom:0;
-  margin:auto;
-  width:calc(100% - 4cm);
-left:2cm;
+.antworten {
+    position: fixed;
+    bottom: 0;
+    margin: auto;
+    width: calc(100% - 4cm);
+    left: 2cm;
     text-align: center;
-    *{
-        margin:0.5cm;
+    * {
+        margin: 0.5cm;
     }
 }
-.wrapper{
-    margin:1cm;
-    *{
-        margin:0.5cm;
+.wrapper {
+    margin: 1cm;
+    mat-card {
+        margin: 0.5cm;
+    }
+    mat-progress-bar {
+        margin: 0;
     }
 }
-.fertig{
-    margin:1cm;
-    mat-icon{
-      margin-left:0.3cm;
-      top:12px;
-      position: absolute;
+.fertig {
+    margin: 1cm;
+    mat-icon {
+        margin-left: 0.3cm;
+        top: 12px;
+        position: absolute;
     }
 }

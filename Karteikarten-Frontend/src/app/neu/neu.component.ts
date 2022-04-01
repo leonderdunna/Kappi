@@ -17,13 +17,19 @@ export class NeuComponent implements OnInit {
 
   add() {
     if (this.frage != '' && this.antwort != '') {
-      this.cardsService.addCard({ frage: this.frage, antwort: this.antwort })
-      this.frage = ''
-      this.antwort = ''
+      this.wirdgesendet = true;
+      this.cardsService.addCard({ frage: this.frage, antwort: this.antwort }).then((data) => {
+        this.wirdgesendet = false;
+        this.cards.push(this.frage)
+        this.frage = ''
+        this.antwort = ''
+      })
+     
     }
-    else{
-      console.log('du bist dumm')
+    else {
+      alert("Bitte geben sie eine Frage und eine Antwort ein!")
     }
   }
-
+  cards: any[] = []
+  wirdgesendet: boolean = false;
 }

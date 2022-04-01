@@ -1,4 +1,4 @@
- <table mat-table [dataSource]="karten" class="mat-elevation-z8">
+<table mat-table [dataSource]="karten" class="mat-elevation-z8">
 
 
 
@@ -7,20 +7,24 @@
         <td mat-cell *matCellDef="let karte"> {{karte.frage}} </td>
     </ng-container>
 
-    
+
     <ng-container matColumnDef="antwort">
         <th mat-header-cell *matHeaderCellDef> Antwort </th>
         <td mat-cell *matCellDef="let karte"> {{karte.antwort}} </td>
     </ng-container>
 
     <ng-container matColumnDef="Bearbeiten">
-        <th mat-header-cell *matHeaderCellDef>  </th>
-        <td mat-cell *matCellDef="let karte"><button (click)="edit(karte.id)" mat-icon-button> <mat-icon>edit</mat-icon></button> </td>
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let karte"><button (click)="edit(karte.id)" mat-icon-button>
+                <mat-icon>edit</mat-icon>
+            </button> </td>
     </ng-container>
 
     <ng-container matColumnDef="löschen">
-        <th mat-header-cell *matHeaderCellDef>  </th>
-        <td mat-cell *matCellDef="let karte"><button (click)="delete(karte.id)" mat-icon-button> <mat-icon>delete</mat-icon></button> </td>
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let karte"><button (click)="delete(karte.id)" mat-icon-button>
+                <mat-icon>delete</mat-icon>
+            </button> </td>
     </ng-container>
 
 

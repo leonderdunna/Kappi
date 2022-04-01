@@ -1,1 +1,1 @@
-export const server:string = "https://karteikarten-online.loca.lt/"
+export const server:string = "http://localhost:3000/"

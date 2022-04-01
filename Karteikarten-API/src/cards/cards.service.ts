@@ -17,8 +17,9 @@ export class CardsService {
     async findOne(id: number): Promise<Cards> {
         return this.cardsRepository.findOne(id)
     }
-    add(card: Cards): void {
+    add(card: Cards): boolean {
         this.cardsRepository.insert(card)
+        return true
     }
     deleteCard(id:ObjectID):void{
         this.cardsRepository.delete(id)

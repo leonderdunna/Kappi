@@ -21,9 +21,10 @@ export class CardsController {
     }
 
     @Post(':username/:password')
-    addCard(@Body() body): void {
+    addCard(@Body() body): any {
         console.log(body.card)
-        this.cardsService.add(body.card)
+       return this.cardsService.add(body.card)
+        
     }
 
     @Put(':username/:password')

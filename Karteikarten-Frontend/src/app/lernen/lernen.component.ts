@@ -50,7 +50,7 @@ export class LernenComponent implements OnInit {
     erneutSchritte: [1000 * 60 * 10]
   }
 
-  frage = ''
+  frage = 'Frage wird geladen...'
   antwort = ''
 
   activeCard = '';

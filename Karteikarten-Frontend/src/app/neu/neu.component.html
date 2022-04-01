@@ -1,4 +1,4 @@
-<div >
+<div>
 
     <mat-form-field appearance="standard">
         <mat-label>Frage</mat-label>
@@ -9,7 +9,15 @@
         <textarea [(ngModel)]="antwort" matInput placeholder="Beispiel: ca. 300m"></textarea>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" >Verwerfen</button>
-    <button mat-raised-button (click)="add()" color="accent" >Hinzufügen</button>
+    <button mat-raised-button color="primary">Verwerfen</button>
+    <button mat-raised-button *ngIf="!wirdgesendet" (click)="add()" color="accent">Hinzufügen</button>
+    <button mat-raised-button disabled *ngIf="wirdgesendet" color="accent">Lädt...</button>
+    <br />
+
+    <mat-chip-list  cdkDropListOrientation="horizontal">
+        <mat-chip  *ngFor="let card of cards">
+            {{card}}
+        </mat-chip>
+    </mat-chip-list>
 
 </div>

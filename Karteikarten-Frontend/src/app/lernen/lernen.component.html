@@ -5,8 +5,15 @@
             verwenden</p>
     </div>
 
-    <mat-card>{{frage}}</mat-card>
-    <mat-card *ngIf="antwortSichtbar">{{antwort}}</mat-card>
+    <mat-card>
+        <mat-card-content [innerHTML]="frage">Frage</mat-card-content>
+        <mat-card-footer *ngIf="karten.length==0">
+            <mat-progress-bar mode="indeterminate">d</mat-progress-bar>
+        </mat-card-footer>
+    </mat-card>
+    <mat-card *ngIf="antwortSichtbar">
+        <mat-card-content [innerHTML]="antwort">Antwort</mat-card-content>
+    </mat-card>
 </div>
 
 <div class="antworten" *ngIf="antwortSichtbar">
@@ -16,7 +23,7 @@
     <button (click)="lernen(2)" mat-button>Gut</button>
     <button (click)="lernen(3)" mat-button>Einfach</button>
 </div>
-<div class="antworten" *ngIf="(!antwortSichtbar && !fertig) ">
+<div class="antworten" *ngIf="(!antwortSichtbar && !fertig && (karten.length != 0)) ">
     <button mat-button (click)="zeigeAntwort()">Antwort zeigen</button>
 
 </div>
