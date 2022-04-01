@@ -18,13 +18,16 @@ export class NeuComponent implements OnInit {
   add() {
     if (this.frage != '' && this.antwort != '') {
       this.wirdgesendet = true;
-      this.cardsService.addCard({ frage: this.frage, antwort: this.antwort }).then((data) => {
-        this.wirdgesendet = false;
-        this.cards.push(this.frage)
-        this.frage = ''
-        this.antwort = ''
+      this.cardsService.addCard({ frage: this.frage, antwort: this.antwort }).subscribe((data) => {
+
+        if (data == true) {
+          this.wirdgesendet = false;
+          this.cards.push(this.frage)
+          this.frage = ''
+          this.antwort = ''
+        } else { this.wirdgesendet = false; alert("Frage konnte nicht hinzugefügt werden!") }
       })
-     
+
     }
     else {
       alert("Bitte geben sie eine Frage und eine Antwort ein!")
