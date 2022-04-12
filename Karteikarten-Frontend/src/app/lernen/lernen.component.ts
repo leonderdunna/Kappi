@@ -22,12 +22,7 @@ export class LernenComponent implements OnInit {
       data.subscribe((s: any) => {
         this.stats = s;
 
-        this.cardsService.getCards().then(data => {
-          data.subscribe((c: any) => {
-            this.karten = c; console.log(c);
-            this.neueKarte()
-          })
-        });
+        this.karten = this.cardsService.getCards();
       })
     });
 

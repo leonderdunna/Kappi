@@ -13,14 +13,12 @@ export class EditComponent implements OnInit {
   ) {
     this.route.params.subscribe(params => {
       this.id = params['id'];
-      this.cardsService.getCard(this.id).subscribe(card => {
-        this.frage = card.frage;
-        this.antwort = card.antwort;
-        console.log("zu editierende karte (im konstruktoer)")
-        console.log(card)
-      })
-    });
+      let card = this.cardsService.getCard(this.id);
+      this.frage = card.frage;
+      this.antwort = card.antwort;
+    })
   }
+
   id = '';
   ngOnInit(): void {
   }
