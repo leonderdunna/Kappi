@@ -10,8 +10,7 @@
     </mat-form-field>
 
     <button mat-raised-button color="primary">Verwerfen</button>
-    <button mat-raised-button *ngIf="!wirdgesendet" (click)="add()" color="accent">Hinzufügen</button>
-    <button mat-raised-button disabled *ngIf="wirdgesendet" color="accent">Lädt...</button>
+    <button mat-raised-button (click)="add()" color="accent">Hinzufügen</button>
     <br />
 
     <mat-chip-list  cdkDropListOrientation="horizontal">

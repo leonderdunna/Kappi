@@ -1,37 +1,46 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { User } from './user.model';
-import { UserService } from './user.service';
-import {server} from './server'
 
 @Injectable({
   providedIn: 'root'
 })
 export class CardsService {
 
-  constructor(private http: HttpClient,
-    private userService: UserService) {
-    this.user = userService.getUser();
+  constructor() { }
+
+  STORAGE_STRINGS: any = {
+    "cardIDs": "cardIDs",
+    "card": "card",
+    "newIDPräfix": "unSyncdCard"
   }
 
-  user: User;
-
-  async getCards(): Promise<any> {
-    return await this.http.get(server+'cards')
+  getCards(): any[] {
+    let cardIDs: string[] = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]');
+    let cards: any[] = [];
+    for (let card of cardIDs) {
+      cards.push(this.getCard(card));
+    }
+    return cards;
   }
 
-  getCard(id: any): Observable<any> {
-    return this.http.get(server+'cards/public/public/' + id)
+  getCard(id: string): any {
+    return JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.card + id) ?? 'false')
   }
 
-  addCard(card: any):Observable<any> {
-   return  this.http.post<any>(server+'cards/public/public', { "card": card })
-   
+  addCard(card: any): string {
+    card.new = true;
+    card.id = this.STORAGE_STRINGS.newIDPRäfix + Math.random();
+    window.localStorage.setItem(this.STORAGE_STRINGS.card + card.id, JSON.stringify(card))
+    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs)??'[]').push(card.id)))
+    return card.id;
   }
-  async delete(id:any):Promise<Observable<any>>{
-    return this.http.delete(server+'cards/public/public/' + id)
- 
+
+
+
+  delete(id: string): boolean {
+    window.localStorage.removeItem(this.STORAGE_STRINGS.card + id);
+    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs)??'[]').remove(id)));
+    return true;
+
   }
 
 }

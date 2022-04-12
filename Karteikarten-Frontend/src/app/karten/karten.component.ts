@@ -10,9 +10,7 @@ import { CardsService } from '../cards.service';
 export class KartenComponent implements OnInit {
 
   constructor(private cardsService: CardsService, private router: Router) {
-    this.cardsService.getCards().then(data => {
-      this.karten = data;
-    })
+   this.karten = this.cardsService.getCards()
   }
 
 
@@ -23,9 +21,9 @@ export class KartenComponent implements OnInit {
     console.log(id)
     this.router.navigate([`edit/${id}`]);
   }
-  async delete(id: any) {
-    this.cardsService.delete(id).then(d => d.subscribe((e: any) => { location.reload() }))
-    console.log(`karte ${id} wird gelöscht`)
+  delete(id: any) {
+    this.cardsService.delete(id);
+    this.karten = this.cardsService.getCards();
 
   }
 
