@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { CardsService } from '../cards.service';
-import { KartenComponent } from '../karten/karten.component';
 import { LernenService } from '../lernen.service';
 import { StatsService } from '../stats.service';
 import { User } from '../user.model';
 import { UserService } from '../user.service';
+import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'app-lernen',
@@ -14,17 +13,16 @@ import { UserService } from '../user.service';
   styleUrls: ['./lernen.component.scss']
 })
 export class LernenComponent implements OnInit {
-  constructor(private cardsService: CardsService, private router: Router, private statsService: StatsService,
-    private userService: UserService, private lernenService: LernenService) {
+  constructor(private cardsService: CardsService,
+    private router: Router,
+    private statsService: StatsService,
+    private userService: UserService,
+    private lernenService: LernenService,
+    private settingsService: SettingsService) {
     this.user = this.userService.getUser();
-
-    this.statsService.getStats().then(data => {
-      data.subscribe((s: any) => {
-        this.stats = s;
-
-        this.karten = this.cardsService.getCards();
-      })
-    });
+    this.stats = this.statsService.getStats();
+    this.karten = this.cardsService.getCards();
+    this.settings = this.settingsService.getSettings();
 
   }
 
@@ -32,18 +30,8 @@ export class LernenComponent implements OnInit {
   user: User;
   karten: any[] = [];
   stats: any[] = [];
+  settings: any;
 
-  settings = { //TODO: müssen später aus dem backend gehohlt werden
-    startLeichtigkeit: 2.5, // relative einheiten
-    neueProTag: 10,
-    lernenSchritte: [1000 * 60, 1000 * 60 * 10],
-    startEinfach: 1000 * 60 * 60 * 24 * 4,
-    startGut: 1000 * 60 * 60 * 24,
-    minIntervall: 1000 * 60 * 60 * 24,
-    maxIntervall: 1000 * 60 * 60 * 24 * 365 * 10,
-    faktorErneut: 0.75,  //relative einheiten
-    erneutSchritte: [1000 * 60 * 10]
-  }
 
   frage = 'Frage wird geladen...'
   antwort = ''
@@ -76,14 +64,11 @@ export class LernenComponent implements OnInit {
   }
 
   addStatus(card: any) {
-    this.statsService.addStatus({
+    this.statsService.addStat({
       "card": card,
       "rubrik": 0,
       "user": this.user.name
-    }).then(data => data.subscribe((d: any) => {
-      console.log("erfolg addStatus():")
-      console.log(d)
-    }))
+    })
   }
 
   neueKarte() {
@@ -126,29 +111,27 @@ export class LernenComponent implements OnInit {
   }
 
   lernen(antwort: number) {
-    if (this.user.name == 'public') {
-      this.neueKarte()
-    } else {
 
-      let newStat = this.lernenService.lernen(
-        antwort,
-        this.stats.filter(e => {
-          if (e.card == this.activeCard)
-            return true;
-          return false
-        })[0], this.settings)
 
-      this.stats = this.stats.filter(e => {
+    let newStat = this.lernenService.lernen(
+      antwort,
+      this.stats.filter(e => {
         if (e.card == this.activeCard)
-          return false;
-        return true
-      })
-      this.stats.push(newStat)
+          return true;
+        return false
+      })[0], this.settings)
 
-      this.statsService.updateStat(newStat.id, newStat).then(data => data.subscribe((d: any) => console.log(d)))
-      this.neueKarte()
-    }
+    this.stats = this.stats.filter(e => {
+      if (e.card == this.activeCard)
+        return false;
+      return true
+    })
+    this.stats.push(newStat)
+
+    this.statsService.updateStat(newStat)
+    this.neueKarte()
   }
+
 
   ngOnInit(): void {
   }

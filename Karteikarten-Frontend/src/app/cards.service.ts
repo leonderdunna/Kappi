@@ -30,17 +30,19 @@ export class CardsService {
     card.new = true;
     card.id = this.STORAGE_STRINGS.newIDPRäfix + Math.random();
     window.localStorage.setItem(this.STORAGE_STRINGS.card + card.id, JSON.stringify(card))
-    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs)??'[]').push(card.id)))
+    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]').push(card.id)))
     return card.id;
   }
 
-
-
   delete(id: string): boolean {
     window.localStorage.removeItem(this.STORAGE_STRINGS.card + id);
-    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs)??'[]').remove(id)));
+    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]').remove(id)));
     return true;
+  }
 
+  updateCard(card: any): void {
+    card.lastChange = Date.now()
+    window.localStorage.setItem(this.STORAGE_STRINGS.card + card.id, JSON.stringify(card))
   }
 
 }

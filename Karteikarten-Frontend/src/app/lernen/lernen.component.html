@@ -1,9 +1,6 @@
 <!-- wird später bestimmt app-card-module verwenden -->
 <div class="wrapper" *ngIf="!fertig">
-    <div class="wrapper" *ngIf="user.name=='public'">
-        <p>Sie befinden sich im Demo-Modus. Angezeigte Karten sind zufällig. Melden Sie sich an, um den Algorithmus zu
-            verwenden</p>
-    </div>
+   
 
     <mat-card>
         <mat-card-content [innerHTML]="frage">Frage</mat-card-content>

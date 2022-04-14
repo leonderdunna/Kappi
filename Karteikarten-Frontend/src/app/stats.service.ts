@@ -1,33 +1,48 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from './user.model';
-import { UserService } from './user.service';
-import { Observable } from 'rxjs';
-import {server} from './server'
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatsService {
 
-  constructor(private http: HttpClient, private userService: UserService) {
-    this.user = userService.getUser();
+  constructor() {
   }
-  user: User;
+  STORAGE_STRINGS: { statIDs: string, stat: string, newIDPräfix: string } = {
+    "statIDs": "statIDs",
+    "stat": "stat",
+    "newIDPräfix": "unSyncdStat"
+  }
 
-  async getStats(): Promise<any> {
-    return await this.http.get(server+'stats/' + this.user.name)
+  getStats(): any[]{
+    let statIDs: string[] = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.statIDs) ?? '[]');
+    let stats: any[] = [];
+    for (let statID of statIDs) {
+      stats.push(this.getStat(statID));
+    }
+    return stats;
+  }
+  getStat(id: string): any {
+    return JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.stat + id) ?? 'false')
   }
 
-  async addStatus(stat:any):Promise<any>{
-    return await this.http.post(server+'stats/',{"stats":stat})
+  addStat(stat: any): string {
+    stat.new = true;
+    stat.id = this.STORAGE_STRINGS.newIDPräfix + Math.random();
+    window.localStorage.setItem(this.STORAGE_STRINGS.stat + stat.id, JSON.stringify(stat))
+    window.localStorage.setItem(this.STORAGE_STRINGS.statIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.statIDs) ?? '[]').push(stat.id)))
+    return stat.id;
   }
-  async removeStat(id:any):Promise<any>{
-    return await this.http.delete(server+'stats/'+id)
+  delete(id: string): boolean {
+    window.localStorage.removeItem(this.STORAGE_STRINGS.stat + id);
+    window.localStorage.setItem(this.STORAGE_STRINGS.statIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.statIDs) ?? '[]').remove(id)));
+    return true;
+
   }
-  async updateStat(id:any,stat:any):Promise<any>{
-    return await this.http.put(server+'stats/'+id,{"stat":stat})
- 
+  updateStat(stat: any): void {
+    stat.lastChange = Date.now()
+    window.localStorage.setItem(this.STORAGE_STRINGS.stat + stat.id, JSON.stringify(stat))
+
   }
 
 }
