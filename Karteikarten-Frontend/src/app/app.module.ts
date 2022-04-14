@@ -31,6 +31,7 @@ import { AboutComponent } from './about/about.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatChipsModule} from '@angular/material/chips';
+import {MatMenuModule} from '@angular/material/menu'
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { MatChipsModule} from '@angular/material/chips';
      MatCardModule,
      MatFormFieldModule,
      MatInputModule,
+     MatMenuModule,
      MatTableModule,
      HttpClientModule,
      FormsModule,

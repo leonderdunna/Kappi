@@ -7,13 +7,14 @@ export class CardsService {
 
   constructor() { }
 
-  STORAGE_STRINGS: any = {
+  STORAGE_STRINGS: { cardIDs: string, card: string, newIDPräfix: string } = {
     "cardIDs": "cardIDs",
     "card": "card",
     "newIDPräfix": "unSyncdCard"
   }
 
   getCards(): any[] {
+
     let cardIDs: string[] = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]');
     let cards: any[] = [];
     for (let card of cardIDs) {
@@ -28,15 +29,21 @@ export class CardsService {
 
   addCard(card: any): string {
     card.new = true;
-    card.id = this.STORAGE_STRINGS.newIDPRäfix + Math.random();
+    card.id = this.STORAGE_STRINGS.newIDPräfix + Math.random();
+    console.log(card)
     window.localStorage.setItem(this.STORAGE_STRINGS.card + card.id, JSON.stringify(card))
-    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]').push(card.id)))
+    let cardsList = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]')
+    cardsList.push(card.id)
+    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(cardsList))
     return card.id;
   }
 
   delete(id: string): boolean {
     window.localStorage.removeItem(this.STORAGE_STRINGS.card + id);
-    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]').remove(id)));
+    let cardsList = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]')
+    console.log(cardsList)
+    cardsList = cardsList.filter((e: string) => e != id)
+    window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(cardsList));
     return true;
   }
 

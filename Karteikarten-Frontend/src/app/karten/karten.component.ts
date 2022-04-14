@@ -10,7 +10,7 @@ import { CardsService } from '../cards.service';
 export class KartenComponent implements OnInit {
 
   constructor(private cardsService: CardsService, private router: Router) {
-   this.karten = this.cardsService.getCards()
+    this.karten = this.cardsService.getCards()
   }
 
 
@@ -21,13 +21,18 @@ export class KartenComponent implements OnInit {
     console.log(id)
     this.router.navigate([`edit/${id}`]);
   }
+
+  neu() {
+    this.router.navigate([`neu`])
+  }
+
   delete(id: any) {
     this.cardsService.delete(id);
     this.karten = this.cardsService.getCards();
 
   }
 
-  displayedColumns: string[] = ["frage", 'löschen', 'antwort']
+  displayedColumns: string[] = ["frage", 'mehr', 'antwort']
   karten: any[] = []
 
 }

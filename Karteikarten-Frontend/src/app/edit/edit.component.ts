@@ -13,18 +13,28 @@ export class EditComponent implements OnInit {
   ) {
     this.route.params.subscribe(params => {
       this.id = params['id'];
-      let card = this.cardsService.getCard(this.id);
-      this.frage = card.frage;
-      this.antwort = card.antwort;
+      this.card = this.cardsService.getCard(this.id);
+      this.frage = this.card.frage;
+      this.antwort = this.card.antwort;
     })
   }
-
+  card:any ;
   id = '';
   ngOnInit(): void {
   }
   frage: string = '';
   antwort: string = '';
-  update(id: any) {
-
+  update() {
+    if(this.frage == '' || this.antwort ==''){
+      alert('Weder Antwort noch Frage dürfen leer sein!')
+      return;
+    }
+    this.card.frage=this.frage;
+    this.card.antwort=this.antwort;
+    this.cardsService.updateCard(this.card)
+  }
+  reset(){
+    this.frage = this.card.frage;
+    this.antwort = this.card.antwort;
   }
 }

@@ -26,5 +26,9 @@ export class NeuComponent implements OnInit {
       alert("Bitte geben sie eine Frage und eine Antwort ein!")
     }
   }
+  verwerfen() {
+    this.frage = '';
+    this.antwort = '';
+  }
   cards: any[] = [];
 }

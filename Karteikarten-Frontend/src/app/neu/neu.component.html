@@ -9,7 +9,7 @@
         <textarea [(ngModel)]="antwort" matInput placeholder="Beispiel: ca. 300m"></textarea>
     </mat-form-field>
 
-    <button mat-raised-button color="primary">Verwerfen</button>
+    <button mat-raised-button (click)="verwerfen()" color="primary">Verwerfen</button>
     <button mat-raised-button (click)="add()" color="accent">Hinzufügen</button>
     <br />
 
