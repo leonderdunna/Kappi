@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CardsService } from '../services/cards.service';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Card } from '../objekte/card.model';
 @Component({
   selector: 'app-edit',
@@ -19,7 +19,7 @@ export class EditComponent implements OnInit {
       this.antwort = this.card.antwort;
     })
   }
-  card?:Card ;
+  card:Card ={frage:'',antwort:''};
   id = '';
   ngOnInit(): void {
   }

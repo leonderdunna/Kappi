@@ -1,14 +1,14 @@
-<!-- wird später bestimmt app-card-module verwenden -->
-<div class="wrapper" *ngIf="!fertig">
-    <mat-card *ngIf="karten.length==0">
-        <mat-card-title>Noch keine Karten wurden erstellt</mat-card-title>
+
+<div class="wrapper">
+    <mat-card *ngIf="karten.length==0 ">
+        <mat-card-subtitle>Noch keine Karten wurden erstellt</mat-card-subtitle>
 
         <button class="add" mat-button (click)="routeNeueKarte()">
             <mat-icon>add_circle</mat-icon>
             <span class="menu-text">Neue Karte</span>
         </button>
     </mat-card>
-    <mat-card *ngIf="activeCard != ''">
+    <mat-card *ngIf="activeCard != '' && !fertig">
         <mat-card-content [innerHTML]="frage">Frage</mat-card-content>
 
     </mat-card>
@@ -28,7 +28,7 @@
     <button mat-button (click)="zeigeAntwort()">Antwort zeigen</button>
 
 </div>
-<div class="fertig" *ngIf="fertig">
+<div class="fertig" *ngIf="fertig && karten.length >0">
     <mat-card>
         Sie sind für Heute fertig.
         <mat-icon>thumb_up</mat-icon>

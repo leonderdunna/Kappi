@@ -22,7 +22,7 @@ export class LernenComponent implements OnInit {
     this.stats = this.statsService.getStats();
     this.karten = this.cardsService.getCards();
     this.settings = this.settingsService.getSettings();
-
+    this.neueKarte()
   }
 
 
@@ -42,40 +42,63 @@ export class LernenComponent implements OnInit {
     this.router.navigate([`neu`])
   }
 
-  neueKartenHinzufügen() {
+  neueKartenHinzufügen(): boolean {
     let statIds = this.stats.map(e => { return e.card })
     let cardIds = this.karten.map(e => { return e.id })
 
+    let änderung = false
     for (let id of cardIds) {
       if (!id) { console.error('Abgespeicherte karte ohne ID'); continue; }
-      if ((statIds.indexOf(id) == -1))
+      if ((statIds.indexOf(id) == -1)) {
         this.addStatus(id)
+        änderung = true;
+      }
     }
+    return änderung;
   }
 
   addStatus(cardID: string) {
     this.statsService.addStat({
       "card": cardID,
       "rubrik": 0,
+      'fällig': Date.now(),
+      'unsynced': true,
+      'leichtigkeit': this.settings.startLeichtigkeit,
     })
+    this.stats = this.statsService.getStats();
   }
 
   neueKarte() {
 
+    this.stats = this.statsService.getStats();
+    this.karten = this.cardsService.getCards();
+
+    console.log(this.stats)
+    console.log(this.karten)
 
     let fs = this.stats.filter(e => {
-      if(!e.fällig) return true;
+      if (!e.fällig) return true;
       if (e.rubrik == 0 || e.fällig < Date.now()) return true; return false
     }) //fs steht für gefilterter status NICHT für filesystem
+    console.log(fs)
 
     if (fs.length == 0) {
-      this.neueKartenHinzufügen();
-      this.keineKartenFällig();
+      if (!this.neueKartenHinzufügen()) {
+        this.keineKartenFällig();
+        return;
+      }
+      this.neueKarte();
       return;
     }
 
     let s = fs[Math.floor(Math.random() * fs.length)]; // s ist aktiver status 
     this.activeCard = s.card;
+    if (this.karten.findIndex(e => e.id === s.card) == -1) {
+      if (!s.id) { console.error('Stat ohne ID!!!'); return; }
+      this.statsService.delete(s.id)
+      this.neueKarte();
+      return;
+    }
     let c = this.karten[this.karten.findIndex(e => e.id === s.card)]
     this.frage = c.frage;
     this.antwort = c.antwort;
@@ -94,6 +117,13 @@ export class LernenComponent implements OnInit {
   }
 
   lernen(antwort: number) {
+    console.log('aktive karte:' + this.activeCard)
+    console.log('antwort:' + antwort)
+    console.log(this.stats.filter(e => {
+      if (e.card == this.activeCard)
+        return true;
+      return false
+    })[0])
     let newStat = this.lernenService.lernen(
       antwort,
       this.stats.filter(e => {

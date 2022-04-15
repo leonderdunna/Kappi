@@ -24,8 +24,8 @@ export class LernenService {
   lernen(antwort: number, stat: Stat, settings: Settings): Stat | false {
 
     //Überprüfen ob alles wichtige da ist
-    if(!stat.leichtigkeit){console.error('Leichtigkeit bei der karte war vorher nicht da');return false;}
-    if(!stat.intervall){console.error('Intervall bei der karte war vorher nicht da');return false;}
+    if (!stat) { console.error('Stat wurde nicht übermittelt'); return false; }
+    if (!stat.leichtigkeit) { console.error('Leichtigkeit bei der karte war vorher nicht da'); return false; }
 
 
     console.log("vorher:")//TODO nur für testzwecke
@@ -76,6 +76,11 @@ export class LernenService {
       } else { return false }
     }
     else if (stat.rubrik == this.RUBRIK_JUNG || stat.rubrik == this.RUBRIK_ALT) {
+
+      //Überürüfen ob intervall da ist
+      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da'); return false; }
+
+
       if (antwort == this.ANTWORT_NOCHMAL) {
         stat.rubrik = this.RUBRIK_ERNEUT_LERNEN;
         stat.stufe = 0;
@@ -98,6 +103,10 @@ export class LernenService {
         stat.fällig = Date.now() + stat.intervall;
       } else return false
     } else if (stat.rubrik == this.RUBRIK_ERNEUT_LERNEN) {
+
+      //Überürüfen ob intervall da ist
+      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da'); return false; }
+
       if (antwort == this.ANTWORT_NOCHMAL) {
         stat.stufe = 0;
         stat.fällig = Date.now() + settings.erneutLernenSchritte[0]
@@ -124,14 +133,17 @@ export class LernenService {
       } else return false
     } else return false
 
-    if (stat.rubrik == this.RUBRIK_JUNG || stat.rubrik == this.RUBRIK_ALT)
+    if (stat.rubrik == this.RUBRIK_JUNG || stat.rubrik == this.RUBRIK_ALT) {
+
+      //Überürüfen ob intervall da ist
+      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da'); return false; }
+
       //wenn intervall über einen monat ist wird die rubrik alt... hat nur einfluss auf eventuelle statistiken
       if (stat.intervall >= 1000 * 60 * 60 * 24 * 30)
         stat.rubrik = this.RUBRIK_ALT;
       else stat.rubrik = this.RUBRIK_JUNG;
-
-    if (stat.gelernt)
-      stat.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
+    }
+    if (stat.gelernt) stat.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
     else stat.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
 
 

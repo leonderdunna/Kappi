@@ -10,7 +10,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MainNavComponent } from './main-nav/main-nav.component';
-import { CardComponent } from './card/card.component'
 import { MatCardModule } from '@angular/material/card';
 import { LernenComponent } from './lernen/lernen.component';
 import { SettingsComponent } from './settings/settings.component'
@@ -38,7 +37,7 @@ import {MatTabsModule} from '@angular/material/tabs'
   declarations: [
      AppComponent,
      MainNavComponent,
-     CardComponent,
+    
      LernenComponent,
      SettingsComponent,
      PaketeComponent,
