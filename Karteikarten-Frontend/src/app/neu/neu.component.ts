@@ -18,7 +18,7 @@ export class NeuComponent implements OnInit {
   add() {
     if (this.frage != '' && this.antwort != '') {
       this.cardsService.addCard({ frage: this.frage, antwort: this.antwort });
-      this.cards.push(this.frage);
+      this.cards.unshift(this.frage);
       this.frage = '';
       this.antwort = '';
     }

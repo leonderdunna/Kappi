@@ -19,5 +19,6 @@ export class SettingsService {
        faktorErneut: 0.75,  //relative einheiten
        erneutSchritte: [1000 * 60 * 10]
      }
-   }
+  }
+  
 }

@@ -2,16 +2,15 @@
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset) ? 'dialog' : 'navigation'"
     [mode]="(isHandset) ? 'over' : 'side'" [opened]="(isHandset) === false">
     <mat-toolbar>Karteikarten</mat-toolbar>
+    <mat-divider></mat-divider>
     <mat-nav-list (click)="drawer.toggle()">
-      <a mat-list-item routerLink="/">
+
+      <a mat-list-item  routerLink="/">
         <mat-icon>school</mat-icon>
         <span class="menu-text">Lernen</span>
       </a>
-      <!-- <a mat-list-item routerLink="pakete">
-        <mat-icon>book</mat-icon>
-        <span class="menu-text">Pakete</span>
-      </a> -->
-      <a mat-list-item routerLink="karten">
+
+      <a mat-list-item  routerLink="karten">
         <mat-icon>list</mat-icon>
         <span class="menu-text">Karten</span>
       </a>
@@ -19,24 +18,35 @@
         <mat-icon>add_circle</mat-icon>
         <span class="menu-text">Neue Karte</span>
       </a>
-      <!-- <a mat-list-item routerLink="statistiken">
-        <mat-icon>assessment</mat-icon>
-        <span matBadge="!" matBadgeColor="warn" class="menu-text">Statistiken</span>
-      </a> -->
+      
+      <mat-divider class="trennen"> </mat-divider>
       <a mat-list-item routerLink="account">
-        <mat-icon>account_circle</mat-icon>
-        <span class="menu-text">Mein Account</span>
+        <mat-icon>sync</mat-icon>
+        <span class="menu-text">Synchronisieren</span>
       </a>
-      <!-- <a mat-list-item routerLink="einstellungen">
+      <a mat-list-item  routerLink="pakete">
+        <mat-icon>book</mat-icon>
+        <span class="menu-text">Pakete</span>
+      </a>
+      <a mat-list-item  routerLink="statistiken">
+        <mat-icon>assessment</mat-icon>
+        <span matBadgeColor="warn" class="menu-text">Statistiken</span>
+      </a>
+      <a mat-list-item  routerLink="einstellungen">
         <mat-icon>settings</mat-icon>
         <span class="menu-text">Einstellungen</span>
-      </a> -->
-      
+      </a>
+      <mat-divider class="trennen"></mat-divider>
       <a mat-list-item routerLink="about">
         <mat-icon>info</mat-icon>
         <span class="menu-text">Das Projekt</span>
       </a>
-      
+
+      <a mat-list-item target="_blank" href="https://github.com/leonderdunna/Karteikarten/issues/new">
+        <mat-icon>bug_report</mat-icon>
+        <span class="menu-text">Fehler melden</span>
+      </a>
+
 
     </mat-nav-list>
   </mat-sidenav>
