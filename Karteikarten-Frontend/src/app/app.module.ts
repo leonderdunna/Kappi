@@ -31,13 +31,18 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatChipsModule} from '@angular/material/chips';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatTabsModule} from '@angular/material/tabs'
+import {MatTabsModule} from '@angular/material/tabs';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
+import { provideDatabase,getDatabase } from '@angular/fire/database';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { providePerformance,getPerformance } from '@angular/fire/performance';
 
 @NgModule({
   declarations: [
      AppComponent,
      MainNavComponent,
-    
      LernenComponent,
      SettingsComponent,
      PaketeComponent,
@@ -71,9 +76,18 @@ import {MatTabsModule} from '@angular/material/tabs'
      MatBadgeModule,
      MatProgressBarModule,
      MatProgressSpinnerModule,
-     MatChipsModule
+     MatChipsModule,
+      provideFirebaseApp(() => initializeApp(environment.firebase)),
+    //  provideAnalytics(() => getAnalytics()),
+      provideDatabase(() => getDatabase()),
+      provideFirestore(() => getFirestore()),
+      providePerformance(() => getPerformance())
   ],
-  providers: [],
+  providers: [
+    ScreenTrackingService,UserTrackingService
+  ],
   bootstrap: [AppComponent]
 })
+
+
 export class AppModule { }
