@@ -1,1 +1,71 @@
-<p>Einstelungen</p>
+<div class="wrapper">
+    <h1>Einstellungen</h1>  
+    <button mat-raised-button (click)="update()"color="accent">Speichern</button>
+  
+    <mat-tab-group>
+        <mat-tab label="Täglicher Grenzwert">
+
+            <div class="wrapper">
+
+                <mat-form-field>
+                    <mat-label>Neue Karten / Tag</mat-label>
+                    <input [(ngModel)]="settings.neueProTag" matInput placeholder="10">
+                </mat-form-field><br>
+                <mat-form-field>
+                    <mat-label> Max. Wiederholungen / Tag</mat-label>
+                    <input [(ngModel)]="settings.kartenProTag" matInput placeholder="10">
+                </mat-form-field>
+            </div>
+
+        </mat-tab>
+        <mat-tab label="Neue Karten">
+            <!-- Lernstufen -->
+
+
+            <div class="wrapper">
+                <mat-form-field>
+                    <mat-label>Intervall für Aufstieg</mat-label>
+                    <input [(ngModel)]="settings.startGut" matInput placeholder="10">
+                </mat-form-field><br>
+                <mat-form-field>
+                    <mat-label>Intervall für einfache Karten</mat-label>
+                    <input [(ngModel)]="settings.startEinfach" matInput placeholder="10">
+                </mat-form-field>
+            </div>
+        </mat-tab>
+        <mat-tab label="Fehlschläge">
+            <!-- Schritte für das erneute Lernen -->
+
+
+            <div class="wrapper">
+
+                <mat-form-field>
+                    <mat-label>Mindestintervall</mat-label>
+                    <input [(ngModel)]="settings.minIntervall" matInput placeholder="10">
+                </mat-form-field>
+            </div>
+
+        </mat-tab>
+        <mat-tab label="Erweitert">
+            <div class="wrapper">
+                <mat-form-field>
+                    <mat-label>Anfängliche Leichtigkeit</mat-label>
+                    <input [(ngModel)]="settings.startLeichtigkeit" matInput placeholder="10">
+                </mat-form-field><br>
+                <mat-form-field>
+                    <mat-label>Neues Intervall</mat-label>
+                    <input [(ngModel)]="settings.faktorErneut" matInput placeholder="10">
+                </mat-form-field><br>
+                <mat-form-field>
+                    <mat-label>Höchstintervall</mat-label>
+                    <input [(ngModel)]="settings.maxIntervall" matInput placeholder="10">
+                </mat-form-field>
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+   
+
+
+
+</div>

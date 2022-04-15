@@ -31,7 +31,8 @@ import { AboutComponent } from './about/about.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatChipsModule} from '@angular/material/chips';
-import {MatMenuModule} from '@angular/material/menu'
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTabsModule} from '@angular/material/tabs'
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import {MatMenuModule} from '@angular/material/menu'
   ],
   imports: [
      BrowserModule,
+     MatTabsModule,
      AppRoutingModule,
      BrowserAnimationsModule,
      MatButtonModule,
