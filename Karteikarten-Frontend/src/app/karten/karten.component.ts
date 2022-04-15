@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Card } from '../objekte/card.model';
 import { CardsService } from '../services/cards.service';
 
 @Component({
@@ -16,9 +17,7 @@ export class KartenComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  edit(id: any) {
-    console.log("karte deren editor geöffnet wird ( edit() )")
-    console.log(id)
+  edit(id: string) {
     this.router.navigate([`edit/${id}`]);
   }
 
@@ -26,13 +25,13 @@ export class KartenComponent implements OnInit {
     this.router.navigate([`neu`])
   }
 
-  delete(id: any) {
+  delete(id: string) {
     this.cardsService.delete(id);
     this.karten = this.cardsService.getCards();
 
   }
 
   displayedColumns: string[] = ["frage", 'mehr', 'antwort']
-  karten: any[] = []
+  karten: Card[] = []
 
 }

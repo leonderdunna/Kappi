@@ -14,20 +14,20 @@ export class UserService {
   }
 
   user: User;
-  passwortwurdegeändert:boolean = false;
+  passwortwurdegeändert: boolean = false;
 
   getUser(): User {
     //  return this.user
-    if(this.user.name != "public")
-    this.testPassword(this.user).subscribe(data => {
-      if (!data && !this.passwortwurdegeändert) {
-        this.passwortwurdegeändert= true
-        this.userSpeichern({ "name": "public", "password": "public" })
-        
-        alert("Ihr Passwort wurde auf einem anderen Gerät geändert. Bitte melden sie sich erneut an")
-        location.reload()
-      }
-    })
+    if (this.user.name != "public")
+      this.testPassword(this.user).subscribe(data => {
+        if (!data && !this.passwortwurdegeändert) {
+          this.passwortwurdegeändert = true
+          this.userSpeichern({ "name": "public", "password": "public" })
+
+          alert("Ihr Passwort wurde auf einem anderen Gerät geändert. Bitte melden sie sich erneut an")
+          location.reload()
+        }
+      })
     return this.user
   }
 
@@ -41,17 +41,16 @@ export class UserService {
   }
 
   getAllUsers(): Observable<any> {
-    return this.http.get(server + 'users')
+    return this.http.get(server + 'users');
   }
   testPassword(user: User): Observable<any> {
-    return this.http.get(server + 'users/' + user.name + '/' + user.password)
+    return this.http.get(server + 'users/' + user.name + '/' + user.password);
   }
 
   addUser(user: User): Observable<any> {
-    return this.http.post(server + 'users',
-      { user: user })
+    return this.http.post(server + 'users', { user: user });
   }
   deleteAccount() {
-    return this.http.delete(server + 'users/' + this.user.name + '/' + this.user.password)
+    return this.http.delete(server + 'users/' + this.user.name + '/' + this.user.password);
   }
 }

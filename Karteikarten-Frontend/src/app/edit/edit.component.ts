@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CardsService } from '../services/cards.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Card } from '../objekte/card.model';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -18,7 +19,7 @@ export class EditComponent implements OnInit {
       this.antwort = this.card.antwort;
     })
   }
-  card:any ;
+  card?:Card ;
   id = '';
   ngOnInit(): void {
   }
@@ -29,11 +30,13 @@ export class EditComponent implements OnInit {
       alert('Weder Antwort noch Frage dürfen leer sein!')
       return;
     }
+    if(!this.card){console.error('Karte gibt es nicht');return;}
     this.card.frage=this.frage;
     this.card.antwort=this.antwort;
     this.cardsService.updateCard(this.card)
   }
   reset(){
+    if(!this.card){console.error('Karte gibt es nicht');return;}
     this.frage = this.card.frage;
     this.antwort = this.card.antwort;
   }

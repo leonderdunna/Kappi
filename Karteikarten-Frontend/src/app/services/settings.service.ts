@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Settings } from '../objekte/settings.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +8,8 @@ export class SettingsService {
 
   constructor() { }
 
-  getSettings():any {
-    let settings: any = JSON.parse(window.localStorage.getItem("einstellungen") ?? 'false')
+  getSettings():Settings {
+    let settings: Settings |false = JSON.parse(window.localStorage.getItem("einstellungen") ?? 'false')
     if (settings == false)
       return { //standardeinstellungen
         startLeichtigkeit: 2.5, // relative einheiten
@@ -19,12 +20,13 @@ export class SettingsService {
         startGut: 1000 * 60 * 60 * 24,
         minIntervall: 1000 * 60 * 60 * 24,
         maxIntervall: 1000 * 60 * 60 * 24 * 365 * 10,
-        faktorErneut: 0.75,  //relative einheiten
-        erneutSchritte: [1000 * 60 * 10]
+        faktorNachErneutemLernen: 0.75,  //relative einheiten
+        erneutLernenSchritte: [1000 * 60 * 10],
+        bonus:1.3,
       }
     return settings
   }
-  update(settings:any):void {
+  update(settings:Settings):void {
     window.localStorage.setItem('einstellungen',JSON.stringify(settings))
   }
 }

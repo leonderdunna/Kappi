@@ -5,6 +5,8 @@ import { StatsService } from '../services/stats.service';
 import { SettingsService } from '../services/settings.service';
 import { Router } from '@angular/router';
 import { Card } from '../objekte/card.model';
+import { Stat } from '../objekte/stat.model';
+import { Settings } from '../objekte/settings.model';
 
 @Component({
   selector: 'app-lernen',
@@ -20,13 +22,13 @@ export class LernenComponent implements OnInit {
     this.stats = this.statsService.getStats();
     this.karten = this.cardsService.getCards();
     this.settings = this.settingsService.getSettings();
-    
+
   }
 
 
   karten: Card[] = [];
-  stats: any[] = [];
-  settings: any;
+  stats: Stat[] = [];
+  settings: Settings;
 
 
   frage = 'Frage wird geladen...'
@@ -39,14 +41,15 @@ export class LernenComponent implements OnInit {
   routeNeueKarte() {
     this.router.navigate([`neu`])
   }
+
   neueKartenHinzufügen() {
     let statIds = this.stats.map(e => { return e.card })
     let cardIds = this.karten.map(e => { return e.id })
 
     for (let id of cardIds) {
-      if ((statIds.indexOf(id) == -1)) {
+      if (!id) { console.error('Abgespeicherte karte ohne ID'); continue; }
+      if ((statIds.indexOf(id) == -1))
         this.addStatus(id)
-      }
     }
   }
 
@@ -61,7 +64,8 @@ export class LernenComponent implements OnInit {
 
 
     let fs = this.stats.filter(e => {
-      if (e.rubrik == 0 || e.rubrik == false || e.fällig < Date.now()) return true; return false
+      if(!e.fällig) return true;
+      if (e.rubrik == 0 || e.fällig < Date.now()) return true; return false
     }) //fs steht für gefilterter status NICHT für filesystem
 
     if (fs.length == 0) {
@@ -83,14 +87,13 @@ export class LernenComponent implements OnInit {
   zeigeAntwort() {
     this.antwortSichtbar = true;
   }
+
   keineKartenFällig() {
     this.antwortSichtbar = false;
     this.fertig = true;
   }
 
   lernen(antwort: number) {
-
-
     let newStat = this.lernenService.lernen(
       antwort,
       this.stats.filter(e => {
@@ -104,12 +107,12 @@ export class LernenComponent implements OnInit {
         return false;
       return true
     })
+    if (!newStat) { console.error('Beim Lernen ist ein Fehler aufgetreen'); return }
     this.stats.push(newStat)
 
     this.statsService.updateStat(newStat)
     this.neueKarte()
   }
-
 
   ngOnInit(): void {
   }

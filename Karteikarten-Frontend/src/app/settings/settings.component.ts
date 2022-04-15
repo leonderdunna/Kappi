@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Settings } from '../objekte/settings.model';
 import { SettingsService } from '../services/settings.service';
 
 
@@ -13,7 +14,7 @@ export class SettingsComponent implements OnInit {
     this.settings = this.settingsService.getSettings();
    }
 
- settings:any;
+ settings:Settings;
   ngOnInit(): void {
   }
   update(){

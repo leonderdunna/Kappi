@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Settings } from '../objekte/settings.model';
+import { Stat } from '../objekte/stat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,123 +21,124 @@ export class LernenService {
 
   constructor() { }
 
-  lernen(antwort: number, c: any, settings: any): any {
+  lernen(antwort: number, stat: Stat, settings: Settings): Stat | false {
+
+    //Überprüfen ob alles wichtige da ist
+    if(!stat.leichtigkeit){console.error('Leichtigkeit bei der karte war vorher nicht da');return false;}
+    if(!stat.intervall){console.error('Intervall bei der karte war vorher nicht da');return false;}
 
 
     console.log("vorher:")//TODO nur für testzwecke
-    console.log(c)
+    console.log(stat)
 
 
     let zufall = 1;//TODO ist noch kein echter zufall ... sollte später zwischen 0.95 und 1.05 liegen
-    if (c.rubrik == false)
-      c.rubrik = 0;
 
-    if (c.rubrik == this.RUBRIK_NEU) {
+    if (stat.rubrik == this.RUBRIK_NEU) {
       if (antwort == this.ANTWORT_EINFACH) {
-        c.rubrik = this.RUBRIK_JUNG
-        c.leichtigkeit = settings.startLeichtigkeit;
-        c.intervall = settings.startEinfach;
-        c.fällig = Date.now() + c.intervall
+        stat.rubrik = this.RUBRIK_JUNG
+        stat.leichtigkeit = settings.startLeichtigkeit;
+        stat.intervall = settings.startEinfach;
+        stat.fällig = Date.now() + stat.intervall
 
       } else if (antwort == this.ANTWORT_NOCHMAL || antwort == this.ANTWORT_SCHWIERIG) {
-        c.rubrik = this.RUBRIK_LERNEN;
-        c.stufe = 0;
-        c.fällig = Date.now() + settings.lernenSchritte[0]
+        stat.rubrik = this.RUBRIK_LERNEN;
+        stat.stufe = 0;
+        stat.fällig = Date.now() + settings.lernenSchritte[0]
       } else if (antwort == this.ANTWORT_GUT) {
-        c.rubrik = this.RUBRIK_LERNEN;
-        c.stufe = 1;
-        c.fällig = Date.now() + settings.lernenSchritte[1]
+        stat.rubrik = this.RUBRIK_LERNEN;
+        stat.stufe = 1;
+        stat.fällig = Date.now() + settings.lernenSchritte[1]
 
       } else { return false }
     }
 
-    else if (c.rubrik == this.RUBRIK_LERNEN) {
+    else if (stat.rubrik == this.RUBRIK_LERNEN) {
       if (antwort == this.ANTWORT_NOCHMAL) {
-        c.stufe = 0;
-        c.fällig = Date.now() + settings.lernenSchritte[0]
+        stat.stufe = 0;
+        stat.fällig = Date.now() + settings.lernenSchritte[0]
       } else if (antwort == this.ANTWORT_GUT) {
-        if (c.stufe < settings.lernenSchritte.length - 1) {
-          c.stufe++
-          c.fällig = Date.now() + settings.lernenSchritte[c.stufe]
+        if (stat.stufe ?? 0 < settings.lernenSchritte.length - 1) {
+          stat.stufe = (stat.stufe ?? 0) + 1
+          stat.fällig = Date.now() + settings.lernenSchritte[stat.stufe]
         } else {
-          c.stufe = undefined;
-          c.rubrik = this.RUBRIK_JUNG;
-          c.leichtigkeit = settings.startLeichtigkeit;
-          c.intervall = settings.startGut;
-          c.fällig = Date.now() + c.intervall
+          stat.stufe = undefined;
+          stat.rubrik = this.RUBRIK_JUNG;
+          stat.leichtigkeit = settings.startLeichtigkeit;
+          stat.intervall = settings.startGut;
+          stat.fällig = Date.now() + stat.intervall
         }
       } else if (antwort = this.ANTWORT_EINFACH) {
-        c.rubrik = this.RUBRIK_JUNG
-        c.leichtigkeit = settings.startLeichtigkeit;
-        c.intervall = settings.startBeiEinfach;
-        c.fällig = Date.now() + c.intervall
+        stat.rubrik = this.RUBRIK_JUNG
+        stat.leichtigkeit = settings.startLeichtigkeit;
+        stat.intervall = settings.startEinfach;
+        stat.fällig = Date.now() + stat.intervall
       } else { return false }
     }
-    else if (c.rubrik == this.RUBRIK_JUNG || c.rubrik == this.RUBRIK_ALT) {
+    else if (stat.rubrik == this.RUBRIK_JUNG || stat.rubrik == this.RUBRIK_ALT) {
       if (antwort == this.ANTWORT_NOCHMAL) {
-        c.rubrik = this.RUBRIK_ERNEUT_LERNEN;
-        c.stufe = 0;
-        c.fällig = Date.now() + settings.erneutLernenSchritte[0]
+        stat.rubrik = this.RUBRIK_ERNEUT_LERNEN;
+        stat.stufe = 0;
+        stat.fällig = Date.now() + settings.erneutLernenSchritte[0]
       } else if (antwort == this.ANTWORT_SCHWIERIG) {
-        c.intervall = c.intervall * 1.2;
-
-        if (c.leichtigkeit >= 1.45)
-          c.leichtigkeit -= 0.15;
+        stat.intervall = stat.intervall ?? Date.now() * 1.2;
+        if (stat.leichtigkeit >= 1.45)
+          stat.leichtigkeit -= 0.15;
         else
-          c.leichtigkeit = 1.30;
+          stat.leichtigkeit = 1.30;
 
-        c.fällig = Date.now() + c.intervall;
+        stat.fällig = Date.now() + stat.intervall;
 
       } else if (antwort == this.ANTWORT_GUT) {
-        c.intervall = c.intervall * c.leichtigkeit * zufall;
-        c.fällig = Date.now() + c.intervall;
+        stat.intervall = stat.intervall * stat.leichtigkeit * zufall;
+        stat.fällig = Date.now() + stat.intervall;
       } else if (antwort == this.ANTWORT_EINFACH) {
-        c.intervall = c.intervall * c.leichtigkeit * settings.bonus * zufall;
-        c.leichtigkeit += 0.15;
-        c.fällig = Date.now() + c.intervall;
+        stat.intervall = stat.intervall * stat.leichtigkeit * settings.bonus * zufall;
+        stat.leichtigkeit += 0.15;
+        stat.fällig = Date.now() + stat.intervall;
       } else return false
-    } else if (c.rubrik == this.RUBRIK_ERNEUT_LERNEN) {
+    } else if (stat.rubrik == this.RUBRIK_ERNEUT_LERNEN) {
       if (antwort == this.ANTWORT_NOCHMAL) {
-        c.stufe = 0;
-        c.fällig = Date.now() + settings.erneutLernenSchritte[0]
+        stat.stufe = 0;
+        stat.fällig = Date.now() + settings.erneutLernenSchritte[0]
       } else if (antwort == this.ANTWORT_GUT) {
-        if (c.stufe < settings.erneutLernenSchritte.length - 1) {
-          c.stufe++
-          c.fällig = Date.now() + settings.erneutLernenSchritte[c.stufe]
+        if (stat.stufe ?? 0 < settings.erneutLernenSchritte.length - 1) {
+          stat.stufe = (stat.stufe ?? 0 + 1)
+          stat.fällig = Date.now() + settings.erneutLernenSchritte[stat.stufe]
         } else {
-          c.stufe = undefined;
-          c.rubrik = this.RUBRIK_JUNG;
-          if (c.leichtigkeit >= 1.50) {
-            c.leichtigkeit -= 0.20
-          } else { c.leichtigkeit = 1.30 }
-          c.intervall = c.intervall * settings.faktorNachErneutemLernen;
-          c.fällig = Date.now() + c.intervall
+          stat.stufe = undefined;
+          stat.rubrik = this.RUBRIK_JUNG;
+          if (stat.leichtigkeit >= 1.50) {
+            stat.leichtigkeit -= 0.20
+          } else { stat.leichtigkeit = 1.30 }
+          stat.intervall = stat.intervall * settings.faktorNachErneutemLernen;
+          stat.fällig = Date.now() + stat.intervall
         }
       } else if (antwort = this.ANTWORT_EINFACH) {
-        c.rubrik = this.RUBRIK_JUNG
-        if (c.leichtigkeit >= 1.35) {
-          c.leichtigkeit -= 0.5
-        } else { c.leichtigkeit = 1.30 }
-        c.intervall = c.intervall * settings.faktorNachErneutemLernen;
-        c.fällig = Date.now() + c.intervall
+        stat.rubrik = this.RUBRIK_JUNG
+        if (stat.leichtigkeit >= 1.35) {
+          stat.leichtigkeit -= 0.5
+        } else { stat.leichtigkeit = 1.30 }
+        stat.intervall = stat.intervall * settings.faktorNachErneutemLernen;
+        stat.fällig = Date.now() + stat.intervall
       } else return false
     } else return false
 
-    if (c.rubrik == this.RUBRIK_JUNG || c.rubrik == this.RUBRIK_ALT)
+    if (stat.rubrik == this.RUBRIK_JUNG || stat.rubrik == this.RUBRIK_ALT)
       //wenn intervall über einen monat ist wird die rubrik alt... hat nur einfluss auf eventuelle statistiken
-      if (c.intervall >= 1000 * 60 * 60 * 24 * 30)
-        c.rubrik = this.RUBRIK_ALT;
-      else c.rubrik = this.RUBRIK_JUNG;
+      if (stat.intervall >= 1000 * 60 * 60 * 24 * 30)
+        stat.rubrik = this.RUBRIK_ALT;
+      else stat.rubrik = this.RUBRIK_JUNG;
 
-    if (c.gelernt)
-      c.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
-    else c.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
+    if (stat.gelernt)
+      stat.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
+    else stat.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
 
 
     console.log("nachher:")//TODO nur für testzwecke
-    console.log(c)
+    console.log(stat)
 
-    return c
+    return stat;
   }
 
 }

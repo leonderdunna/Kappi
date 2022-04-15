@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Stat } from '../objekte/stat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +14,20 @@ export class StatsService {
     "newIDPräfix": "unSyncdStat"
   }
 
-  getStats(): any[] {
+  getStats(): Stat[] {
     let statIDs: string[] = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.statIDs) ?? '[]');
-    let stats: any[] = [];
+    let stats: Stat[] = [];
     for (let statID of statIDs) {
       stats.push(this.getStat(statID));
     }
     return stats;
   }
-  getStat(id: string): any {
+  getStat(id: string): Stat {
     return JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.stat + id) ?? 'false')
   }
 
-  addStat(stat: any): string {
-    stat.new = true;
+  addStat(stat: Stat): string {
+    stat.unsynced = true;
     stat.id = this.STORAGE_STRINGS.newIDPräfix + Math.random();
     window.localStorage.setItem(this.STORAGE_STRINGS.stat + stat.id, JSON.stringify(stat))
     let statList = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.statIDs) ?? '[]')
@@ -43,7 +44,7 @@ export class StatsService {
     return true;
 
   }
-  updateStat(stat: any): void {
+  updateStat(stat: Stat): void {
     stat.lastChange = Date.now()
     window.localStorage.setItem(this.STORAGE_STRINGS.stat + stat.id, JSON.stringify(stat))
 

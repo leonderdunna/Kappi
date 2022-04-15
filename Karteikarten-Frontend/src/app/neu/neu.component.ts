@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Card } from '../objekte/card.model';
 import { CardsService } from '../services/cards.service';
 
 @Component({
@@ -30,5 +31,5 @@ export class NeuComponent implements OnInit {
     this.frage = '';
     this.antwort = '';
   }
-  cards: any[] = [];
+  cards: string[] = [];
 }
