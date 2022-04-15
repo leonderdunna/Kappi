@@ -30,7 +30,6 @@ export class CardsService {
   addCard(card: any): string {
     card.new = true;
     card.id = this.STORAGE_STRINGS.newIDPräfix + Math.random();
-    console.log(card)
     window.localStorage.setItem(this.STORAGE_STRINGS.card + card.id, JSON.stringify(card))
     let cardsList = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]')
     cardsList.push(card.id)

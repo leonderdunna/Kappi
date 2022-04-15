@@ -1,12 +1,16 @@
 <!-- wird später bestimmt app-card-module verwenden -->
 <div class="wrapper" *ngIf="!fertig">
    
+    <mat-card *ngIf="karten.length==0">
 
-    <mat-card>
+        <button class="add" mat-button (click)="routeNeueKarte()">
+            <mat-icon>add_circle</mat-icon>
+            <span class="menu-text">Neue Karte</span>
+        </button>
+     </mat-card>
+    <mat-card *ngIf="activeCard != ''">
         <mat-card-content [innerHTML]="frage">Frage</mat-card-content>
-        <mat-card-footer *ngIf="karten.length==0">
-            <mat-progress-bar mode="indeterminate">d</mat-progress-bar>
-        </mat-card-footer>
+       
     </mat-card>
     <mat-card *ngIf="antwortSichtbar">
         <mat-card-content [innerHTML]="antwort">Antwort</mat-card-content>

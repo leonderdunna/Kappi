@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { CardsService } from '../services/cards.service';
+import { LernenService } from '../services/lernen.service';
+import { StatsService } from '../services/stats.service';
+import { SettingsService } from '../services/settings.service';
 import { Router } from '@angular/router';
-import { CardsService } from '../cards.service';
-import { LernenService } from '../lernen.service';
-import { StatsService } from '../stats.service';
-import { User } from '../user.model';
-import { UserService } from '../user.service';
-import { SettingsService } from '../settings.service';
+import { Card } from '../objekte/card.model';
 
 @Component({
   selector: 'app-lernen',
@@ -14,21 +13,18 @@ import { SettingsService } from '../settings.service';
 })
 export class LernenComponent implements OnInit {
   constructor(private cardsService: CardsService,
-    private router: Router,
     private statsService: StatsService,
-    private userService: UserService,
     private lernenService: LernenService,
-    private settingsService: SettingsService) {
-    this.user = this.userService.getUser();
+    private settingsService: SettingsService,
+    private router: Router) {
     this.stats = this.statsService.getStats();
     this.karten = this.cardsService.getCards();
     this.settings = this.settingsService.getSettings();
-
+    
   }
 
 
-  user: User;
-  karten: any[] = [];
+  karten: Card[] = [];
   stats: any[] = [];
   settings: any;
 
@@ -40,47 +36,29 @@ export class LernenComponent implements OnInit {
   antwortSichtbar = false;
   fertig = false;
 
+  routeNeueKarte() {
+    this.router.navigate([`neu`])
+  }
   neueKartenHinzufügen() {
-    let änderung = false
     let statIds = this.stats.map(e => { return e.card })
     let cardIds = this.karten.map(e => { return e.id })
 
     for (let id of cardIds) {
       if ((statIds.indexOf(id) == -1)) {
         this.addStatus(id)
-        änderung = true;
       }
     }
-
-    console.log("karten die übernommen wurden: neueKartenHinzufügen():")
-    console.log(statIds)
-    console.log("alle kartenids neueKartenHinzufügen():")
-    console.log(cardIds)
-
-    //KEINE ENDLÖSUNG aber erstmal reichts
-    if (änderung)
-      location.reload();
-
   }
 
-  addStatus(card: any) {
+  addStatus(cardID: string) {
     this.statsService.addStat({
-      "card": card,
+      "card": cardID,
       "rubrik": 0,
-      "user": this.user.name
     })
   }
 
   neueKarte() {
 
-    if (this.user.name == 'public') {
-      let c = this.karten[Math.floor(Math.random() * this.karten.length)]
-
-      this.frage = c.frage;
-      this.antwort = c.antwort;
-      this.antwortSichtbar = false;
-      return;
-    }
 
     let fs = this.stats.filter(e => {
       if (e.rubrik == 0 || e.rubrik == false || e.fällig < Date.now()) return true; return false

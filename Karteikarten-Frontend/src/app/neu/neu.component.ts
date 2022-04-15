@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CardsService } from '../cards.service';
+import { CardsService } from '../services/cards.service';
 
 @Component({
   selector: 'app-neu',
