@@ -73,14 +73,12 @@ export class LernenComponent implements OnInit {
     this.stats = this.statsService.getStats();
     this.karten = this.cardsService.getCards();
 
-    console.log(this.stats)
-    console.log(this.karten)
 
     let fs = this.stats.filter(e => {
       if (!e.fällig) return true;
       if (e.rubrik == 0 || e.fällig < Date.now()) return true; return false
     }) //fs steht für gefilterter status NICHT für filesystem
-    console.log(fs)
+    
 
     if (fs.length == 0) {
       if (!this.neueKartenHinzufügen()) {
@@ -117,13 +115,7 @@ export class LernenComponent implements OnInit {
   }
 
   lernen(antwort: number) {
-    console.log('aktive karte:' + this.activeCard)
-    console.log('antwort:' + antwort)
-    console.log(this.stats.filter(e => {
-      if (e.card == this.activeCard)
-        return true;
-      return false
-    })[0])
+   
     let newStat = this.lernenService.lernen(
       antwort,
       this.stats.filter(e => {

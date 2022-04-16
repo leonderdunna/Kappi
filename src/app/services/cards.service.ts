@@ -41,7 +41,7 @@ export class CardsService {
   delete(id: string): boolean {
     window.localStorage.removeItem(this.STORAGE_STRINGS.card + id);
     let cardsList:string[] = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]')
-    console.log(cardsList)
+  
     cardsList = cardsList.filter((e: string) => e != id)
     window.localStorage.setItem(this.STORAGE_STRINGS.cardIDs, JSON.stringify(cardsList));
     return true;

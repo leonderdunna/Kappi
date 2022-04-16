@@ -28,9 +28,7 @@ export class LernenService {
     if (!stat.leichtigkeit) { console.error('Leichtigkeit bei der karte war vorher nicht da'); return false; }
 
 
-    console.log("vorher:")//TODO nur für testzwecke
-    console.log(stat)
-
+   
 
     let zufall = 1;//TODO ist noch kein echter zufall ... sollte später zwischen 0.95 und 1.05 liegen
 
@@ -147,9 +145,7 @@ export class LernenService {
     else stat.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
 
 
-    console.log("nachher:")//TODO nur für testzwecke
-    console.log(stat)
-
+  
     return stat;
   }
 
