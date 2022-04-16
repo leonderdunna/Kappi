@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Card } from '../objekte/card.model';
 import { Stat } from '../objekte/stat.model';
 
 @Injectable({
@@ -24,6 +25,10 @@ export class StatsService {
   }
   getStat(id: string): Stat {
     return JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.stat + id) ?? 'false')
+  }
+  getStatByCardID(id:string):Stat{
+   return this.getStats().filter((e:Stat)=>{if(e.card == id)return true;return false})[0]
+
   }
 
   addStat(stat: Stat): string {

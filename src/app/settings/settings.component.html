@@ -14,7 +14,9 @@
             </mat-form-field>
 
 
-            <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="Die maximale Anzahl an neuen Karten, die an einem Tag eingeführt werden sollen, wenn neue Karten zur Verfügung stehen. Da neues Material Ihr Arbeitspensum für kurzfristige Wiederholungen steigert, sollte dies typischerweise mindestens 10-mal so gering sein wie Ihr Grenzwert für Wiederholungen" matTooltipHideDelay="500">
+            <mat-icon mat-raised-button #tooltip="matTooltip"
+                matTooltip="Die maximale Anzahl an neuen Karten, die an einem Tag eingeführt werden sollen, wenn neue Karten zur Verfügung stehen. Da neues Material Ihr Arbeitspensum für kurzfristige Wiederholungen steigert, sollte dies typischerweise mindestens 10-mal so gering sein wie Ihr Grenzwert für Wiederholungen"
+                matTooltipHideDelay="500">
                 info
             </mat-icon>
 
@@ -22,7 +24,10 @@
             <mat-form-field>
                 <mat-label> Max. Wiederholungen / Tag</mat-label>
                 <input [(ngModel)]="settings.kartenProTag" matInput placeholder="10">
-            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="Die maximale Anzahl an Wiederholkarten, die an einem Tag angezeigt werden soll, wenn Karten für die Wiederholung bereitstehen." matTooltipHideDelay="500">
+            </mat-form-field>
+            <mat-icon mat-raised-button #tooltip="matTooltip"
+                matTooltip="Die maximale Anzahl an Wiederholkarten, die an einem Tag angezeigt werden soll, wenn Karten für die Wiederholung bereitstehen."
+                matTooltipHideDelay="500">
                 info
             </mat-icon>
 
@@ -38,14 +43,20 @@
             <mat-form-field>
                 <mat-label>Intervall für Aufstieg</mat-label>
                 <input [(ngModel)]="startGut" matInput placeholder="10">
-            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip='Die Anzahl an abzuwartenden Tagen, bevor eine Karte, die mit "Gut" in der finalen Lernstufe bewertet wurde, wieder angezeigt wird.' matTooltipHideDelay="500">
+            </mat-form-field>
+            <mat-icon mat-raised-button #tooltip="matTooltip"
+                matTooltip='Die Anzahl an abzuwartenden Tagen, bevor eine Karte, die mit "Gut" in der finalen Lernstufe bewertet wurde, wieder angezeigt wird.'
+                matTooltipHideDelay="500">
                 info
             </mat-icon>
-<br>
+            <br>
             <mat-form-field>
                 <mat-label>Intervall für einfache Karten</mat-label>
                 <input [(ngModel)]="startEinfach" matInput placeholder="10">
-            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="Die abzuwartende Anzahl an Tagen, bevor eine Karte wieder angezeigt wird, nachdem der 'Einfach'-Knopf benutzt wurde, um die Karten direkt aus dem Lernen herauszunehmen" matTooltipHideDelay="500">
+            </mat-form-field>
+            <mat-icon mat-raised-button #tooltip="matTooltip"
+                matTooltip="Die abzuwartende Anzahl an Tagen, bevor eine Karte wieder angezeigt wird, nachdem der 'Einfach'-Knopf benutzt wurde, um die Karten direkt aus dem Lernen herauszunehmen"
+                matTooltipHideDelay="500">
                 info
             </mat-icon>
 
@@ -61,7 +72,9 @@
             <mat-form-field>
                 <mat-label>Mindestintervall</mat-label>
                 <input [(ngModel)]="minIntervall" matInput placeholder="10">
-            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="" matTooltipHideDelay="500">
+            </mat-form-field>
+            <mat-icon mat-raised-button #tooltip="matTooltip"
+                matTooltip="Intervall in Tagen, die eine Karte nicht unterschreiten kann." matTooltipHideDelay="500">
                 info
             </mat-icon>
 
@@ -74,21 +87,28 @@
             <mat-form-field>
                 <mat-label>Anfängliche Leichtigkeit</mat-label>
                 <input [(ngModel)]="settings.startLeichtigkeit" matInput placeholder="10">
-            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="" matTooltipHideDelay="500">
+            </mat-form-field>
+            <mat-icon mat-raised-button #tooltip="matTooltip"
+                matTooltip="Multiplikator mit dem das Intervall einer Karte erhöht wird wenn sie mit Gut bewertet wird. Dieser Startwert wird von jeder Karte durch die Antworten Nochmal, Schwierig, Einfach beeinflusst"
+                matTooltipHideDelay="500">
                 info
             </mat-icon>
-<br>
+            <br>
             <mat-form-field>
                 <mat-label>Neues Intervall</mat-label>
                 <input [(ngModel)]="settings.faktorNachErneutemLernen" matInput placeholder="10">
-            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="" matTooltipHideDelay="500">
+            </mat-form-field>
+            <mat-icon mat-raised-button #tooltip="matTooltip"
+                matTooltip="Multiplikator, mit dem das Intervall einer mit Nochmal beantworteten Karte verringert wird."
+                matTooltipHideDelay="500">
                 info
             </mat-icon>
-<br>
+            <br>
             <mat-form-field>
                 <mat-label>Höchstintervall</mat-label>
                 <input [(ngModel)]="maxIntervall" matInput placeholder="10">
-            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="" matTooltipHideDelay="500">
+            </mat-form-field>
+            <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="Maximales Intervall das eine Karte erreichen kann in Jahren." matTooltipHideDelay="500">
                 info
             </mat-icon>
 
