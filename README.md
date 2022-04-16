@@ -1,4 +1,4 @@
-# Karteikarten
+# Kappi
 
 > Author: Leonard-Orlando Menzel
 

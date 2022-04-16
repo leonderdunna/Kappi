@@ -1,7 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset) ? 'dialog' : 'navigation'"
     [mode]="(isHandset) ? 'over' : 'side'" [opened]="(isHandset) === false">
-    <mat-toolbar>Karteikarten</mat-toolbar>
+    <mat-toolbar>Kappi</mat-toolbar>
     <mat-divider></mat-divider>
     <mat-nav-list (click)="drawer.toggle()">
 
@@ -42,7 +42,7 @@
         <span class="menu-text">Das Projekt</span>
       </a>
 
-      <a mat-list-item target="_blank" href="https://github.com/leonderdunna/Karteikarten/issues/new">
+      <a mat-list-item target="_blank" href="https://github.com/leonderdunna/Kappi/issues/new">
         <mat-icon>bug_report</mat-icon>
         <span class="menu-text">Fehler melden</span>
       </a>
@@ -55,7 +55,7 @@
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Karteikarten</span>
+      <span>Kappi</span>
     </mat-toolbar>
     <!-- Add Content Here -->
     <router-outlet></router-outlet>

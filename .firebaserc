@@ -1,14 +1,5 @@
 {
-  "targets": {
-    "karteikarten-online": {
-      "hosting": {
-        "TestMaterial": [
-          "karteikarten-online"
-        ]
-      }
-    }
-  },
   "projects": {
-    "default": "karteikarten-online"
+    "default": "kappi-app"
   }
 }

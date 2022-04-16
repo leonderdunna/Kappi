@@ -1,70 +1,102 @@
 <div class="wrapper">
-    <h1>Einstellungen</h1>  
-    <button mat-raised-button (click)="update()"color="accent">Speichern</button>
-  
-    <mat-tab-group>
-        <mat-tab label="Täglicher Grenzwert">
+    <h1>Einstellungen</h1>
+    <button mat-raised-button (click)="update()" color="accent">Speichern</button>
+    <br>
 
-            <div class="wrapper">
+    <mat-card>
+        <mat-card-title>Täglicher Grenzwert</mat-card-title>
 
-                <mat-form-field>
-                    <mat-label>Neue Karten / Tag</mat-label>
-                    <input [(ngModel)]="settings.neueProTag" matInput placeholder="10">
-                </mat-form-field><br>
-                <mat-form-field>
-                    <mat-label> Max. Wiederholungen / Tag</mat-label>
-                    <input [(ngModel)]="settings.kartenProTag" matInput placeholder="10">
-                </mat-form-field>
-            </div>
+        <div>
 
-        </mat-tab>
-        <mat-tab label="Neue Karten">
-            <!-- Lernstufen -->
+            <mat-form-field>
+                <mat-label>Neue Karten / Tag</mat-label>
+                <input [(ngModel)]="settings.neueProTag" matInput placeholder="10">
+            </mat-form-field>
 
 
-            <div class="wrapper">
-                <mat-form-field>
-                    <mat-label>Intervall für Aufstieg</mat-label>
-                    <input [(ngModel)]="settings.startGut" matInput placeholder="10">
-                </mat-form-field><br>
-                <mat-form-field>
-                    <mat-label>Intervall für einfache Karten</mat-label>
-                    <input [(ngModel)]="settings.startEinfach" matInput placeholder="10">
-                </mat-form-field>
-            </div>
-        </mat-tab>
-        <mat-tab label="Fehlschläge">
-            <!-- Schritte für das erneute Lernen -->
+            <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="Die maximale Anzahl an neuen Karten, die an einem Tag eingeführt werden sollen, wenn neue Karten zur Verfügung stehen. Da neues Material Ihr Arbeitspensum für kurzfristige Wiederholungen steigert, sollte dies typischerweise mindestens 10-mal so gering sein wie Ihr Grenzwert für Wiederholungen" matTooltipHideDelay="500">
+                info
+            </mat-icon>
+
+            <br>
+            <mat-form-field>
+                <mat-label> Max. Wiederholungen / Tag</mat-label>
+                <input [(ngModel)]="settings.kartenProTag" matInput placeholder="10">
+            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="Die maximale Anzahl an Wiederholkarten, die an einem Tag angezeigt werden soll, wenn Karten für die Wiederholung bereitstehen." matTooltipHideDelay="500">
+                info
+            </mat-icon>
+
+        </div>
+
+    </mat-card>
+    <mat-card>
+        <mat-card-title>Neue Karten</mat-card-title>
+        <!-- Lernstufen -->
 
 
-            <div class="wrapper">
+        <div>
+            <mat-form-field>
+                <mat-label>Intervall für Aufstieg</mat-label>
+                <input [(ngModel)]="startGut" matInput placeholder="10">
+            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip='Die Anzahl an abzuwartenden Tagen, bevor eine Karte, die mit "Gut" in der finalen Lernstufe bewertet wurde, wieder angezeigt wird.' matTooltipHideDelay="500">
+                info
+            </mat-icon>
+<br>
+            <mat-form-field>
+                <mat-label>Intervall für einfache Karten</mat-label>
+                <input [(ngModel)]="startEinfach" matInput placeholder="10">
+            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="Die abzuwartende Anzahl an Tagen, bevor eine Karte wieder angezeigt wird, nachdem der 'Einfach'-Knopf benutzt wurde, um die Karten direkt aus dem Lernen herauszunehmen" matTooltipHideDelay="500">
+                info
+            </mat-icon>
 
-                <mat-form-field>
-                    <mat-label>Mindestintervall</mat-label>
-                    <input [(ngModel)]="settings.minIntervall" matInput placeholder="10">
-                </mat-form-field>
-            </div>
+        </div>
+    </mat-card>
+    <mat-card>
+        <mat-card-title>Fehlschläge</mat-card-title>
+        <!-- Schritte für das erneute Lernen -->
 
-        </mat-tab>
-        <mat-tab label="Erweitert">
-            <div class="wrapper">
-                <mat-form-field>
-                    <mat-label>Anfängliche Leichtigkeit</mat-label>
-                    <input [(ngModel)]="settings.startLeichtigkeit" matInput placeholder="10">
-                </mat-form-field><br>
-                <mat-form-field>
-                    <mat-label>Neues Intervall</mat-label>
-                    <input [(ngModel)]="settings.faktorNachErneutemLernen" matInput placeholder="10">
-                </mat-form-field><br>
-                <mat-form-field>
-                    <mat-label>Höchstintervall</mat-label>
-                    <input [(ngModel)]="settings.maxIntervall" matInput placeholder="10">
-                </mat-form-field>
-            </div>
-        </mat-tab>
 
-    </mat-tab-group>
-   
+        <div>
+
+            <mat-form-field>
+                <mat-label>Mindestintervall</mat-label>
+                <input [(ngModel)]="minIntervall" matInput placeholder="10">
+            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="" matTooltipHideDelay="500">
+                info
+            </mat-icon>
+
+        </div>
+
+    </mat-card>
+    <mat-card>
+        <mat-card-title>Erweitert</mat-card-title>
+        <div>
+            <mat-form-field>
+                <mat-label>Anfängliche Leichtigkeit</mat-label>
+                <input [(ngModel)]="settings.startLeichtigkeit" matInput placeholder="10">
+            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="" matTooltipHideDelay="500">
+                info
+            </mat-icon>
+<br>
+            <mat-form-field>
+                <mat-label>Neues Intervall</mat-label>
+                <input [(ngModel)]="settings.faktorNachErneutemLernen" matInput placeholder="10">
+            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="" matTooltipHideDelay="500">
+                info
+            </mat-icon>
+<br>
+            <mat-form-field>
+                <mat-label>Höchstintervall</mat-label>
+                <input [(ngModel)]="maxIntervall" matInput placeholder="10">
+            </mat-form-field>      <mat-icon mat-raised-button #tooltip="matTooltip" matTooltip="" matTooltipHideDelay="500">
+                info
+            </mat-icon>
+
+        </div>
+    </mat-card>
+
+
+
 
 
 

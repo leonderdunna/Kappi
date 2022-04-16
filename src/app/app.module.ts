@@ -22,69 +22,61 @@ import { AnmeldenComponent } from './anmelden/anmelden.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
-import { MatTableModule} from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { EditComponent } from './edit/edit.component'
 import { FormsModule } from '@angular/forms';
-import { MatBadgeModule} from '@angular/material/badge';
+import { MatBadgeModule } from '@angular/material/badge';
 import { AboutComponent } from './about/about.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { MatChipsModule} from '@angular/material/chips';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatTabsModule} from '@angular/material/tabs';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
-import { environment } from '../environments/environment';
-import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
-import { provideDatabase,getDatabase } from '@angular/fire/database';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import { providePerformance,getPerformance } from '@angular/fire/performance';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
-     AppComponent,
-     MainNavComponent,
-     LernenComponent,
-     SettingsComponent,
-     PaketeComponent,
-     KartenComponent,
-     StatistikenComponent,
-     AccountComponent,
-     NeuComponent,
-     AnmeldenComponent,
-     AccountSettingsComponent,
-     EditComponent,
-     AboutComponent,
+    AppComponent,
+    MainNavComponent,
+    LernenComponent,
+    SettingsComponent,
+    PaketeComponent,
+    KartenComponent,
+    StatistikenComponent,
+    AccountComponent,
+    NeuComponent,
+    AnmeldenComponent,
+    AccountSettingsComponent,
+    EditComponent,
+    AboutComponent,
 
   ],
   imports: [
-     BrowserModule,
-     MatTabsModule,
-     AppRoutingModule,
-     BrowserAnimationsModule,
-     MatButtonModule,
-     MatToolbarModule,
-     MatSidenavModule,
-     MatIconModule,
-     MatListModule,
-     MatCardModule,
-     MatFormFieldModule,
-     MatInputModule,
-     MatMenuModule,
-     MatTableModule,
-     HttpClientModule,
-     FormsModule,
-     MatBadgeModule,
-     MatProgressBarModule,
-     MatProgressSpinnerModule,
-     MatChipsModule,
-      provideFirebaseApp(() => initializeApp(environment.firebase)),
-    //  provideAnalytics(() => getAnalytics()),
-      provideDatabase(() => getDatabase()),
-      provideFirestore(() => getFirestore()),
-      providePerformance(() => getPerformance())
+    BrowserModule,
+    MatTabsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatMenuModule,
+    MatTableModule,
+    HttpClientModule,
+    FormsModule,
+    MatBadgeModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatTooltipModule,
+
   ],
   providers: [
-    ScreenTrackingService,UserTrackingService
+
   ],
   bootstrap: [AppComponent]
 })
