@@ -33,6 +33,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HighchartsChartModule } from 'highcharts-angular'
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatToolbarModule,
     MatSidenavModule,
     MatIconModule,
+    HighchartsChartModule,
     MatListModule,
     MatCardModule,
     MatFormFieldModule,
