@@ -11,8 +11,18 @@
         <mat-card-content [innerHTML]="frage">Frage</mat-card-content>
 
     </mat-card>
-    <mat-card *ngIf="antwortSichtbar">
-        <mat-card-content [innerHTML]="antwort">Antwort</mat-card-content>
+    <mat-card *ngIf="!fertig">
+        <mat-card-content>
+
+            <mat-form-field appearance="standard">
+                <mat-label>Antwort</mat-label>
+                <input autocomplete="off" type="text" [(ngModel)]="userantwort" matInput placeholder="Beispiel: ca. 300m">
+            </mat-form-field>
+
+
+            <p *ngIf="antwortSichtbar">{{hinweis}}</p>
+            <p *ngIf="antwortSichtbar" [innerHTML]="antwort">Antwort</p>
+        </mat-card-content>
     </mat-card>
 </div>
 

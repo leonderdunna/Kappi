@@ -70,7 +70,8 @@ export class LernenComponent implements OnInit {
     })
     this.stats = this.statsService.getStats();
   }
-
+  userantwort = '';
+  hinweis='';
   neueKarte() {
 
     this.stats = this.statsService.getStats();
@@ -79,14 +80,13 @@ export class LernenComponent implements OnInit {
 
     let fs = this.stats.filter(e => {
       if (!e.fällig) return true;
-      if (this.gelerntService.getNeue(0) >= (this.settingsService.getSettings().neueProTag - 0)&&
-      e.rubrik == 0)
+      if (this.gelerntService.getNeue(0) >= (this.settingsService.getSettings().neueProTag - 0) &&
+        e.rubrik == 0)
         return false;
       if (e.rubrik == 0 || e.fällig < Date.now())
         return true;
       return false
     }) //fs steht für gefilterter status NICHT für filesystem
-
 
     if (fs.length == 0) {
       if (!this.neueKartenHinzufügen()) {
@@ -115,6 +115,13 @@ export class LernenComponent implements OnInit {
   //Click handlers und so
   zeigeAntwort() {
     this.antwortSichtbar = true;
+    if(this.userantwort == this.antwort){
+      this.antwort=''
+      this.hinweis='Das ist richtig!!'
+    }
+    else{
+      this.hinweis='Leider falsch. die richtige antwort wäre:'
+    }
   }
 
   keineKartenFällig() {
