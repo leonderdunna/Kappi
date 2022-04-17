@@ -73,14 +73,24 @@ export class StatistikenComponent implements OnInit {
         return true
       return false
     })
-    for (let i: number = 0; i < 31; i++) {
+
+    fälligLernen.push(
+      lernenKarten.filter((e) => {
+        if (
+          (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0 )<= Date.now()) {
+          return true;
+        }
+        return false
+      }).length
+    )
+
+    for (let i: number = 0; i < 30; i++) {
       fälligLernen.push(
         lernenKarten.filter((e) => {
           console.log(this.statService.getStatByCardID(e.id ?? ''))
           if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() * this.isPositiv(i) + (i * msProTag)) &&
             (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
-            console.log(this.statService.getStatByCardID(e.id ?? ''))
           }
           return false
         }).length
@@ -96,15 +106,25 @@ export class StatistikenComponent implements OnInit {
         return true
       return false
     })
-    for (let i: number = 0; i < 31; i++) {
+
+    fälligJung.push(
+      lernenKarten.filter((e) => {
+        if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= Date.now())
+          return true;
+        return false;
+      }).length
+    )
+    console.log('fälligJung')
+    console.log(fälligJung);
+
+    for (let i: number = 0; i < 30; i++) {
       fälligJung.push(
         lernenKarten.filter((e) => {
           console.log(this.statService.getStatByCardID(e.id ?? ''))
           if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() * this.isPositiv(i) + (i * msProTag)) &&
             (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
-            console.log(this.statService.getStatByCardID(e.id ?? ''))
-          }
+         }
           return false
         }).length
       )
@@ -119,7 +139,19 @@ export class StatistikenComponent implements OnInit {
         return true
       return false
     })
-    for (let i: number = 0; i < 31; i++) {
+
+    fälligAlt.push(
+      lernenKarten.filter((e) => {
+        if (
+          (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0 )<= Date.now()) {
+          return true;
+        }
+        return false
+      }).length
+    )
+
+
+    for (let i: number = 0; i < 30; i++) {
       fälligAlt.push(
         lernenKarten.filter((e) => {
           console.log(this.statService.getStatByCardID(e.id ?? ''))
