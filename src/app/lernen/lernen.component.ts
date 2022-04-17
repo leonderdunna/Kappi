@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Card } from '../objekte/card.model';
 import { Stat } from '../objekte/stat.model';
 import { Settings } from '../objekte/settings.model';
+import { GelerntService } from '../services/gelernt.service';
 
 @Component({
   selector: 'app-lernen',
@@ -18,11 +19,13 @@ export class LernenComponent implements OnInit {
     private statsService: StatsService,
     private lernenService: LernenService,
     private settingsService: SettingsService,
-    private router: Router) {
+    private router: Router,
+    private gelerntService: GelerntService) {
     this.stats = this.statsService.getStats();
     this.karten = this.cardsService.getCards();
     this.settings = this.settingsService.getSettings();
     this.neueKarte()
+
   }
 
 
@@ -76,9 +79,14 @@ export class LernenComponent implements OnInit {
 
     let fs = this.stats.filter(e => {
       if (!e.fällig) return true;
-      if (e.rubrik == 0 || e.fällig < Date.now()) return true; return false
+      if (this.gelerntService.getNeue(0) >= (this.settingsService.getSettings().neueProTag - 0)&&
+      e.rubrik == 0)
+        return false;
+      if (e.rubrik == 0 || e.fällig < Date.now())
+        return true;
+      return false
     }) //fs steht für gefilterter status NICHT für filesystem
-    
+
 
     if (fs.length == 0) {
       if (!this.neueKartenHinzufügen()) {
@@ -115,7 +123,17 @@ export class LernenComponent implements OnInit {
   }
 
   lernen(antwort: number) {
-   
+
+
+    //TEST
+    console.log(antwort);
+    console.log(this.stats.filter(e => {
+      if (e.card == this.activeCard)
+        return true;
+      return false
+    })[0])
+    console.log(this.settings)
+
     let newStat = this.lernenService.lernen(
       antwort,
       this.stats.filter(e => {

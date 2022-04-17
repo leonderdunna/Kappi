@@ -26,7 +26,10 @@ export class LernenService {
     //Überprüfen ob alles wichtige da ist
     if (!stat) { console.error('Stat wurde nicht übermittelt'); return false; }
     if (!stat.leichtigkeit) { console.error('Leichtigkeit bei der karte war vorher nicht da'); return false; }
-
+    if(!stat.fällig){
+      console.error('Karte hatte kein Fälligkeitszeitpunkt')
+      stat.fällig = Date.now();
+    }
 
    
 
@@ -56,9 +59,9 @@ export class LernenService {
         stat.stufe = 0;
         stat.fällig = Date.now() + settings.lernenSchritte[0]
       } else if (antwort == this.ANTWORT_GUT) {
-        if (stat.stufe ?? 0 < settings.lernenSchritte.length - 1) {
+        if ((stat.stufe ?? 0) < settings.lernenSchritte.length - 1) {
           stat.stufe = (stat.stufe ?? 0) + 1
-          stat.fällig = Date.now() + settings.lernenSchritte[stat.stufe]
+          stat.fällig = Date.now() + (settings.lernenSchritte[stat.stufe] ?? settings.lernenSchritte[settings.lernenSchritte.length-1])
         } else {
           stat.stufe = undefined;
           stat.rubrik = this.RUBRIK_JUNG;
@@ -84,7 +87,7 @@ export class LernenService {
         stat.stufe = 0;
         stat.fällig = Date.now() + settings.erneutLernenSchritte[0]
       } else if (antwort == this.ANTWORT_SCHWIERIG) {
-        stat.intervall = stat.intervall ?? Date.now() * 1.2;
+        stat.intervall = (stat.intervall ?? 0) * 1.2;
         if (stat.leichtigkeit >= 1.45)
           stat.leichtigkeit -= 0.15;
         else
@@ -109,8 +112,8 @@ export class LernenService {
         stat.stufe = 0;
         stat.fällig = Date.now() + settings.erneutLernenSchritte[0]
       } else if (antwort == this.ANTWORT_GUT) {
-        if (stat.stufe ?? 0 < settings.erneutLernenSchritte.length - 1) {
-          stat.stufe = (stat.stufe ?? 0 + 1)
+        if ((stat.stufe ?? 0) < settings.erneutLernenSchritte.length - 1) {
+          stat.stufe = ((stat.stufe ?? 0) + 1)
           stat.fällig = Date.now() + settings.erneutLernenSchritte[stat.stufe]
         } else {
           stat.stufe = undefined;
