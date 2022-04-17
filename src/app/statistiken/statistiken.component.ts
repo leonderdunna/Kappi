@@ -92,7 +92,7 @@ export class StatistikenComponent implements OnInit {
     let fälligJung: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 2 )
+      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 2)
         return true
       return false
     })
@@ -115,7 +115,7 @@ export class StatistikenComponent implements OnInit {
     let fälligAlt: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 3 )
+      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 3)
         return true
       return false
     })
@@ -126,7 +126,6 @@ export class StatistikenComponent implements OnInit {
           if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() * this.isPositiv(i) + (i * msProTag)) &&
             (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
-            console.log(this.statService.getStatByCardID(e.id ?? ''))
           }
           return false
         }).length
