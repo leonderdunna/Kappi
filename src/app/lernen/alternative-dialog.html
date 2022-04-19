@@ -1,0 +1,17 @@
+<mat-card-title>
+    Fehlende Antwortmöglichkeit ergenzen
+</mat-card-title>
+<mat-form-field appearance="standard">
+    <mat-label>(Falsche) Antwort</mat-label>
+    <input autocomplete="off" [(ngModel)]="data.alternative" matInput placeholder="Antwort">
+</mat-form-field>
+<mat-form-field *ngIf="falsch" appearance="standard">
+    <mat-label>Hinweis</mat-label>
+    <input autocomplete="off" [(ngModel)]="hinweis" matInput placeholder="Beispiel: Rechtschreibung beachten!">
+</mat-form-field>
+<mat-checkbox [(ngModel)]="falsch">Hinweis hinzufügen</mat-checkbox>
+
+<mat-dialog-actions>
+   
+    <button mat-button (click)="add()">Hinzufügen</button>
+</mat-dialog-actions>

@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { MatCardModule } from '@angular/material/card';
-import { LernenComponent } from './lernen/lernen.component';
+import { AddAlternativeDialog, LernenComponent } from './lernen/lernen.component';
 import { SettingsComponent } from './settings/settings.component'
 import { PaketeComponent } from './pakete/pakete.component';
 import { KartenComponent } from './karten/karten.component';
@@ -33,8 +33,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { HighchartsChartModule } from 'highcharts-angular'
-
+import { HighchartsChartModule } from 'highcharts-angular';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,15 +51,17 @@ import { HighchartsChartModule } from 'highcharts-angular'
     AccountSettingsComponent,
     EditComponent,
     AboutComponent,
-
+    AddAlternativeDialog
   ],
   imports: [
     BrowserModule,
+    MatCheckboxModule,
     MatTabsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatToolbarModule,
+    MatDialogModule,
     MatSidenavModule,
     MatIconModule,
     HighchartsChartModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CardsService } from '../services/cards.service';
 import { LernenService } from '../services/lernen.service';
 import { StatsService } from '../services/stats.service';
@@ -8,6 +8,7 @@ import { Card } from '../objekte/card.model';
 import { Stat } from '../objekte/stat.model';
 import { Settings } from '../objekte/settings.model';
 import { GelerntService } from '../services/gelernt.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-lernen',
@@ -20,7 +21,8 @@ export class LernenComponent implements OnInit {
     private lernenService: LernenService,
     private settingsService: SettingsService,
     private router: Router,
-    private gelerntService: GelerntService) {
+    private gelerntService: GelerntService,
+    private dialog: MatDialog) {
     this.stats = this.statsService.getStats();
     this.karten = this.cardsService.getCards();
     this.settings = this.settingsService.getSettings();
@@ -40,6 +42,14 @@ export class LernenComponent implements OnInit {
   activeCard = '';
   antwortSichtbar = false;
   fertig = false;
+
+  userantwort = '';
+  hinweis = '';
+  hinweisBenoetigt = false;
+  skip = false;
+  richtig = false;
+  falsch = false;
+
 
   routeNeueKarte() {
     this.router.navigate([`neu`])
@@ -70,9 +80,17 @@ export class LernenComponent implements OnInit {
     })
     this.stats = this.statsService.getStats();
   }
-  userantwort = '';
-  hinweis='';
+
   neueKarte() {
+
+    //Reset all stuf
+    this.userantwort = '';
+    this.hinweis = '';
+    this.hinweisBenoetigt = false;
+    this.skip = false;
+    this.richtig = false;
+    this.antwortSichtbar = false;
+    this.falsch = false;
 
     this.stats = this.statsService.getStats();
     this.karten = this.cardsService.getCards();
@@ -113,15 +131,56 @@ export class LernenComponent implements OnInit {
   }
 
   //Click handlers und so
-  zeigeAntwort() {
+  pruefen() {
+    if (this.userantwort == this.antwort) {
+      this.richtig = true; 
+      this.antwortSichtbar=false;
+      this.falsch=false;
+      this.hinweis='';return;
+    }
+    let card = this.cardsService.getCard(this.activeCard)
+    if (card.alternativAntworten)
+      for (let e of card.alternativAntworten)
+        if (e == this.userantwort) {
+          this.hinweis='<span style="color:green">Richtig! Eine andere Lösung wäre:<span>'
+          this.richtig = true;
+          this.falsch=false;
+          this.antwortSichtbar=true;
+          return;
+        }
+
+    if (card.fehler)
+      for (let e of card.fehler)
+        if (e.antwort == this.userantwort) {
+          this.hinweisBenoetigt = true;
+          this.hinweis = e.hinweis;
+          this.antwortSichtbar=false;
+          this.falsch = false;
+          return;
+        }
+    this.hinweis = 'Das war leider falsch. Richtig wäre:'
     this.antwortSichtbar = true;
-    if(this.userantwort == this.antwort){
-      this.antwort=''
-      this.hinweis='Das ist richtig!!'
-    }
-    else{
-      this.hinweis='Leider falsch. die richtige antwort wäre:'
-    }
+    this.falsch = true;
+    //TODO: möglichkeit antwort als doch richtig ...
+  }
+
+  openDialog() {
+   let dialogRef = this.dialog.open(AddAlternativeDialog, {
+      data: {
+        card: this.activeCard,
+        alternative: this.userantwort
+      }
+    });
+    dialogRef.afterClosed().subscribe((result)=>{
+      if(!result)return;
+      this.pruefen();
+    })
+  }
+
+  ueberspringen() {
+    this.skip = true;
+    this.hinweis = 'Diese Karte wurde Übersprungen. Richtig wäre gewesen:'
+    this.antwortSichtbar = true;
   }
 
   keineKartenFällig() {
@@ -130,16 +189,6 @@ export class LernenComponent implements OnInit {
   }
 
   lernen(antwort: number) {
-
-
-    //TEST
-    console.log(antwort);
-    console.log(this.stats.filter(e => {
-      if (e.card == this.activeCard)
-        return true;
-      return false
-    })[0])
-    console.log(this.settings)
 
     let newStat = this.lernenService.lernen(
       antwort,
@@ -159,9 +208,56 @@ export class LernenComponent implements OnInit {
 
     this.statsService.updateStat(newStat)
     this.neueKarte()
+
   }
 
   ngOnInit(): void {
   }
 
+}
+
+@Component({
+  selector: 'add-alternative-dialog',
+  templateUrl: 'alternative-dialog.html',
+  styleUrls: ['dialog.scss']
+})
+export class AddAlternativeDialog {
+  constructor(private cardsService: CardsService,
+    public dialogRef: MatDialogRef<AddAlternativeDialog>,
+    @Inject(MAT_DIALOG_DATA)
+    public data: { card: string, alternative: string },
+  ) {
+
+  }
+  hinweis: string = '';
+  falsch: boolean = false;
+  add() {
+    let card = this.cardsService.getCard(this.data.card)
+    if (this.falsch) {
+      if (!(this.hinweis != '' && this.data.alternative != '')) { alert('Bitte geben Sie alle nötigen Informationen an'); return }
+      if (card.fehler) {
+        for(let f of card.fehler){
+          if(f.antwort == this.data.alternative){ alert('Diese Antwort existiert schon'); return }
+        }
+        card.fehler.push({ hinweis: this.hinweis, antwort: this.data.alternative })
+      } else {
+        card.fehler = [{ hinweis: this.hinweis, antwort: this.data.alternative }]
+      }
+
+    } else {
+      if (!(this.data.alternative != '')) { alert('Bitte geben Sie alle nötigen Informationen an'); return }
+      if (card.alternativAntworten) {
+        for(let f of card.alternativAntworten){
+          if(f == this.data.alternative){ alert('Diese Antwort existiert schon'); return }
+        }
+        card.alternativAntworten.push(this.data.alternative)
+      }
+      else {
+        card.alternativAntworten = [this.data.alternative]
+      }
+
+    }
+    this.cardsService.updateCard(card)
+    this.dialogRef.close(true)
+  }
 }

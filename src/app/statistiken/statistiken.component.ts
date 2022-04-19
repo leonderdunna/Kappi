@@ -5,7 +5,6 @@ import * as Highcharts from 'highcharts';
 import { SettingsService } from '../services/settings.service';
 import { GelerntService } from '../services/gelernt.service';
 
-
 @Component({
   selector: 'app-statistiken',
   templateUrl: './statistiken.component.html',
@@ -17,7 +16,7 @@ export class StatistikenComponent implements OnInit {
     private cardsService: CardsService,
     private statService: StatsService,
     private settingsService: SettingsService,
-    private gelerntService:GelerntService) {
+    private gelerntService: GelerntService) {
   }
 
   //Kartenzahlen
@@ -44,21 +43,17 @@ export class StatistikenComponent implements OnInit {
 
   settings = this.settingsService.getSettings();
 
-  isPositiv(i: number): number {
-    if (i == 0) return 0; return 1
-  }
   getFälligNeu(): number[] {
     let gesamt = this.neueKartenZahl;
     let fälligNeu: number[] = [];
 
     if ((gesamt + this.gelerntService.getNeue(0)) >= this.settings.neueProTag) {
-      gesamt -= this.settings.neueProTag -this.gelerntService.getNeue(0);
+      gesamt -= (this.settings.neueProTag - this.gelerntService.getNeue(0));
       fälligNeu.push(this.settings.neueProTag - this.gelerntService.getNeue(0))
-
-    } else {
-      fälligNeu.push(gesamt -this.gelerntService.getNeue(0));
-      gesamt = 0;
-    }
+   } else {
+      fälligNeu.push(gesamt );
+      gesamt =0;
+  }
     for (let i: number = 1; i < 31; i++) {
       if (gesamt >= this.settings.neueProTag) {
         gesamt -= this.settings.neueProTag;
@@ -79,7 +74,8 @@ export class StatistikenComponent implements OnInit {
     let fälligLernen: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 1 || this.statService.getStatByCardID(e.id ?? '')?.rubrik == 4)
+      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 1 ||
+        this.statService.getStatByCardID(e.id ?? '')?.rubrik == 4)
         return true
       return false
     })
@@ -87,7 +83,7 @@ export class StatistikenComponent implements OnInit {
     fälligLernen.push(
       lernenKarten.filter((e) => {
         if (
-          (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0 )<= Date.now()) {
+          (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= Date.now()) {
           return true;
         }
         return false
@@ -97,7 +93,7 @@ export class StatistikenComponent implements OnInit {
     for (let i: number = 0; i < 30; i++) {
       fälligLernen.push(
         lernenKarten.filter((e) => {
-         if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() * this.isPositiv(i) + (i * msProTag)) &&
+          if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now()  + (i * msProTag)) &&
             (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
           }
@@ -123,14 +119,14 @@ export class StatistikenComponent implements OnInit {
         return false;
       }).length
     )
-    
+
     for (let i: number = 0; i < 30; i++) {
       fälligJung.push(
         lernenKarten.filter((e) => {
-        if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() * this.isPositiv(i) + (i * msProTag)) &&
+          if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() + (i * msProTag)) &&
             (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
-         }
+          }
           return false
         }).length
       )
@@ -149,7 +145,7 @@ export class StatistikenComponent implements OnInit {
     fälligAlt.push(
       lernenKarten.filter((e) => {
         if (
-          (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0 )<= Date.now()) {
+          (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= Date.now()) {
           return true;
         }
         return false
@@ -160,7 +156,7 @@ export class StatistikenComponent implements OnInit {
     for (let i: number = 0; i < 30; i++) {
       fälligAlt.push(
         lernenKarten.filter((e) => {
-          if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() * this.isPositiv(i) + (i * msProTag)) &&
+          if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() + (i * msProTag)) &&
             (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
           }

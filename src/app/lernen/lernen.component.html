@@ -16,28 +16,35 @@
 
             <mat-form-field appearance="standard">
                 <mat-label>Antwort</mat-label>
-                <input autocomplete="off" type="text" [(ngModel)]="userantwort" matInput placeholder="Beispiel: ca. 300m">
+                <input autocomplete="off" type="text" [(ngModel)]="userantwort" matInput
+                    placeholder="Beispiel: ca. 300m">
             </mat-form-field>
+            <mat-error *ngIf="(hinweis!='' )&&!richtig" [innerHTML]="hinweis"></mat-error>
+            <mat-error style="color: green;" *ngIf="(hinweis!='' )&& richtig" [innerHTML]="hinweis"></mat-error>
 
 
-            <p *ngIf="antwortSichtbar">{{hinweis}}</p>
             <p *ngIf="antwortSichtbar" [innerHTML]="antwort">Antwort</p>
+            <mat-icon *ngIf="richtig">thumb_up</mat-icon>
         </mat-card-content>
     </mat-card>
 </div>
 
-<div class="antworten" *ngIf="antwortSichtbar">
+<div class="antworten" *ngIf="(falsch || richtig || skip)">
 
     <button (click)="lernen(0)" mat-button>Nochmal</button>
-    <button (click)="lernen(1)" mat-button>Schwer</button>
-    <button (click)="lernen(2)" mat-button>Gut</button>
-    <button (click)="lernen(3)" mat-button>Einfach</button>
+    <button *ngIf="!falsch&&!skip" (click)="lernen(1)" mat-button>Schwer</button>
+    <button *ngIf=" !falsch&& !hinweisBenoetigt &&!skip" (click)="lernen(2)" mat-button>Gut</button>
+    <button *ngIf="!falsch&&!hinweisBenoetigt &&!skip" (click)="lernen(3)" mat-button>Einfach</button>
+    <button *ngIf="falsch" (click)="openDialog()" mat-button>Antwort war richtig!</button>
 </div>
-<div class="antworten" *ngIf="(!antwortSichtbar && !fertig && (karten.length != 0)) ">
-    <button mat-button (click)="zeigeAntwort()">Antwort zeigen</button>
+<div class="antworten" *ngIf="(!falsch&&userantwort != ''&&!richtig && !skip && !fertig && (karten.length != 0)) ">
+    <button mat-button (click)="pruefen()">Überprüfen</button>
+</div>
+<div class="antworten" *ngIf="(!falsch&&(userantwort =='')&&(!richtig && !skip) && !fertig && (karten.length != 0)) ">
+    <button mat-button (click)="ueberspringen()">Überspringen</button>
 
 </div>
-<div class="fertig" *ngIf="fertig && karten.length >0">
+<div class="fertig" *ngIf="(fertig && karten.length >0)">
     <mat-card>
         Sie sind für Heute fertig.
         <mat-icon>thumb_up</mat-icon>

@@ -2,8 +2,8 @@
     position: fixed;
     bottom: 0;
     margin: auto;
-    width: calc(100% - 4cm);
-    left: 2cm;
+    width: calc(100% - 1cm);
+    left: 0.5cm;
     text-align: center;
     * {
         margin: 0.5cm;
@@ -25,4 +25,7 @@
         top: 12px;
         position: absolute;
     }
+}
+mat-form-field{
+    width:100%;
 }
