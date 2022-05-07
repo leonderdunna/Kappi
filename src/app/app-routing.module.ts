@@ -9,17 +9,21 @@ import { NeuComponent } from './neu/neu.component';
 import { PaketeComponent } from './pakete/pakete.component';
 import { SettingsComponent } from './settings/settings.component';
 import { StatistikenComponent } from './statistiken/statistiken.component';
+import { TestComponent } from './test/test.component';
+import { SyncComponent } from './sync/sync.component';
 
 const routes: Routes = [
-  { path: '', component: LernenComponent },
+  { path: 'lernen', component: LernenComponent },
   { path: 'pakete', component: PaketeComponent },
-  { path: 'karten', component: KartenComponent },
+  { path: '', component: KartenComponent },
   { path: 'neu', component: NeuComponent },
   { path: 'statistiken', component: StatistikenComponent },
   { path: 'account', component: AccountComponent },
   { path: 'einstellungen', component: SettingsComponent },
-  { path: 'edit/:id',component:EditComponent},
-  {path: 'about',component:AboutComponent}
+  { path: 'edit/:id', component: EditComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'test', component: TestComponent },
+  {path:'sync',component:SyncComponent}
 ];
 
 @NgModule({

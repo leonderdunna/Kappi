@@ -1,12 +1,40 @@
-.wrapper{
-    margin:1cm;
+.wrapper {
+    margin: 1cm;
 }
-mat-card{
-    margin:0.5cm;
-    min-width:fit-content;
-    padding:1cm;
-    float:left;
-    mat-card-title{
-        margin-bottom:1cm;
+
+mat-card {
+ 
+    mat-card-title {
+        margin-bottom: 1cm;
+    }
+}
+
+@media only screen and (min-width:735px) {
+    .wrapper {
+        margin: 1cm;
+
+        mat-card {
+            margin: 0.5cm;
+            min-width: fit-content;
+            padding: 1cm;
+            float: left;
+        }
+
+    }
+
+}
+
+@media only screen and (max-width:735px) {
+    .wrapper {
+        margin: 0.5cm;
+        margin-top: 1cm;
+
+        mat-card {
+            margin: auto;
+            margin-top: 0.5cm;
+            width: 90%;
+            
+        }
+
     }
 }

@@ -36,6 +36,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TestComponent } from './test/test.component';
+import { SyncComponent } from './sync/sync.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +53,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     AccountSettingsComponent,
     EditComponent,
     AboutComponent,
-    AddAlternativeDialog
+    AddAlternativeDialog,
+    TestComponent,
+    SyncComponent
   ],
   imports: [
     BrowserModule,
