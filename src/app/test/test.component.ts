@@ -22,7 +22,7 @@ export class TestComponent implements OnInit {
 addNote(){
   let cards=this.cardsService.getCards()
   for(let c of cards){
-    this.ankiService.addNote(c.frage,c.antwort)
+ //   this.ankiService.addNote(c.frage,c.antwort)
   }
 }
  
