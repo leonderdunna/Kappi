@@ -13,7 +13,7 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
-    "experimentalDecorators": true,
+
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2017",
@@ -22,7 +22,7 @@
       "es2020",
       "dom"
     ],
-    "experimentalDecorators":true,
+    
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
