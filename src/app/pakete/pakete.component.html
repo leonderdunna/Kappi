@@ -1,3 +1,36 @@
-<div class="wrapper">
-    <h1>Das Paketsystem ist noch in der Entwicklung</h1>
+<div>
+
+    <mat-card *ngFor='let paket of pakete' class="paket">
+        <mat-card-content >
+            <mat-card-title (click)="zeigeKarten(paket.name)">{{paket.name}}</mat-card-title>
+            <ul>
+                <ng-container *ngTemplateOutlet="recursiveListTmpl; context:{ list: paket.stapel }">
+                </ng-container>
+            </ul>
+            <mat-slide-toggle>Dieses Paket Aktivieren</mat-slide-toggle>
+        </mat-card-content>
+        
+    </mat-card>
+
+
+
+    <ng-template #recursiveListTmpl let-list="list">
+        <li *ngFor="let item of list">
+            {{ item.name }}
+            <ul *ngIf="item.stapel.length > 0">
+                <ng-container *ngTemplateOutlet="recursiveListTmpl; context:{ list: item.stapel }"></ng-container>
+            </ul>
+        </li>
+    </ng-template>
+
+
+<div class="wrapper" *ngIf="pakete.length<=0">
+    Es sind keine Karten vorhanden
+    <br>
+    <button class="add" mat-button (click)="neu()">
+        <mat-icon>add_circle</mat-icon>
+        <span class="menu-text">Neue Karte</span>
+    </button>
+
+
 </div>

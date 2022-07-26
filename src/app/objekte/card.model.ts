@@ -1,3 +1,5 @@
+import { Paket } from "./paket.model";
+
 export interface Card{
     frage:string;
     antwort:string;
@@ -9,4 +11,5 @@ export interface Card{
         hinweis:string;
         antwort:string;
     }[]
+    paket:string[]
 }

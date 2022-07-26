@@ -1,3 +1,19 @@
+<mat-card>
+    <mat-card-title>Filter</mat-card-title>
+    <mat-card-content>
+      
+            <mat-form-field appearance="standard">
+                <mat-label>Paket</mat-label>
+                <textarea matInput [(ngModel)]="paket"
+                    placeholder="Beispiel: Schule"></textarea>
+            </mat-form-field>
+            <button mat-button (click)="filter()">Anwenden</button>
+        
+    </mat-card-content>
+
+
+</mat-card>
+
 <table mat-table [dataSource]="karten" class="mat-elevation-z8" *ngIf="karten.length>0">
     <ng-container matColumnDef="frage">
         <th mat-header-cell *matHeaderCellDef> Frage </th>
@@ -17,7 +33,7 @@
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item  (click)="edit(karte.id)">
+                <button mat-menu-item (click)="edit(karte.id)">
                     <mat-icon>edit</mat-icon>
                     <span>Bearbeiten</span>
                 </button>

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Paket } from '../objekte/paket.model';
+import { PaketeService } from '../services/pakete.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pakete',
@@ -7,9 +10,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaketeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private paketeService: PaketeService,
+    private router:Router
+  ) { }
 
   ngOnInit(): void {
   }
 
+  pakete: Paket[] = this.paketeService.getPakete()
+
+  zeigeKarten(paket:string){
+    this.router.navigate([`/`],{'queryParams':{'paket':paket}})
+  }
+
+  neu() {
+    this.router.navigate([`neu`])
+  }
 }

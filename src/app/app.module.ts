@@ -38,6 +38,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TestComponent } from './test/test.component';
 import { SyncComponent } from './sync/sync.component';
+import { MatAutocompleteModule} from '@angular/material/autocomplete'
+import { MatSlideToggleModule} from '@angular/material/slide-toggle'
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +63,7 @@ import { SyncComponent } from './sync/sync.component';
   ],
   imports: [
     BrowserModule,
+    MatSlideToggleModule,
     MatCheckboxModule,
     MatTabsModule,
     AppRoutingModule,
@@ -67,6 +72,7 @@ import { SyncComponent } from './sync/sync.component';
     MatToolbarModule,
     MatDialogModule,
     MatSidenavModule,
+    MatAutocompleteModule,
     MatIconModule,
     HighchartsChartModule,
     MatListModule,
