@@ -12,15 +12,20 @@
         <mat-label>Paket</mat-label>
         <textarea [(ngModel)]="paket" matInput placeholder="Beispiel: ca. 300m"></textarea>
     </mat-form-field>
+    <mat-form-field appearance="standard">
+        <mat-label>Mehr Infos</mat-label>
+        <textarea [(ngModel)]="material" matInput placeholder="Beispiel: https://Link-zum-Hefter.de"></textarea>
+    </mat-form-field>
 
-    <button *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal))" mat-raised-button (click)="reset()"
+
+    <button *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))" mat-raised-button (click)="reset()"
         color="primary">Verwerfen</button>
-    <button *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal))" mat-raised-button (click)="update()"
+    <button *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))" mat-raised-button (click)="update()"
         color="accent">Bearbeiten</button>
 
-    <button *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal))" mat-raised-button disabled (click)="reset()"
+    <button *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))" mat-raised-button disabled (click)="reset()"
         color="primary">Verwerfen</button>
-    <button *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal))" mat-raised-button disabled="" (click)="update()"
+    <button *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))" mat-raised-button disabled="" (click)="update()"
         color="accent">Bearbeiten</button>
 
 </div>

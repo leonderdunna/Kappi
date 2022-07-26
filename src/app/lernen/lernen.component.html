@@ -37,13 +37,25 @@
     <button *ngIf="!falsch&&!hinweisBenoetigt &&!skip" (click)="lernen(3)" mat-button>Einfach</button>
     <button *ngIf="falsch" (click)="openDialog()" mat-button>Antwort war richtig!</button>
 </div>
+
+
 <div class="antworten" *ngIf="(!falsch&&userantwort != ''&&!richtig && !skip && !fertig && (karten.length != 0)) ">
     <button mat-button (click)="pruefen()">Überprüfen</button>
 </div>
+
+
 <div class="antworten" *ngIf="(!falsch&&(userantwort =='')&&(!richtig && !skip) && !fertig && (karten.length != 0)) ">
     <button mat-button (click)="ueberspringen()">Überspringen</button>
 
 </div>
+
+<div class="material" >
+    <a *ngIf="material" [href]="material" target="infos">
+        <mat-icon>book</mat-icon>
+    </a>
+    <mat-icon (click)="edit(activeCard)">edit</mat-icon>
+</div>
+
 <div class="fertig" *ngIf="(fertig && karten.length >0)">
     <mat-card>
         Sie sind für Heute fertig.

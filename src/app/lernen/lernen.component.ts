@@ -38,6 +38,7 @@ export class LernenComponent implements OnInit {
 
   frage = 'Frage wird geladen...'
   antwort = ''
+  material=''
 
   activeCard = '';
   antwortSichtbar = false;
@@ -54,6 +55,10 @@ export class LernenComponent implements OnInit {
   routeNeueKarte() {
     this.router.navigate([`neu`])
   }
+  edit(id: string) {
+    this.router.navigate([`edit/${id}`]);
+  }
+
 
   neueKartenHinzufügen(): boolean {
     let statIds = this.stats.map(e => { return e.card })
@@ -127,6 +132,9 @@ export class LernenComponent implements OnInit {
     this.frage = c.frage;
     this.antwort = c.antwort;
     this.antwortSichtbar = false;
+    if(c.material){
+      this.material=c.material
+    }
 
   }
 

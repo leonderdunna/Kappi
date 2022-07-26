@@ -11,5 +11,6 @@ export interface Card{
         hinweis:string;
         antwort:string;
     }[]
-    paket:string[]
+    paket:string[];
+    material?:string;
 }

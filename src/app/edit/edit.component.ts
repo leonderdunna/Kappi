@@ -22,7 +22,10 @@ export class EditComponent implements OnInit {
         this.paket += ('::' + this.card.paket[i])
       }
       this.paketOriginal = this.paket
-     
+      if (this.card.material) {
+        this.material = this.card.material
+        this.materialOriginal = this.material
+      }
     })
   }
   card: Card = { frage: '', antwort: '', paket: [] };
@@ -32,6 +35,8 @@ export class EditComponent implements OnInit {
   frage: string = '';
   antwort: string = '';
   paket: string = '';
+  material: string = ''
+  materialOriginal: string = '';
   paketOriginal: string = ''
   update() {
     if (this.frage == '' || this.antwort == '') {
@@ -43,6 +48,12 @@ export class EditComponent implements OnInit {
     this.card.antwort = this.antwort;
     this.card.paket = this.paket.split('::')
     this.paketOriginal = this.paket
+    this.materialOriginal = this.material
+    if (this.material != '')
+      this.card.material = this.material
+    else {
+      this.card.material = undefined;
+    }
     this.cardsService.updateCard(this.card)
   }
   reset() {
@@ -50,6 +61,7 @@ export class EditComponent implements OnInit {
     this.frage = this.card.frage;
     this.antwort = this.card.antwort;
     this.paket = this.card.paket[0]
+    this.material = this.materialOriginal
     for (let i = 1; i < this.card.paket.length; i++) {
       this.paket += ('::' + this.card.paket[i])
     }

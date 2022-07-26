@@ -12,10 +12,15 @@
         <mat-label>Paket</mat-label>
         <textarea [(ngModel)]="paket" [matAutocomplete]="paketeauto" matInput placeholder="Beispiel: Schule::Französisch::Klasse 6::Unité 3::Text: 'Der Eifelturm'"></textarea>
     </mat-form-field>
+    <mat-form-field appearance="standard">
+        <mat-label>Mehr Information</mat-label>
+        <textarea [(ngModel)]="material" matInput placeholder="https://Link-zum-Hefter.de/"></textarea>
+    </mat-form-field>
 
     <mat-autocomplete #paketeauto="matAutocomplete">
         <mat-option *ngFor="let p of pakete" [value]="p">{{p}}</mat-option>
     </mat-autocomplete>
+
 
     <button mat-raised-button (click)="verwerfen()" color="primary">Verwerfen</button>
     <button mat-raised-button (click)="add()" color="accent">Hinzufügen</button>

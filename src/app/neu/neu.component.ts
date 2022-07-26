@@ -10,18 +10,36 @@ import { PaketeService } from '../services/pakete.service';
 })
 export class NeuComponent implements OnInit {
 
-  constructor(private cardsService: CardsService, private paketeService:PaketeService) { }
+  constructor(private cardsService: CardsService, private paketeService: PaketeService) { }
 
   ngOnInit(): void {
   }
   frage = '';
   antwort = '';
-  paket= '';
-  pakete=this.paketeService.getPaketeAsString()
+  paket = '';
+  pakete = this.paketeService.getPaketeAsString()
+  material = ''
 
   add() {
     if (this.frage != '' && this.antwort != '') {
-      this.cardsService.addCard({ frage: this.frage, antwort: this.antwort,paket : this.paket.split('::') });
+
+      if (this.material != '') {
+        this.cardsService.addCard({
+          frage: this.frage,
+          antwort: this.antwort,
+          paket: this.paket.split('::'),
+          material:this.material
+        })
+      }
+      else
+        this.cardsService.addCard({
+          frage: this.frage,
+          antwort: this.antwort,
+          paket: this.paket.split('::')
+        });
+
+
+
       this.cards.unshift(this.frage);
       this.frage = '';
       this.antwort = '';
