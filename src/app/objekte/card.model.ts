@@ -3,7 +3,7 @@ import { Paket } from "./paket.model";
 export interface Card{
     frage:string;
     antwort:string;
-    id?:string
+    id:string
     unsynced?:boolean;
     lastChange?:number;
     alternativAntworten?:string[];
@@ -13,4 +13,5 @@ export interface Card{
     }[]
     paket:string[];
     material?:string;
+    entwurf?:boolean;
 }

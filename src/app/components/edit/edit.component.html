@@ -57,7 +57,7 @@
 
 
     </details>
-    <div>
+    <div *ngIf="!card.entwurf">
         <button
             *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))"
             mat-raised-button (click)="reset()" color="primary">Verwerfen</button>
@@ -71,5 +71,12 @@
         <button
             *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))"
             mat-raised-button disabled="" (click)="update()" color="accent">Bearbeiten</button>
+    </div>
+    <div *ngIf="card.entwurf">
+        <button mat-raised-button (click)="abbrechen()" color="primary">Abbrechen</button>
+        <button mat-raised-button (click)="entwurfSpeichern()" color="primary">Als Entwurf Speichern</button>
+        <button
+           mat-raised-button (click)="addCard()" color="accent">Hinzufügen</button>
+   
     </div>
 </div>

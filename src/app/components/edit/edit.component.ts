@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CardsService } from '../../services/cards.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Card } from '../../objekte/card.model';
 import { AddAlternativeDialog } from '../lernen/lernen.component';
 import { MatDialog } from '@angular/material/dialog';
+
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -14,6 +15,7 @@ export class EditComponent implements OnInit {
   constructor(private cardsService: CardsService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
+    private router:Router,
   ) {
     this.route.params.subscribe(params => {
       this.id = params['id'];
@@ -31,7 +33,7 @@ export class EditComponent implements OnInit {
       }
     })
   }
-  card: Card = { frage: '', antwort: '', paket: [] };
+  card: Card = { frage: '', antwort: '', paket: [],id:'' };
   id = '';
   ngOnInit(): void {
   }
@@ -41,8 +43,8 @@ export class EditComponent implements OnInit {
   material: string = ''
   materialOriginal: string = '';
   paketOriginal: string = ''
-  update() {
-    if (this.frage == '' || this.antwort == '') {
+  update( ignoreWarnings?:boolean) {
+    if ((this.frage == '' || this.antwort == '')&&!ignoreWarnings) {
       alert('Weder Antwort noch Frage dürfen leer sein!')
       return;
     }
@@ -96,5 +98,17 @@ export class EditComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
      this.card = this.cardsService.getCard(this.id)
     })
+  }
+  entwurfSpeichern(){
+    this.update(true)
+    this.router.navigate(['neu'])
+  }
+  addCard(){
+    this.card.entwurf=false
+    this.update()
+    this.router.navigate(['neu'])
+  }
+  abbrechen(){
+    this.router.navigate(['neu'])
   }
 }

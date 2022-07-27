@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Card } from '../../objekte/card.model';
-import { CardsService } from '../../services/cards.service';
-import { PaketeService } from '../../services/pakete.service';
+import { Router } from '@angular/router';
+import { CardsService } from 'src/app/services/cards.service';
 
 @Component({
   selector: 'app-neu',
@@ -10,47 +9,28 @@ import { PaketeService } from '../../services/pakete.service';
 })
 export class NeuComponent implements OnInit {
 
-  constructor(private cardsService: CardsService, private paketeService: PaketeService) { }
+  constructor(private cardsService:CardsService,private router:Router) {
+    if(this.cardsService.getEntwürfe().length==0){
+      this.neu()
+    }
+   }
 
   ngOnInit(): void {
   }
-  frage = '';
-  antwort = '';
-  paket = '';
-  pakete = this.paketeService.getPaketeAsString()
-  material = ''
 
-  add() {
-    if (this.frage != '' && this.antwort != '') {
+  entwuerfe=this.cardsService.getEntwürfe()
 
-      if (this.material != '') {
-        this.cardsService.addCard({
-          frage: this.frage,
-          antwort: this.antwort,
-          paket: this.paket.split('::'),
-          material:this.material
-        })
-      }
-      else
-        this.cardsService.addCard({
-          frage: this.frage,
-          antwort: this.antwort,
-          paket: this.paket.split('::')
-        });
-
-
-
-      this.cards.unshift(this.frage);
-      this.frage = '';
-      this.antwort = '';
-    }
-    else {
-      alert("Bitte geben sie eine Frage und eine Antwort ein!")
-    }
+  delete(id:string){
+    this.cardsService.delete(id)
+    this.entwuerfe=this.cardsService.getEntwürfe()
   }
-  verwerfen() {
-    this.frage = '';
-    this.antwort = '';
+  edit(id:string){
+    this.router.navigate([`edit/${id}`])
   }
-  cards: string[] = [];
+
+neu(){
+  this.router.navigate([`edit/${this.cardsService.newCard()}`])
+  
+}
+
 }

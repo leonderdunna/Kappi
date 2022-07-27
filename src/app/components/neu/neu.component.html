@@ -1,35 +1,13 @@
-<div>
+<div class="wrapper">
+    <button (click)="neu()" mat-button>Neue Karte</button>
+    <h1>Entwürfe</h1>
+    <mat-card *ngFor="let entwurf of entwuerfe">
+<mat-card-title>{{entwurf.frage}}</mat-card-title>
+<mat-card-content>{{entwurf.antwort}}</mat-card-content>
+<mat-card-footer>
+    <button (click)="delete(entwurf.id)" mat-button>Löschen</button>
+    <button (click)="edit(entwurf.id)" mat-button>Bearbeiten</button>
 
-    <mat-form-field appearance="standard">
-        <mat-label>Frage</mat-label>
-        <textarea [(ngModel)]="frage" matInput placeholder="Beispiel: Wie hoch ist der Eifelturm?"></textarea>
-    </mat-form-field>
-    <mat-form-field appearance="standard">
-        <mat-label>Antwort</mat-label>
-        <textarea [(ngModel)]="antwort" matInput placeholder="Beispiel: ca. 300m"></textarea>
-    </mat-form-field>
-    <mat-form-field appearance="standard">
-        <mat-label>Paket</mat-label>
-        <textarea [(ngModel)]="paket" [matAutocomplete]="paketeauto" matInput placeholder="Beispiel: Schule::Französisch::Klasse 6::Unité 3::Text: 'Der Eifelturm'"></textarea>
-    </mat-form-field>
-    <mat-form-field appearance="standard">
-        <mat-label>Mehr Information</mat-label>
-        <textarea [(ngModel)]="material" matInput placeholder="https://Link-zum-Hefter.de/"></textarea>
-    </mat-form-field>
-
-    <mat-autocomplete #paketeauto="matAutocomplete">
-        <mat-option *ngFor="let p of pakete" [value]="p">{{p}}</mat-option>
-    </mat-autocomplete>
-
-
-    <button mat-raised-button (click)="verwerfen()" color="primary">Verwerfen</button>
-    <button mat-raised-button (click)="add()" color="accent">Hinzufügen</button>
-    <br />
-
-    <mat-chip-list  cdkDropListOrientation="horizontal">
-        <mat-chip  *ngFor="let card of cards">
-            {{card}}
-        </mat-chip>
-    </mat-chip-list>
-
+</mat-card-footer>
+    </mat-card>
 </div>

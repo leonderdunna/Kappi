@@ -17,7 +17,6 @@ import { PaketeComponent } from './components/pakete/pakete.component';
 import { KartenComponent } from './components/karten/karten.component';
 import { StatistikenComponent } from './components/statistiken/statistiken.component';
 import { AccountComponent } from './components/account/account.component';
-import { NeuComponent } from './components/neu/neu.component';
 import { AnmeldenComponent } from './components/account/anmelden/anmelden.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -39,7 +38,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TestComponent } from './components/test/test.component';
 import { SyncComponent } from './components/sync/sync.component';
 import { MatAutocompleteModule} from '@angular/material/autocomplete'
-import { MatSlideToggleModule} from '@angular/material/slide-toggle'
+import { MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { NeuComponent } from './components/neu/neu.component'
 
 
 @NgModule({
@@ -52,14 +52,14 @@ import { MatSlideToggleModule} from '@angular/material/slide-toggle'
     KartenComponent,
     StatistikenComponent,
     AccountComponent,
-    NeuComponent,
     AnmeldenComponent,
     AccountSettingsComponent,
     EditComponent,
     AboutComponent,
     AddAlternativeDialog,
     TestComponent,
-    SyncComponent
+    SyncComponent,
+    NeuComponent
   ],
   imports: [
     BrowserModule,

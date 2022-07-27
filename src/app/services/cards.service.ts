@@ -22,6 +22,24 @@ export class CardsService {
     for (let card of cardIDs) {
       cards.push(this.getCard(card));
     }
+    cards = cards.filter((card) => {
+      if (card.entwurf)
+        return false
+      return true
+    })
+    return cards;
+  }
+  getEntwürfe(){
+    let cardIDs: string[] = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]');
+    let cards: Card[] = [];
+    for (let card of cardIDs) {
+      cards.push(this.getCard(card));
+    }
+    cards = cards.filter((card) => {
+      if (card.entwurf)
+        return true
+      return false
+    })
     return cards;
   }
 
@@ -29,9 +47,15 @@ export class CardsService {
     return JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.card + id) ?? 'false')
   }
 
-  addCard(card: Card): string {
-    card.unsynced = true;
-    card.id = this.STORAGE_STRINGS.newIDPräfix + Math.random();
+  newCard(): string {
+    let card: Card = {
+      unsynced: true,
+      entwurf: true,
+      frage: '',
+      antwort: '',
+      paket: ['Standard'],
+      id: this.STORAGE_STRINGS.newIDPräfix + Math.random(),
+    }
     window.localStorage.setItem(this.STORAGE_STRINGS.card + card.id, JSON.stringify(card))
     let cardsList = JSON.parse(window.localStorage.getItem(this.STORAGE_STRINGS.cardIDs) ?? '[]')
     cardsList.push(card.id)
