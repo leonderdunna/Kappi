@@ -57,6 +57,9 @@ export class LernenComponent implements OnInit {
   routeNeueKarte() {
     this.router.navigate([`neu`])
   }
+  routePakete(){
+    this.router.navigate(['pakete'])
+  }
   edit(id: string) {
     this.router.navigate([`edit/${id}`]);
   }

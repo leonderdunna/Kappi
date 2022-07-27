@@ -1,4 +1,4 @@
-<div>
+<div class="wrapper">
 
     <mat-form-field appearance="standard">
         <mat-label>Frage</mat-label>
@@ -7,25 +7,69 @@
     <mat-form-field appearance="standard">
         <mat-label>Antwort</mat-label>
         <textarea [(ngModel)]="antwort" matInput placeholder="Beispiel: ca. 300m"></textarea>
+
     </mat-form-field>
+
+
+
     <mat-form-field appearance="standard">
         <mat-label>Paket</mat-label>
         <textarea [(ngModel)]="paket" matInput placeholder="Beispiel: ca. 300m"></textarea>
     </mat-form-field>
-    <mat-form-field appearance="standard">
-        <mat-label>Mehr Infos</mat-label>
-        <textarea [(ngModel)]="material" matInput placeholder="Beispiel: https://Link-zum-Hefter.de"></textarea>
-    </mat-form-field>
+
+    <details>
+        <summary>Erweitert</summary>
+
+        <mat-form-field appearance="standard">
+            <mat-label>Mehr Infos</mat-label>
+            <textarea [(ngModel)]="material" matInput placeholder="Beispiel: https://Link-zum-Hefter.de"></textarea>
+        </mat-form-field>
+
+        <mat-card class="aantworten">
+            <mat-card-title>Alternative Antworten</mat-card-title>
+            <mat-card-content>
+                <div *ngFor="let a of card.alternativAntworten">
+                    <span>{{a}} </span>
+                    <button mat-button (click)="removeAltAntwort(a)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="hfehler">
+            <mat-card-title>Heufige Fehler</mat-card-title>
+            <mat-card-content>
+                <div *ngFor="let a of card.fehler">
+                    <span>{{a.antwort}} </span>
+                    <mat-icon class="forward">arrow_forward</mat-icon><span>{{a.hinweis}}</span>
+                    <button mat-button (click)="removeHFehler(a.antwort)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+
+            </mat-card-content>
+
+        </mat-card>
+        <button mat-button (click)="openDialog()">
+            <mat-icon>add_circle</mat-icon>Antwort
+        </button>
 
 
-    <button *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))" mat-raised-button (click)="reset()"
-        color="primary">Verwerfen</button>
-    <button *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))" mat-raised-button (click)="update()"
-        color="accent">Bearbeiten</button>
+    </details>
+    <div>
+        <button
+            *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))"
+            mat-raised-button (click)="reset()" color="primary">Verwerfen</button>
+        <button
+            *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))"
+            mat-raised-button (click)="update()" color="accent">Bearbeiten</button>
 
-    <button *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))" mat-raised-button disabled (click)="reset()"
-        color="primary">Verwerfen</button>
-    <button *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))" mat-raised-button disabled="" (click)="update()"
-        color="accent">Bearbeiten</button>
-
+        <button
+            *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))"
+            mat-raised-button disabled (click)="reset()" color="primary">Verwerfen</button>
+        <button
+            *ngIf="((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))"
+            mat-raised-button disabled="" (click)="update()" color="accent">Bearbeiten</button>
+    </div>
 </div>

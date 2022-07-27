@@ -1,10 +1,23 @@
-div{
+.wrapper{
     
     padding:1cm;
+    max-width: 20cm;
+    margin:auto;
 }
 div mat-form-field{
     display:block;
 }
 div button{
     margin: 0.5cm;
+}
+mat-card{
+   // float:left;
+    margin:1cm;
+  //  padding:1cm;
+}
+.forward{
+    padding:0cm 0.5cm;
+}
+mat-card div button, mat-card div mat-icon{
+    margin:0;
 }
