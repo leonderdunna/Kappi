@@ -9,6 +9,7 @@ import { Stat } from '../objekte/stat.model';
 import { Settings } from '../objekte/settings.model';
 import { GelerntService } from '../services/gelernt.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PaketeService } from '../services/pakete.service';
 
 @Component({
   selector: 'app-lernen',
@@ -17,6 +18,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 })
 export class LernenComponent implements OnInit {
   constructor(private cardsService: CardsService,
+    private paketeService: PaketeService,
     private statsService: StatsService,
     private lernenService: LernenService,
     private settingsService: SettingsService,
@@ -24,7 +26,7 @@ export class LernenComponent implements OnInit {
     private gelerntService: GelerntService,
     private dialog: MatDialog) {
     this.stats = this.statsService.getStats();
-    this.karten = this.cardsService.getCards();
+    this.karten = this.paketeService.getActiveCards();
     this.settings = this.settingsService.getSettings();
     this.neueKarte()
 
@@ -98,7 +100,7 @@ export class LernenComponent implements OnInit {
     this.falsch = false;
 
     this.stats = this.statsService.getStats();
-    this.karten = this.cardsService.getCards();
+    this.karten = this.paketeService.getActiveCards();
 
 
     let fs = this.stats.filter(e => {

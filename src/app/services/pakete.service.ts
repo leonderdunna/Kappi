@@ -3,6 +3,7 @@ import { merge } from 'highcharts';
 import { Paket } from '../objekte/paket.model'
 import { Stapel } from '../objekte/stapel.model';
 import { CardsService } from './cards.service';
+import { Card } from '../objekte/card.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,16 @@ export class PaketeService {
     return pakete
 
   }
+
+  getActiveCards(): Card[] {
+    let aktivePakete = this.getAktivePakete()
+    return this.cardsService.getCards().filter((card) => {
+      if (aktivePakete.includes(card.paket[0]))
+        return true
+      return false
+    })
+  }
+
   merge(pakete: Paket[], paket: Paket) {
     let ps: Paket[] = []
 
