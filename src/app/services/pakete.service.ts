@@ -18,10 +18,13 @@ export class PaketeService {
     let pakete: Paket[] = []
 
     let cards = this.cardsService.getCards()
+    let aktivePakete = this.getAktivePakete()
 
     for (let card of cards) {
       let p = card.paket
       let paket: Paket = { 'name': p[0], 'stapel': [] }
+      if (aktivePakete.includes(paket.name))
+        paket.aktiv = true;
 
 
       for (let i = p.length - 1; i > 0; i--) {
@@ -53,7 +56,7 @@ export class PaketeService {
     return ps
   }
   mergeStapel(stapel1: Stapel[], stapel2: Stapel[]): Stapel[] {
-    let stapel:Stapel[] =[]
+    let stapel: Stapel[] = []
     for (let i = 0; i < stapel2.length; i++) {
       let ps: Stapel[] = []
 
@@ -72,15 +75,23 @@ export class PaketeService {
     }
     return stapel
   }
-  getPaketeAsString(){
-    let p:string[] = [];
+  getPaketeAsString() {
+    let p: string[] = [];
     let cards = this.cardsService.getCards()
-    for (let c of cards){
-      p.push( c.paket.reduce((paket,e)=>{
-        return paket += '::'+e
-      }) )
+    for (let c of cards) {
+      p.push(c.paket.reduce((paket, e) => {
+        return paket += '::' + e
+      }))
     }
     return [... new Set(p)] //TODO: Stapel ergänzen
 
   }
+
+  getAktivePakete(): string[] {
+    return JSON.parse(localStorage.getItem('aktivePakete') || '[]')
+  }
+  setAktivePakete(pakete: string[]) {
+    localStorage.setItem('aktivePakete', JSON.stringify(pakete))
+  }
+
 }

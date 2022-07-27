@@ -1,15 +1,15 @@
 <div>
 
     <mat-card *ngFor='let paket of pakete' class="paket">
-        <mat-card-content >
+        <mat-card-content>
             <mat-card-title (click)="zeigeKarten(paket.name)">{{paket.name}}</mat-card-title>
             <ul>
                 <ng-container *ngTemplateOutlet="recursiveListTmpl; context:{ list: paket.stapel }">
                 </ng-container>
             </ul>
-            <mat-slide-toggle>Dieses Paket Aktivieren</mat-slide-toggle>
+             <mat-slide-toggle (change)="aktivePaketeAktualisieren()" [(ngModel)]="paket.aktiv">Dieses Paket Aktivieren</mat-slide-toggle>
         </mat-card-content>
-        
+
     </mat-card>
 
 
@@ -24,13 +24,13 @@
     </ng-template>
 
 
-<div class="wrapper" *ngIf="pakete.length<=0">
-    Es sind keine Karten vorhanden
-    <br>
-    <button class="add" mat-button (click)="neu()">
-        <mat-icon>add_circle</mat-icon>
-        <span class="menu-text">Neue Karte</span>
-    </button>
+    <div class="wrapper" *ngIf="pakete.length<=0">
+        Es sind keine Karten vorhanden
+        <br>
+        <button class="add" mat-button (click)="neu()">
+            <mat-icon>add_circle</mat-icon>
+            <span class="menu-text">Neue Karte</span>
+        </button>
 
 
-</div>
+    </div>

@@ -12,7 +12,7 @@ export class PaketeComponent implements OnInit {
 
   constructor(
     private paketeService: PaketeService,
-    private router:Router
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -20,11 +20,24 @@ export class PaketeComponent implements OnInit {
 
   pakete: Paket[] = this.paketeService.getPakete()
 
-  zeigeKarten(paket:string){
-    this.router.navigate([`/`],{'queryParams':{'paket':paket}})
+
+  zeigeKarten(paket: string) {
+    this.router.navigate([`/`], { 'queryParams': { 'paket': paket } })
   }
 
   neu() {
     this.router.navigate([`neu`])
   }
+
+  aktivePaketeAktualisieren() {
+    this.paketeService.setAktivePakete(
+      this.pakete.filter((e) => {
+        if (e.aktiv)
+          return true
+        return false
+      }).map((e) => { return e.name })
+    )
+    console.log(this.pakete)
+  }
+
 }
