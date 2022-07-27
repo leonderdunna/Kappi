@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Paket } from '../objekte/paket.model';
-import { PaketeService } from '../services/pakete.service'
+import { Paket } from '../../objekte/paket.model';
+import { PaketeService } from '../../services/pakete.service'
 import { Router } from '@angular/router';
 
 @Component({

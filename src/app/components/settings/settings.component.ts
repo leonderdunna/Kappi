@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Settings } from '../objekte/settings.model';
-import { SettingsService } from '../services/settings.service';
+import { Settings } from '../../objekte/settings.model';
+import { SettingsService } from '../../services/settings.service';
 
 
 @Component({

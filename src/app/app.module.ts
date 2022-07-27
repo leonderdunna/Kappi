@@ -9,24 +9,24 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MainNavComponent } from './main-nav/main-nav.component';
+import { MainNavComponent } from './components/main-nav/main-nav.component';
 import { MatCardModule } from '@angular/material/card';
-import { AddAlternativeDialog, LernenComponent } from './lernen/lernen.component';
-import { SettingsComponent } from './settings/settings.component'
-import { PaketeComponent } from './pakete/pakete.component';
-import { KartenComponent } from './karten/karten.component';
-import { StatistikenComponent } from './statistiken/statistiken.component';
-import { AccountComponent } from './account/account.component';
-import { NeuComponent } from './neu/neu.component';
-import { AnmeldenComponent } from './anmelden/anmelden.component';
+import { AddAlternativeDialog, LernenComponent } from './components/lernen/lernen.component';
+import { SettingsComponent } from './components/settings/settings.component'
+import { PaketeComponent } from './components/pakete/pakete.component';
+import { KartenComponent } from './components/karten/karten.component';
+import { StatistikenComponent } from './components/statistiken/statistiken.component';
+import { AccountComponent } from './components/account/account.component';
+import { NeuComponent } from './components/neu/neu.component';
+import { AnmeldenComponent } from './components/account/anmelden/anmelden.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { AccountSettingsComponent } from './components/account/account-settings/account-settings.component';
 import { MatTableModule } from '@angular/material/table';
-import { EditComponent } from './edit/edit.component'
+import { EditComponent } from './components/edit/edit.component'
 import { FormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
-import { AboutComponent } from './about/about.component';
+import { AboutComponent } from './components/about/about.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
@@ -36,8 +36,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { TestComponent } from './test/test.component';
-import { SyncComponent } from './sync/sync.component';
+import { TestComponent } from './components/test/test.component';
+import { SyncComponent } from './components/sync/sync.component';
 import { MatAutocompleteModule} from '@angular/material/autocomplete'
 import { MatSlideToggleModule} from '@angular/material/slide-toggle'
 

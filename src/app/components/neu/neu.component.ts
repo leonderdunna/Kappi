@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Card } from '../objekte/card.model';
-import { CardsService } from '../services/cards.service';
-import { PaketeService } from '../services/pakete.service';
+import { Card } from '../../objekte/card.model';
+import { CardsService } from '../../services/cards.service';
+import { PaketeService } from '../../services/pakete.service';
 
 @Component({
   selector: 'app-neu',

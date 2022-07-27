@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CardsService } from '../services/cards.service';
+import { CardsService } from '../../services/cards.service';
 import { ActivatedRoute } from '@angular/router';
-import { Card } from '../objekte/card.model';
+import { Card } from '../../objekte/card.model';
 import { AddAlternativeDialog } from '../lernen/lernen.component';
 import { MatDialog } from '@angular/material/dialog';
 @Component({

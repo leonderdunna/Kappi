@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CardsService } from '../services/cards.service';
-import { StatsService } from '../services/stats.service';
+import { CardsService } from '../../services/cards.service';
+import { StatsService } from '../../services/stats.service';
 import * as Highcharts from 'highcharts';
-import { SettingsService } from '../services/settings.service';
-import { GelerntService } from '../services/gelernt.service';
+import { SettingsService } from '../../services/settings.service';
+import { GelerntService } from '../../services/gelernt.service';
 
 @Component({
   selector: 'app-statistiken',

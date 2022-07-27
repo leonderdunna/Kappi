@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { User } from '../objekte/user.model';
-import { UserService } from '../services/user.service';
+import { User } from '../../../objekte/user.model';
+import { UserService } from '../../../services/user.service';
 import { RouterModule } from '@angular/router';
 
 

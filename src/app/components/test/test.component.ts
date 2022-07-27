@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CardsService } from '../services/cards.service';
-import { AnkiService } from '../services/sync/anki.service';
+import { CardsService } from '../../services/cards.service';
+import { AnkiService } from '../../services/sync/anki.service';
 
 @Component({
   selector: 'app-test',

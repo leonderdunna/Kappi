@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { User } from '../objekte/user.model';
-import { UserService } from '../services/user.service';
+import { User } from '../../../objekte/user.model';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-account-settings',

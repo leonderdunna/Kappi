@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { CardsService } from '../services/cards.service';
-import { LernenService } from '../services/lernen.service';
-import { StatsService } from '../services/stats.service';
-import { SettingsService } from '../services/settings.service';
+import { CardsService } from '../../services/cards.service';
+import { LernenService } from '../../services/lernen.service';
+import { StatsService } from '../../services/stats.service';
+import { SettingsService } from '../../services/settings.service';
 import { Router } from '@angular/router';
-import { Card } from '../objekte/card.model';
-import { Stat } from '../objekte/stat.model';
-import { Settings } from '../objekte/settings.model';
-import { GelerntService } from '../services/gelernt.service';
+import { Card } from '../../objekte/card.model';
+import { Stat } from '../../objekte/stat.model';
+import { Settings } from '../../objekte/settings.model';
+import { GelerntService } from '../../services/gelernt.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PaketeService } from '../services/pakete.service';
+import { PaketeService } from '../../services/pakete.service';
 
 @Component({
   selector: 'app-lernen',
