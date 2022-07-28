@@ -10,7 +10,7 @@ import { server } from '../resources/server'
 export class UserService {
 
   constructor(private http: HttpClient) {
-    this.user = JSON.parse(window.localStorage.getItem("user") ?? '{"name": "public",   "password": "public" } ')
+    this.user = JSON.parse(window.localStorage.getItem("user") ?? '{"name": "public",   "passwort": "public" } ')
   }
 
   user: User;
@@ -18,16 +18,18 @@ export class UserService {
 
   getUser(): User {
     //  return this.user
-    if (this.user.name != "public")
-      this.testPassword(this.user).subscribe(data => {
+    if (this.user.name != "public") {
+      this.verify(this.user).subscribe(data => {
         if (!data && !this.passwortwurdegeändert) {
           this.passwortwurdegeändert = true
-          this.userSpeichern({ "name": "public", "password": "public" })
+          this.userSpeichern({ "name": "public", "passwort": "public" })
 
           alert("Ihr Passwort wurde auf einem anderen Gerät geändert. Bitte melden sie sich erneut an")
-          location.reload()
+
         }
       })
+
+    }
     return this.user
   }
 
@@ -37,20 +39,20 @@ export class UserService {
   }
 
   changePasswort(p: string) {
-    return this.http.put(server + 'users/' + this.user.name + '/' + this.user.password + '/' + p, {})
+    return this.http.put(server + 'user/', { user: this.user, neuesPasswort: p })
   }
 
   getAllUsers(): Observable<any> {
-    return this.http.get(server + 'users');
+    return this.http.get(server + 'user');
   }
-  testPassword(user: User): Observable<any> {
-    return this.http.get(server + 'users/' + user.name + '/' + user.password);
+  verify(user: User): Observable<any> {
+    return this.http.post(server + 'user/verify', { user: user });
   }
 
   addUser(user: User): Observable<any> {
-    return this.http.post(server + 'users', { user: user });
+    return this.http.post(server + 'user', { "user": user });
   }
-  deleteAccount() {
-    return this.http.delete(server + 'users/' + this.user.name + '/' + this.user.password);
+  deleteAccount(user: User) {
+    return this.http.post(server + 'user/delete', { user: user });
   }
 }

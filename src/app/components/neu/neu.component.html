@@ -1,13 +1,14 @@
 <div class="wrapper">
-    <button (click)="neu()" mat-button>Neue Karte</button>
     <h1>Entwürfe</h1>
     <mat-card *ngFor="let entwurf of entwuerfe">
-<mat-card-title>{{entwurf.frage}}</mat-card-title>
-<mat-card-content>{{entwurf.antwort}}</mat-card-content>
-<mat-card-footer>
-    <button (click)="delete(entwurf.id)" mat-button>Löschen</button>
-    <button (click)="edit(entwurf.id)" mat-button>Bearbeiten</button>
+        <mat-card-title>{{entwurf.frage}}</mat-card-title>
+        <mat-card-content>{{entwurf.antwort}}</mat-card-content>
+        <mat-card-footer>
+            <button (click)="delete(entwurf.id)" mat-button>Löschen</button>
+            <button (click)="edit(entwurf.id)" mat-button>Bearbeiten</button>
 
-</mat-card-footer>
+        </mat-card-footer>
     </mat-card>
+    <button (click)="neu()" mat-raised-button color="accent">Neue Karte</button>
+
 </div>

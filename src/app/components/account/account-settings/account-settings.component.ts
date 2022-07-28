@@ -33,7 +33,7 @@ export class AccountSettingsComponent implements OnInit {
             alert('Passwort konnte nicht geändert werden')
             
         })
-      this.userService.userSpeichern({ name: this.user?.name ?? 'public', password: this.passwort })
+      this.userService.userSpeichern({ name: this.user?.name ?? 'public', passwort: this.passwort })
      // this.onSignin.emit(true)
     } else {
       alert('Bitte stellen Sie sicher, dass Sie das Passwort richtig eingegeben haben')
@@ -41,15 +41,15 @@ export class AccountSettingsComponent implements OnInit {
 
   }
   abmelden() {
-    this.userService.userSpeichern({ name: 'public', password: 'public' })
+    this.userService.userSpeichern({ name: 'public', passwort: 'public' })
     this.onSignin.emit(true)
   }
 
   deleteAccount() {
     if (confirm('Möchten Sie Ihren Account wirklich löschen? (diese Aktion kann nicht rückgängig gemacht werden)')) {
-      this.userService.deleteAccount().subscribe(data => {
+      this.userService.deleteAccount(this.user || {name:'',passwort:''}).subscribe(data => {
         if (data) {
-          this.userService.userSpeichern({ name: 'public', password: 'public' })
+          this.userService.userSpeichern({ name: 'public', passwort: 'public' })
           alert('Der Account wurde erfolgreich gelöscht')
           this.onSignin.emit(true)
         } else

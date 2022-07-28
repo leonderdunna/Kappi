@@ -28,9 +28,9 @@ export class AnmeldenComponent implements OnInit {
   }
   @Output() onSignin = new EventEmitter<boolean>()
   anmelden() {
-    this.userService.testPassword({ name: this.anmeldenUsername, password: this.anmeldenPasswort }).subscribe(data => {
+    this.userService.verify({ name: this.anmeldenUsername, passwort: this.anmeldenPasswort }).subscribe(data => {
       if (data) {
-        this.userService.userSpeichern({ name: this.anmeldenUsername, password: this.anmeldenPasswort })
+        this.userService.userSpeichern({ name: this.anmeldenUsername, passwort: this.anmeldenPasswort })
         this.onSignin.emit(true)
       }
       else {
@@ -43,8 +43,8 @@ export class AnmeldenComponent implements OnInit {
 
   registrieren() {
     if (!(this.allusers.indexOf(this.registrierenUsername) != -1) && this.registrierenUsername!='' && this.registrierenUsername != 'public' && this.rpasswort == this.rnpasswort && this.rpasswort != '') {
-      this.userService.addUser({ name: this.registrierenUsername, password: this.rpasswort }).subscribe(data => {
-        this.userService.userSpeichern({ name: this.registrierenUsername, password: this.rpasswort })
+      this.userService.addUser({ name: this.registrierenUsername, passwort: this.rpasswort }).subscribe(data => {
+        this.userService.userSpeichern({ name: this.registrierenUsername, passwort: this.rpasswort })
         this.onSignin.emit(true)
       })  }
       else {

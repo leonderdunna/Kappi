@@ -12,7 +12,7 @@
         <p>
             <mat-form-field appearance="standard">
                 <mat-label>Passwort</mat-label>
-                <input [(ngModel)]="anmeldenPasswort" matInput type="password" placeholder="Passwort">
+                <input [(ngModel)]="anmeldenPasswort" matInput type="passwort" placeholder="Passwort">
                 <!-- <mat-hint>Hint</mat-hint> -->
             </mat-form-field>
         </p>
@@ -32,14 +32,14 @@
             <p>
                 <mat-form-field appearance="standard">
                     <mat-label>Passwort</mat-label>
-                    <input [(ngModel)]="rpasswort" matInput type="password" placeholder="Passwort">
+                    <input [(ngModel)]="rpasswort" matInput type="passwort" placeholder="Passwort">
                     <!-- <mat-hint>Hint</mat-hint> -->
                 </mat-form-field>
             </p>
             <p>
                 <mat-form-field appearance="standard">
                     <mat-label>Passwort wiederholen</mat-label>
-                    <input matInput [(ngModel)]="rnpasswort" type="password" placeholder="Passwort">
+                    <input matInput [(ngModel)]="rnpasswort" type="passwort" placeholder="Passwort">
                     <mat-hint *ngIf="(rnpasswort!= rpasswort)">Passwörter stimmen nicht überein</mat-hint> 
                 </mat-form-field>
             </p>
