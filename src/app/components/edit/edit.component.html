@@ -14,19 +14,19 @@
 
     <mat-form-field appearance="standard">
         <mat-label>Paket</mat-label>
-        <textarea [(ngModel)]="paket" matInput placeholder="Beispiel: ca. 300m"></textarea>
+        <textarea [(ngModel)]="paket" matInput placeholder="Beispiel: Schule::Sprachen::Französisch::Vokabeln"></textarea>
     </mat-form-field>
 
-    <details>
-        <summary>Erweitert</summary>
 
         <mat-form-field appearance="standard">
             <mat-label>Mehr Infos</mat-label>
             <textarea [(ngModel)]="material" matInput placeholder="Beispiel: https://Link-zum-Hefter.de"></textarea>
         </mat-form-field>
 
-        <mat-card class="aantworten">
-            <mat-card-title>Alternative Antworten</mat-card-title>
+  <mat-checkbox [(ngModel)]="eingeben">Antwort muss eingegeben werden</mat-checkbox>
+
+        <mat-card *ngIf="!(card.alternativAntworten ==undefined ||card.alternativAntworten?.length == 0)" class="aantworten">
+            <mat-card-title>Alternative Antworten {{card.alternativAntworten}}</mat-card-title>
             <mat-card-content>
                 <div *ngFor="let a of card.alternativAntworten">
                     <span>{{a}} </span>
@@ -37,7 +37,7 @@
 
             </mat-card-content>
         </mat-card>
-        <mat-card class="hfehler">
+        <mat-card  *ngIf="!( card.fehler ==undefined ||card.fehler?.length == 0)" class="hfehler">
             <mat-card-title>Heufige Fehler</mat-card-title>
             <mat-card-content>
                 <div *ngFor="let a of card.fehler">
@@ -51,12 +51,11 @@
             </mat-card-content>
 
         </mat-card>
+  <div *ngIf="eingeben" class="div">
         <button mat-button (click)="openDialog()">
             <mat-icon>add_circle</mat-icon>Antwort
         </button>
-
-
-    </details>
+</div>
     <div *ngIf="!card.entwurf">
         <button
             *ngIf="!((antwort ==card.antwort)&&(frage==card.frage)&&(paket == paketOriginal)&&(material==materialOriginal))"
@@ -77,6 +76,6 @@
         <button mat-raised-button (click)="entwurfSpeichern()" color="primary">Als Entwurf Speichern</button>
         <button
            mat-raised-button (click)="addCard()" color="accent">Hinzufügen</button>
-   
+
     </div>
 </div>

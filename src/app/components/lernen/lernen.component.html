@@ -15,7 +15,7 @@
         <mat-card-content [innerHTML]="frage">Frage</mat-card-content>
 
     </mat-card>
-    <mat-card *ngIf="!fertig">
+    <mat-card *ngIf="(!fertig && eingeben)" class="antwortSchreiben">
         <mat-card-content>
 
             <mat-form-field appearance="standard">
@@ -31,7 +31,12 @@
             <mat-icon *ngIf="richtig">thumb_up</mat-icon>
         </mat-card-content>
     </mat-card>
+  <mat-card *ngIf="activeCard != '' && !fertig && richtig && !eingeben">
+    <mat-card-content [innerHTML]="antwort">Antwort</mat-card-content>
+
+  </mat-card>
 </div>
+
 
 <div class="antworten" *ngIf="(falsch || richtig || skip)">
 
@@ -48,16 +53,16 @@
 </div>
 
 
-<div class="antworten" *ngIf="(!falsch&&(userantwort =='')&&(!richtig && !skip) && !fertig && (karten.length != 0)) ">
-    <button mat-button (click)="ueberspringen()">Überspringen</button>
-
+<div class="antworten" *ngIf="(!falsch&&(userantwort =='')&&(!richtig && !skip) && !fertig && (karten.length != 0) ) ">
+    <button *ngIf="eingeben" mat-button (click)="ueberspringen()">Überspringen</button>
+  <button *ngIf="!eingeben" (click)="antwortZeigen()" mat-button>Antowrt anzeigen</button>
 </div>
 
 <div class="material" >
     <a *ngIf="material" [href]="material" target="infos">
         <mat-icon>book</mat-icon>
     </a>
-    <mat-icon (click)="edit(activeCard)">edit</mat-icon>
+    <mat-icon *ngIf="!(karten.length==0 || fertig)" (click)="edit(activeCard)">edit</mat-icon>
 </div>
 
 <div class="fertig" *ngIf="(fertig && karten.length >0)">

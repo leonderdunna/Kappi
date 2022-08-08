@@ -41,6 +41,7 @@ export class LernenComponent implements OnInit {
   frage = 'Frage wird geladen...'
   antwort = ''
   material=''
+  eingeben?:boolean=false
 
   activeCard = '';
   antwortSichtbar = false;
@@ -125,7 +126,7 @@ export class LernenComponent implements OnInit {
       return;
     }
 
-    let s = fs[Math.floor(Math.random() * fs.length)]; // s ist aktiver status 
+    let s = fs[Math.floor(Math.random() * fs.length)]; // s ist aktiver status
     this.activeCard = s.card;
     if (this.karten.findIndex(e => e.id === s.card) == -1) {
       if (!s.id) { console.error('Stat ohne ID!!!'); return; }
@@ -137,6 +138,7 @@ export class LernenComponent implements OnInit {
     this.frage = c.frage;
     this.antwort = c.antwort;
     this.antwortSichtbar = false;
+    this.eingeben = c.eingeben
     if(c.material){
       this.material=c.material
     }
@@ -146,7 +148,7 @@ export class LernenComponent implements OnInit {
   //Click handlers und so
   pruefen() {
     if (this.userantwort == this.antwort) {
-      this.richtig = true; 
+      this.richtig = true;
       this.antwortSichtbar=false;
       this.falsch=false;
       this.hinweis='';return;
@@ -176,6 +178,9 @@ export class LernenComponent implements OnInit {
     this.falsch = true;
     //TODO: möglichkeit antwort als doch richtig ...
   }
+antwortZeigen(){
+    this.richtig = true;
+}
 
   openDialog() {
    let dialogRef = this.dialog.open(AddAlternativeDialog, {

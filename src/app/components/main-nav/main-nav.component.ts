@@ -10,7 +10,7 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class MainNavComponent {
 
-  isHandset:boolean =true 
+  isHandset:boolean = true;
 
   constructor(private breakpointObserver: BreakpointObserver) {}
 

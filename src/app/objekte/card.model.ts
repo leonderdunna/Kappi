@@ -5,6 +5,7 @@ export interface Card{
     antwort:string;
     id:string
     unsynced?:boolean;
+    eingeben?:boolean;
     lastChange?:number;
     alternativAntworten?:string[];
     fehler?:{

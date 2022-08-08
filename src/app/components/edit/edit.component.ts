@@ -31,6 +31,10 @@ export class EditComponent implements OnInit {
         this.material = this.card.material
         this.materialOriginal = this.material
       }
+      if(this.card.eingeben){
+        this.eingeben=this.card.eingeben
+
+      this.eingebenOriginal=this.card.eingeben}
     })
   }
   card: Card = { frage: '', antwort: '', paket: [],id:'' };
@@ -43,6 +47,8 @@ export class EditComponent implements OnInit {
   material: string = ''
   materialOriginal: string = '';
   paketOriginal: string = ''
+  eingeben:boolean = false;
+  eingebenOriginal:boolean = false;
   update( ignoreWarnings?:boolean) {
     if ((this.frage == '' || this.antwort == '')&&!ignoreWarnings) {
       alert('Weder Antwort noch Frage dürfen leer sein!')
@@ -54,11 +60,14 @@ export class EditComponent implements OnInit {
     this.card.paket = this.paket.split('::')
     this.paketOriginal = this.paket
     this.materialOriginal = this.material
+    this.eingebenOriginal = this.eingeben
+    this.card.eingeben= this.eingeben
     if (this.material != '')
       this.card.material = this.material
     else {
       this.card.material = undefined;
     }
+    this.card.eingeben=this.eingeben;
     this.cardsService.updateCard(this.card)
   }
   reset() {

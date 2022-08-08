@@ -18,6 +18,7 @@ export class NeuComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
   entwuerfe=this.cardsService.getEntwürfe()
 
   delete(id:string){
@@ -30,7 +31,7 @@ export class NeuComponent implements OnInit {
 
 neu(){
   this.router.navigate([`edit/${this.cardsService.newCard()}`])
-  
+
 }
 
 }
