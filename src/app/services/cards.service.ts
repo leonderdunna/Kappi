@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Card } from '../objekte/card.model';
+import { StatsService} from "./stats.service";
 
 
 @Injectable({
@@ -7,7 +8,7 @@ import { Card } from '../objekte/card.model';
 })
 export class CardsService {
 
-  constructor() { }
+  constructor( private statsService:StatsService) { }
 
   STORAGE_STRINGS: { cardIDs: string, card: string, newIDPräfix: string } = {
     "cardIDs": "cardIDs",
@@ -53,7 +54,9 @@ export class CardsService {
       entwurf: true,
       frage: '',
       antwort: '',
+      stat:this.statsService.newStat();
       paket: ['Standard'],
+
       id: this.STORAGE_STRINGS.newIDPräfix + Math.random(),
     }
     window.localStorage.setItem(this.STORAGE_STRINGS.card + card.id, JSON.stringify(card))

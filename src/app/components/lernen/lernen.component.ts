@@ -10,6 +10,8 @@ import { Settings } from '../../objekte/settings.model';
 import { GelerntService } from '../../services/gelernt.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PaketeService } from '../../services/pakete.service';
+import { ZusatzComponent} from "../edit/zusatz/zusatz.component";
+import {Fortschritt} from "../../objekte/fortschritt.model";
 
 @Component({
   selector: 'app-lernen',
@@ -25,35 +27,35 @@ export class LernenComponent implements OnInit {
     private router: Router,
     private gelerntService: GelerntService,
     private dialog: MatDialog) {
-    this.stats = this.statsService.getStats();
-    this.karten = this.paketeService.getActiveCards();
-    this.settings = this.settingsService.getSettings();
+
     this.neueKarte()
 
   }
 
 
-  karten: Card[] = [];
-  stats: Stat[] = [];
-  settings: Settings;
+  //
+  karten: Card[] = this.paketeService.getActiveCards();
+  stats: Stat[] = this.statsService.getStats();
+  settings: Settings  = this.settingsService.getSettings();
+
+  karte?:Card;
+
+  defaultfortschritt:Fortschritt={
+    antwortSichtbar:false,
+    fertig:false,
+    hinweisBenoetigt:false,
+    skip:false,
+    richtig:false,
+    falsch:false,
+  }
 
 
-  frage = 'Frage wird geladen...'
-  antwort = ''
-  material=''
-  eingeben?:boolean=false
+  fortschritt:Fortschritt = this.defaultfortschritt;
 
   activeCard = '';
-  antwortSichtbar = false;
-  fertig = false;
 
   userantwort = '';
-  hinweis = '';
-  hinweisBenoetigt = false;
-  skip = false;
-  richtig = false;
-  falsch = false;
-
+  hinweis='';
 
   routeNeueKarte() {
     this.router.navigate([`neu`])
@@ -84,6 +86,9 @@ export class LernenComponent implements OnInit {
   addStatus(cardID: string) {
     this.statsService.addStat({
       "card": cardID,
+      intervall:0,
+      stufe:0,
+      gelernt:[],
       "rubrik": 0,
       'fällig': Date.now(),
       'unsynced': true,
@@ -96,12 +101,7 @@ export class LernenComponent implements OnInit {
 
     //Reset all stuf
     this.userantwort = '';
-    this.hinweis = '';
-    this.hinweisBenoetigt = false;
-    this.skip = false;
-    this.richtig = false;
-    this.antwortSichtbar = false;
-    this.falsch = false;
+    this.fortschritt=this.defaultfortschritt;
 
     this.stats = this.statsService.getStats();
     this.karten = this.paketeService.getActiveCards();
@@ -134,23 +134,17 @@ export class LernenComponent implements OnInit {
       this.neueKarte();
       return;
     }
-    let c = this.karten[this.karten.findIndex(e => e.id === s.card)]
-    this.frage = c.frage;
-    this.antwort = c.antwort;
-    this.antwortSichtbar = false;
-    this.eingeben = c.eingeben
-    if(c.material){
-      this.material=c.material
-    }
+    this.karte = this.karten[this.karten.findIndex(e => e.id === s.card)]
+
 
   }
 
   //Click handlers und so
   pruefen() {
-    if (this.userantwort == this.antwort) {
-      this.richtig = true;
-      this.antwortSichtbar=false;
-      this.falsch=false;
+    if (this.userantwort == this.karte?.antwort) {
+      this.fortschritt.richtig = true;
+      this.fortschritt.antwortSichtbar=false;
+      this.fortschritt.falsch=false;
       this.hinweis='';return;
     }
     let card = this.cardsService.getCard(this.activeCard)
@@ -158,32 +152,32 @@ export class LernenComponent implements OnInit {
       for (let e of card.alternativAntworten)
         if (e == this.userantwort) {
           this.hinweis='<span style="color:green">Richtig! Eine andere Lösung wäre:<span>'
-          this.richtig = true;
-          this.falsch=false;
-          this.antwortSichtbar=true;
+          this.fortschritt.richtig = true;
+          this.fortschritt.falsch=false;
+          this.fortschritt.antwortSichtbar=true;
           return;
         }
 
     if (card.fehler)
       for (let e of card.fehler)
         if (e.antwort == this.userantwort) {
-          this.hinweisBenoetigt = true;
+          this.fortschritt.hinweisBenoetigt = true;
           this.hinweis = e.hinweis;
-          this.antwortSichtbar=false;
-          this.falsch = false;
+          this.fortschritt.antwortSichtbar=false;
+          this.fortschritt.falsch = false;
           return;
         }
     this.hinweis = 'Das war leider falsch. Richtig wäre:'
-    this.antwortSichtbar = true;
-    this.falsch = true;
+    this.fortschritt.antwortSichtbar = true;
+    this.fortschritt.falsch = true;
     //TODO: möglichkeit antwort als doch richtig ...
   }
 antwortZeigen(){
-    this.richtig = true;
+    this.fortschritt.richtig = true;
 }
 
   openDialog() {
-   let dialogRef = this.dialog.open(AddAlternativeDialog, {
+   let dialogRef = this.dialog.open(ZusatzComponent, {
       data: {
         card: this.activeCard,
         alternative: this.userantwort
@@ -196,35 +190,23 @@ antwortZeigen(){
   }
 
   ueberspringen() {
-    this.skip = true;
+    this.fortschritt.skip = true;
     this.hinweis = 'Diese Karte wurde Übersprungen. Richtig wäre gewesen:'
-    this.antwortSichtbar = true;
+    this.fortschritt.antwortSichtbar = true;
   }
 
   keineKartenFällig() {
-    this.antwortSichtbar = false;
-    this.fertig = true;
+    this.fortschritt.antwortSichtbar = false;
+    this.fortschritt.fertig = true;
   }
 
   lernen(antwort: number) {
-
-    let newStat = this.lernenService.lernen(
+    this.statsService.updateStat(this.lernenService.lernen(
       antwort,
       this.stats.filter(e => {
-        if (e.card == this.activeCard)
-          return true;
-        return false
-      })[0], this.settings)
+        return e.card == this.activeCard;
 
-    this.stats = this.stats.filter(e => {
-      if (e.card == this.activeCard)
-        return false;
-      return true
-    })
-    if (!newStat) { console.error('Beim Lernen ist ein Fehler aufgetreen'); return }
-    this.stats.push(newStat)
-
-    this.statsService.updateStat(newStat)
+      })[0], this.settings))
     this.neueKarte()
 
   }
@@ -232,50 +214,4 @@ antwortZeigen(){
   ngOnInit(): void {
   }
 
-}
-
-@Component({
-  selector: 'add-alternative-dialog',
-  templateUrl: 'alternative-dialog.html',
-  styleUrls: ['dialog.scss']
-})
-export class AddAlternativeDialog {
-  constructor(private cardsService: CardsService,
-    public dialogRef: MatDialogRef<AddAlternativeDialog>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: { card: string, alternative: string },
-  ) {
-
-  }
-  hinweis: string = '';
-  falsch: boolean = false;
-  add() {
-    let card = this.cardsService.getCard(this.data.card)
-    if (this.falsch) {
-      if (!(this.hinweis != '' && this.data.alternative != '')) { alert('Bitte geben Sie alle nötigen Informationen an'); return }
-      if (card.fehler) {
-        for(let f of card.fehler){
-          if(f.antwort == this.data.alternative){ alert('Diese Antwort existiert schon'); return }
-        }
-        card.fehler.push({ hinweis: this.hinweis, antwort: this.data.alternative })
-      } else {
-        card.fehler = [{ hinweis: this.hinweis, antwort: this.data.alternative }]
-      }
-
-    } else {
-      if (!(this.data.alternative != '')) { alert('Bitte geben Sie alle nötigen Informationen an'); return }
-      if (card.alternativAntworten) {
-        for(let f of card.alternativAntworten){
-          if(f == this.data.alternative){ alert('Diese Antwort existiert schon'); return }
-        }
-        card.alternativAntworten.push(this.data.alternative)
-      }
-      else {
-        card.alternativAntworten = [this.data.alternative]
-      }
-
-    }
-    this.cardsService.updateCard(card)
-    this.dialogRef.close(true)
-  }
 }

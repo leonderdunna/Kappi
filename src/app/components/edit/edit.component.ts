@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CardsService } from '../../services/cards.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Card } from '../../objekte/card.model';
-import { AddAlternativeDialog } from '../lernen/lernen.component';
+import {ZusatzComponent} from "./zusatz/zusatz.component";
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -98,7 +98,7 @@ export class EditComponent implements OnInit {
   }
 
   openDialog() {
-    let dialogRef = this.dialog.open(AddAlternativeDialog, {
+    let dialogRef = this.dialog.open(ZusatzComponent, {
       data: {
         card: this.card.id,
         alternative: ''

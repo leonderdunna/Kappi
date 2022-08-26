@@ -21,17 +21,17 @@ export class LernenService {
 
   constructor() { }
 
-  lernen(antwort: number, stat: Stat, settings: Settings): Stat | false {
+  lernen(antwort: number, stat: Stat, settings: Settings): Stat  {
 
     //Überprüfen ob alles wichtige da ist
-    if (!stat) { console.error('Stat wurde nicht übermittelt'); return false; }
-    if (!stat.leichtigkeit) { console.error('Leichtigkeit bei der karte war vorher nicht da'); return false; }
+    if (!stat) { console.error('Stat wurde nicht übermittelt'); }
+    if (!stat.leichtigkeit) { console.error('Leichtigkeit bei der karte war vorher nicht da'); }
     if(!stat.fällig){
       console.error('Karte hatte kein Fälligkeitszeitpunkt')
       stat.fällig = Date.now();
     }
 
-   
+
 
     let zufall = 1;//TODO ist noch kein echter zufall ... sollte später zwischen 0.95 und 1.05 liegen
 
@@ -51,7 +51,7 @@ export class LernenService {
         stat.stufe = 1;
         stat.fällig = Date.now() + settings.lernenSchritte[1]
 
-      } else { return false }
+      }
     }
 
     else if (stat.rubrik == this.RUBRIK_LERNEN) {
@@ -63,7 +63,7 @@ export class LernenService {
           stat.stufe = (stat.stufe ?? 0) + 1
           stat.fällig = Date.now() + (settings.lernenSchritte[stat.stufe] ?? settings.lernenSchritte[settings.lernenSchritte.length-1])
         } else {
-          stat.stufe = undefined;
+          stat.stufe = 0;
           stat.rubrik = this.RUBRIK_JUNG;
           stat.leichtigkeit = settings.startLeichtigkeit;
           stat.intervall = settings.startGut;
@@ -74,12 +74,12 @@ export class LernenService {
         stat.leichtigkeit = settings.startLeichtigkeit;
         stat.intervall = settings.startEinfach;
         stat.fällig = Date.now() + stat.intervall
-      } else { return false }
+      }
     }
     else if (stat.rubrik == this.RUBRIK_JUNG || stat.rubrik == this.RUBRIK_ALT) {
 
       //Überürüfen ob intervall da ist
-      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da'); return false; }
+      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da'); }
 
 
       if (antwort == this.ANTWORT_NOCHMAL) {
@@ -102,11 +102,11 @@ export class LernenService {
         stat.intervall = stat.intervall * stat.leichtigkeit * settings.bonus * zufall;
         stat.leichtigkeit += 0.15;
         stat.fällig = Date.now() + stat.intervall;
-      } else return false
+      }
     } else if (stat.rubrik == this.RUBRIK_ERNEUT_LERNEN) {
 
       //Überürüfen ob intervall da ist
-      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da'); return false; }
+      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da'); }
 
       if (antwort == this.ANTWORT_NOCHMAL) {
         stat.stufe = 0;
@@ -116,7 +116,7 @@ export class LernenService {
           stat.stufe = ((stat.stufe ?? 0) + 1)
           stat.fällig = Date.now() + settings.erneutLernenSchritte[stat.stufe]
         } else {
-          stat.stufe = undefined;
+          stat.stufe = 0;
           stat.rubrik = this.RUBRIK_JUNG;
           if (stat.leichtigkeit >= 1.50) {
             stat.leichtigkeit -= 0.20
@@ -131,13 +131,13 @@ export class LernenService {
         } else { stat.leichtigkeit = 1.30 }
         stat.intervall = stat.intervall * settings.faktorNachErneutemLernen;
         stat.fällig = Date.now() + stat.intervall
-      } else return false
-    } else return false
+      }
+    }
 
     if (stat.rubrik == this.RUBRIK_JUNG || stat.rubrik == this.RUBRIK_ALT) {
 
       //Überürüfen ob intervall da ist
-      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da'); return false; }
+      if (!stat.intervall) { console.error('Intervall bei der karte war vorher nicht da');  }
 
       //wenn intervall über einen monat ist wird die rubrik alt... hat nur einfluss auf eventuelle statistiken
       if (stat.intervall >= 1000 * 60 * 60 * 24 * 30)
@@ -148,7 +148,7 @@ export class LernenService {
     else stat.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
 
 
-  
+
     return stat;
   }
 

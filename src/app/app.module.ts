@@ -11,7 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MainNavComponent } from './components/main-nav/main-nav.component';
 import { MatCardModule } from '@angular/material/card';
-import { AddAlternativeDialog, LernenComponent } from './components/lernen/lernen.component';
+import {  LernenComponent } from './components/lernen/lernen.component';
+import {ZusatzComponent} from "./components/edit/zusatz/zusatz.component";
 import { SettingsComponent } from './components/settings/settings.component'
 import { PaketeComponent } from './components/pakete/pakete.component';
 import { KartenComponent } from './components/karten/karten.component';
@@ -39,7 +40,8 @@ import { TestComponent } from './components/test/test.component';
 import { SyncComponent } from './components/sync/sync.component';
 import { MatAutocompleteModule} from '@angular/material/autocomplete'
 import { MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { NeuComponent } from './components/neu/neu.component'
+import { NeuComponent } from './components/neu/neu.component';
+
 
 
 @NgModule({
@@ -56,10 +58,11 @@ import { NeuComponent } from './components/neu/neu.component'
     AccountSettingsComponent,
     EditComponent,
     AboutComponent,
-    AddAlternativeDialog,
+    ZusatzComponent,
     TestComponent,
     SyncComponent,
-    NeuComponent
+    NeuComponent,
+
   ],
   imports: [
     BrowserModule,

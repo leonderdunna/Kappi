@@ -1,18 +1,36 @@
-import { Paket } from "./paket.model";
+export interface Card {
 
-export interface Card{
-    frage:string;
-    antwort:string;
-    id:string
-    unsynced?:boolean;
-    eingeben?:boolean;
-    lastChange?:number;
-    alternativAntworten?:string[];
-    fehler?:{
-        hinweis:string;
-        antwort:string;
+  id?: string;
+  time: number;
+  paket: string[];
+
+  content: {
+    entwurf: boolean;
+    time: number;
+
+    frage: string;
+    antwort: string;
+    eingeben: boolean;
+    alternativAntworten?: string[];
+    fehler?: {
+      hinweis: string;
+      antwort: string;
     }[]
-    paket:string[];
-    material?:string;
-    entwurf?:boolean;
+
+    material?: string;
+  }[];
+
+  stat: {
+    time: number;
+    rubrik: number;
+    due: number;
+    leichtigkeit: number;
+    intervall: number;
+    stufe: number;
+    gelernt?: {
+      zeit: number;
+      antwort: number
+    };
+  }[];
+
 }
