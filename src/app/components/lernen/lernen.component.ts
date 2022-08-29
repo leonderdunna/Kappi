@@ -4,7 +4,7 @@ import { LernenService } from '../../services/lernen.service';
 import { StatsService } from '../../services/stats.service';
 import { SettingsService } from '../../services/settings.service';
 import { Router } from '@angular/router';
-import { Card } from '../../objekte/card.model';
+import { Card } from '../../objekte/card/card.model';
 import { Stat } from '../../objekte/stat.model';
 import { Settings } from '../../objekte/settings.model';
 import { GelerntService } from '../../services/gelernt.service';

@@ -3,7 +3,7 @@ import { merge } from 'highcharts';
 import { Paket } from '../objekte/paket.model'
 import { Stapel } from '../objekte/stapel.model';
 import { CardsService } from './cards.service';
-import { Card } from '../objekte/card.model';
+import { Card } from '../objekte/card/card.model';
 
 @Injectable({
   providedIn: 'root'

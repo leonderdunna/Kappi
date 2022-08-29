@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { CardsService } from '../../services/cards.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Card } from '../../objekte/card.model';
+import {Component, OnInit} from '@angular/core';
+import {CardsService} from '../../services/cards.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Card} from '../../objekte/card/card.model';
 import {ZusatzComponent} from "./zusatz/zusatz.component";
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
+import {Content} from "../../objekte/card/content.model";
 
 @Component({
   selector: 'app-edit',
@@ -13,65 +14,66 @@ import { MatDialog } from '@angular/material/dialog';
 export class EditComponent implements OnInit {
 
   constructor(private cardsService: CardsService,
-    private route: ActivatedRoute,
-    private dialog: MatDialog,
-    private router:Router,
+              private route: ActivatedRoute,
+              private dialog: MatDialog,
+              private router: Router,
   ) {
     this.route.params.subscribe(params => {
-      this.id = params['id'];
-      this.card = this.cardsService.getCard(this.id);
-      this.frage = this.card.frage;
-      this.antwort = this.card.antwort;
-      this.paket = this.card.paket[0]
+
+      this.card = this.cardsService.getCard(params['id']);
+
+      this.original = this.card.content[this.card.content.length - 1]
+      this.neu = {...this.card.content[this.card.content.length - 1]}
+
       for (let i = 1; i < this.card.paket.length; i++) {
         this.paket += ('::' + this.card.paket[i])
       }
       this.paketOriginal = this.paket
-      if (this.card.material) {
-        this.material = this.card.material
-        this.materialOriginal = this.material
-      }
-      if(this.card.eingeben){
-        this.eingeben=this.card.eingeben
 
-      this.eingebenOriginal=this.card.eingeben}
     })
   }
-  card: Card = { frage: '', antwort: '', paket: [],id:'' };
-  id = '';
+
+  card?: Card;
+
   ngOnInit(): void {
   }
-  frage: string = '';
-  antwort: string = '';
+
   paket: string = '';
-  material: string = ''
-  materialOriginal: string = '';
+  original?: Content;
+  neu?: Content;
+
   paketOriginal: string = ''
-  eingeben:boolean = false;
-  eingebenOriginal:boolean = false;
-  update( ignoreWarnings?:boolean) {
-    if ((this.frage == '' || this.antwort == '')&&!ignoreWarnings) {
+
+  update() {
+    if ((this.frage == '' || this.antwort == '') && !ignoreWarnings) {
       alert('Weder Antwort noch Frage dürfen leer sein!')
       return;
     }
-    if (!this.card) { console.error('Karte gibt es nicht'); return; }
+    if (!this.card) {
+      console.error('Karte gibt es nicht');
+      return;
+    }
     this.card.frage = this.frage;
     this.card.antwort = this.antwort;
     this.card.paket = this.paket.split('::')
     this.paketOriginal = this.paket
     this.materialOriginal = this.material
     this.eingebenOriginal = this.eingeben
-    this.card.eingeben= this.eingeben
+    this.card.eingeben = this.eingeben
     if (this.material != '')
       this.card.material = this.material
     else {
       this.card.material = undefined;
     }
-    this.card.eingeben=this.eingeben;
+    this.card.eingeben = this.eingeben;
     this.cardsService.updateCard(this.card)
   }
+
   reset() {
-    if (!this.card) { console.error('Karte gibt es nicht'); return; }
+    if (!this.card) {
+      console.error('Karte gibt es nicht');
+      return;
+    }
     this.frage = this.card.frage;
     this.antwort = this.card.antwort;
     this.paket = this.card.paket[0]
@@ -80,6 +82,7 @@ export class EditComponent implements OnInit {
       this.paket += ('::' + this.card.paket[i])
     }
   }
+
   removeAltAntwort(a: string) {
     this.card.alternativAntworten = this.card.alternativAntworten?.filter((i) => {
       if (i != a)
@@ -88,6 +91,7 @@ export class EditComponent implements OnInit {
     })
     this.cardsService.updateCard(this.card)
   }
+
   removeHFehler(f: string) {
     this.card.fehler = this.card.fehler?.filter((i) => {
       if (i.antwort != f)
@@ -105,19 +109,22 @@ export class EditComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
-     this.card = this.cardsService.getCard(this.id)
+      this.card = this.cardsService.getCard(this.id)
     })
   }
-  entwurfSpeichern(){
+
+  entwurfSpeichern() {
     this.update(true)
     this.router.navigate(['neu'])
   }
-  addCard(){
-    this.card.entwurf=false
+
+  addCard() {
+    this.card.entwurf = false
     this.update()
     this.router.navigate(['neu'])
   }
-  abbrechen(){
+
+  abbrechen() {
     this.router.navigate(['neu'])
   }
 }
