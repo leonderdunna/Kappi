@@ -1,8 +1,8 @@
 <div class="wrapper">
     <h1>Entwürfe</h1>
     <mat-card *ngFor="let entwurf of entwuerfe">
-        <mat-card-title>{{entwurf.frage}}</mat-card-title>
-        <mat-card-content>{{entwurf.antwort}}</mat-card-content>
+        <mat-card-title>{{entwurf.content[entwurf.content.length-1].felder.frage}}</mat-card-title>
+        <mat-card-content>{{entwurf.content[entwurf.content.length-1].felder.antwort}}</mat-card-content>
         <mat-card-footer>
             <button (click)="delete(entwurf.id)" mat-button>Löschen</button>
             <button (click)="edit(entwurf.id)" mat-button>Bearbeiten</button>

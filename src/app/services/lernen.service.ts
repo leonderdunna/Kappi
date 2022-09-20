@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Settings } from '../objekte/settings.model';
-import { Stat } from '../objekte/stat.model';
+import { Stat } from '../objekte/card/stat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +26,9 @@ export class LernenService {
     //Überprüfen ob alles wichtige da ist
     if (!stat) { console.error('Stat wurde nicht übermittelt'); }
     if (!stat.leichtigkeit) { console.error('Leichtigkeit bei der karte war vorher nicht da'); }
-    if(!stat.fällig){
+    if(!stat.due){
       console.error('Karte hatte kein Fälligkeitszeitpunkt')
-      stat.fällig = Date.now();
+      stat.due = Date.now();
     }
 
 
@@ -40,16 +40,16 @@ export class LernenService {
         stat.rubrik = this.RUBRIK_JUNG
         stat.leichtigkeit = settings.startLeichtigkeit;
         stat.intervall = settings.startEinfach;
-        stat.fällig = Date.now() + stat.intervall
+        stat.due = Date.now() + stat.intervall
 
       } else if (antwort == this.ANTWORT_NOCHMAL || antwort == this.ANTWORT_SCHWIERIG) {
         stat.rubrik = this.RUBRIK_LERNEN;
         stat.stufe = 0;
-        stat.fällig = Date.now() + settings.lernenSchritte[0]
+        stat.due = Date.now() + settings.lernenSchritte[0]
       } else if (antwort == this.ANTWORT_GUT) {
         stat.rubrik = this.RUBRIK_LERNEN;
         stat.stufe = 1;
-        stat.fällig = Date.now() + settings.lernenSchritte[1]
+        stat.due = Date.now() + settings.lernenSchritte[1]
 
       }
     }
@@ -57,23 +57,23 @@ export class LernenService {
     else if (stat.rubrik == this.RUBRIK_LERNEN) {
       if (antwort == this.ANTWORT_NOCHMAL) {
         stat.stufe = 0;
-        stat.fällig = Date.now() + settings.lernenSchritte[0]
+        stat.due = Date.now() + settings.lernenSchritte[0]
       } else if (antwort == this.ANTWORT_GUT) {
         if ((stat.stufe ?? 0) < settings.lernenSchritte.length - 1) {
           stat.stufe = (stat.stufe ?? 0) + 1
-          stat.fällig = Date.now() + (settings.lernenSchritte[stat.stufe] ?? settings.lernenSchritte[settings.lernenSchritte.length-1])
+          stat.due = Date.now() + (settings.lernenSchritte[stat.stufe] ?? settings.lernenSchritte[settings.lernenSchritte.length-1])
         } else {
           stat.stufe = 0;
           stat.rubrik = this.RUBRIK_JUNG;
           stat.leichtigkeit = settings.startLeichtigkeit;
           stat.intervall = settings.startGut;
-          stat.fällig = Date.now() + stat.intervall
+          stat.due = Date.now() + stat.intervall
         }
       } else if (antwort = this.ANTWORT_EINFACH) {
         stat.rubrik = this.RUBRIK_JUNG
         stat.leichtigkeit = settings.startLeichtigkeit;
         stat.intervall = settings.startEinfach;
-        stat.fällig = Date.now() + stat.intervall
+        stat.due = Date.now() + stat.intervall
       }
     }
     else if (stat.rubrik == this.RUBRIK_JUNG || stat.rubrik == this.RUBRIK_ALT) {
@@ -85,7 +85,7 @@ export class LernenService {
       if (antwort == this.ANTWORT_NOCHMAL) {
         stat.rubrik = this.RUBRIK_ERNEUT_LERNEN;
         stat.stufe = 0;
-        stat.fällig = Date.now() + settings.erneutLernenSchritte[0]
+        stat.due = Date.now() + settings.erneutLernenSchritte[0]
       } else if (antwort == this.ANTWORT_SCHWIERIG) {
         stat.intervall = (stat.intervall ?? 0) * 1.2;
         if (stat.leichtigkeit >= 1.45)
@@ -93,15 +93,15 @@ export class LernenService {
         else
           stat.leichtigkeit = 1.30;
 
-        stat.fällig = Date.now() + stat.intervall;
+        stat.due = Date.now() + stat.intervall;
 
       } else if (antwort == this.ANTWORT_GUT) {
         stat.intervall = stat.intervall * stat.leichtigkeit * zufall;
-        stat.fällig = Date.now() + stat.intervall;
+        stat.due = Date.now() + stat.intervall;
       } else if (antwort == this.ANTWORT_EINFACH) {
         stat.intervall = stat.intervall * stat.leichtigkeit * settings.bonus * zufall;
         stat.leichtigkeit += 0.15;
-        stat.fällig = Date.now() + stat.intervall;
+        stat.due = Date.now() + stat.intervall;
       }
     } else if (stat.rubrik == this.RUBRIK_ERNEUT_LERNEN) {
 
@@ -110,11 +110,11 @@ export class LernenService {
 
       if (antwort == this.ANTWORT_NOCHMAL) {
         stat.stufe = 0;
-        stat.fällig = Date.now() + settings.erneutLernenSchritte[0]
+        stat.due = Date.now() + settings.erneutLernenSchritte[0]
       } else if (antwort == this.ANTWORT_GUT) {
         if ((stat.stufe ?? 0) < settings.erneutLernenSchritte.length - 1) {
           stat.stufe = ((stat.stufe ?? 0) + 1)
-          stat.fällig = Date.now() + settings.erneutLernenSchritte[stat.stufe]
+          stat.due = Date.now() + settings.erneutLernenSchritte[stat.stufe]
         } else {
           stat.stufe = 0;
           stat.rubrik = this.RUBRIK_JUNG;
@@ -122,7 +122,7 @@ export class LernenService {
             stat.leichtigkeit -= 0.20
           } else { stat.leichtigkeit = 1.30 }
           stat.intervall = stat.intervall * settings.faktorNachErneutemLernen;
-          stat.fällig = Date.now() + stat.intervall
+          stat.due = Date.now() + stat.intervall
         }
       } else if (antwort = this.ANTWORT_EINFACH) {
         stat.rubrik = this.RUBRIK_JUNG
@@ -130,7 +130,7 @@ export class LernenService {
           stat.leichtigkeit -= 0.5
         } else { stat.leichtigkeit = 1.30 }
         stat.intervall = stat.intervall * settings.faktorNachErneutemLernen;
-        stat.fällig = Date.now() + stat.intervall
+        stat.due = Date.now() + stat.intervall
       }
     }
 
@@ -144,8 +144,8 @@ export class LernenService {
         stat.rubrik = this.RUBRIK_ALT;
       else stat.rubrik = this.RUBRIK_JUNG;
     }
-    if (stat.gelernt) stat.gelernt.push({ "zeit": Date.now(), "antwort": antwort })
-    else stat.gelernt = [{ "zeit": Date.now(), "antwort": antwort }]
+
+    else stat.gelernt = { zeit: Date.now(), antwort: antwort }
 
 
 

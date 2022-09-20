@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardsService } from 'src/app/services/cards.service';
+import {Defaults} from "../../objekte/Defaults";
 
 @Component({
   selector: 'app-neu',
@@ -30,7 +31,8 @@ export class NeuComponent implements OnInit {
   }
 
 neu(){
-  this.router.navigate([`edit/${this.cardsService.newCard()}`])
+    console.error("ich glaube hier klappt was noch nicht. id wird gehohlt, aber die karte nicht hinzugefügt")
+  this.router.navigate([`edit/${Defaults.card().id}`]) //TODO: das wird nicht funktionieren. die karte muss hinzugefügt werden.
 
 }
 

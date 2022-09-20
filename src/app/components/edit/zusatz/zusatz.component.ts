@@ -22,25 +22,25 @@ export class ZusatzComponent {
     let card = this.cardsService.getCard(this.data.card)
     if (this.falsch) {
       if (!(this.hinweis != '' && this.data.alternative != '')) { alert('Bitte geben Sie alle nötigen Informationen an'); return }
-      if (card.fehler) {
-        for(let f of card.fehler){
+      if (card.content[card.content.length-1].felder.fehler) {
+        for(let f of card.content[card.content.length-1].felder.fehler??[]){
           if(f.antwort == this.data.alternative){ alert('Diese Antwort existiert schon'); return }
         }
-        card.fehler.push({ hinweis: this.hinweis, antwort: this.data.alternative })
+        card.content[card.content.length-1].felder.fehler?.push({ hinweis: this.hinweis, antwort: this.data.alternative })
       } else {
-        card.fehler = [{ hinweis: this.hinweis, antwort: this.data.alternative }]
+        card.content[card.content.length-1].felder.fehler = [{ hinweis: this.hinweis, antwort: this.data.alternative }]
       }
 
     } else {
       if (!(this.data.alternative != '')) { alert('Bitte geben Sie alle nötigen Informationen an'); return }
-      if (card.alternativAntworten) {
-        for(let f of card.alternativAntworten){
+      if (card.content[card.content.length-1].felder.alternativAntworten) {
+        for(let f of card.content[card.content.length-1].felder.alternativAntworten??[]){
           if(f == this.data.alternative){ alert('Diese Antwort existiert schon'); return }
         }
-        card.alternativAntworten.push(this.data.alternative)
+        card.content[card.content.length-1].felder.alternativAntworten?.push(this.data.alternative)
       }
       else {
-        card.alternativAntworten = [this.data.alternative]
+        card.content[card.content.length-1].felder.alternativAntworten = [this.data.alternative]
       }
 
     }

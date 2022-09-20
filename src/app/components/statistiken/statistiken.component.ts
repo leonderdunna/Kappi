@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CardsService } from '../../services/cards.service';
-import { StatsService } from '../../services/stats.service';
+
 import * as Highcharts from 'highcharts';
 import { SettingsService } from '../../services/settings.service';
 import { GelerntService } from '../../services/gelernt.service';
+import {PaketeService} from "../../services/pakete.service";
 
 @Component({
   selector: 'app-statistiken',
@@ -14,7 +15,7 @@ export class StatistikenComponent implements OnInit {
 
   constructor(
     private cardsService: CardsService,
-    private statService: StatsService,
+    private paketeService:PaketeService,
     private settingsService: SettingsService,
     private gelerntService: GelerntService) {
   }
@@ -22,10 +23,10 @@ export class StatistikenComponent implements OnInit {
   //Kartenzahlen
   karten = this.cardsService.getCards();
   gesamtkartenzahl = this.karten.length;
-  neueKartenZahl = this.karten.filter((e) => { if (!this.statService.getStatByCardID(e.id ?? '')) return true; if (this.statService.getStatByCardID(e.id ?? '').rubrik == 0) return true; return false }).length
-  kartenJung = this.karten.filter((e) => { if (!this.statService.getStatByCardID(e.id ?? '')) return false; if (this.statService.getStatByCardID(e.id ?? '').rubrik == 2) return true; return false }).length
-  kartenAlt = this.karten.filter((e) => { if (!this.statService.getStatByCardID(e.id ?? '')) return false; if (this.statService.getStatByCardID(e.id ?? '').rubrik == 3) return true; return false }).length
-  lernenunderneut = this.karten.filter((e) => { if (!this.statService.getStatByCardID(e.id ?? '')) return false; if (this.statService.getStatByCardID(e.id ?? '').rubrik == 1 || this.statService.getStatByCardID(e.id ?? '').rubrik == 4) return true; return false }).length
+  neueKartenZahl = this.karten.filter((card) => { return card.stat[card.stat.length-1].rubrik===0}).length
+  kartenJung = this.karten.filter((card) => { return card.stat[card.stat.length-1].rubrik===1}).length //TODO: 1 ist höchtwahrscheinlich nicht die rubrik für jung
+  kartenAlt = this.karten.filter((card) => { return card.stat[card.stat.length-1].rubrik===2}).length //TODO: 2 ist höchtwahrscheinlich nicht die rubrik für alt
+  lernenunderneut = this.karten.filter((card) => { return card.stat[card.stat.length-1].rubrik===2}).length //TODO: 2 ist höchtwahrscheinlich nicht die rubrik für lernen oder erneut
   ngOnInit(): void {
   }
 
@@ -35,11 +36,7 @@ export class StatistikenComponent implements OnInit {
   fälligJung: number[] = [];
   fälligAlt: number[] = [];
 
-  aktiveKarten = this.karten.filter((e) => {
-    if (this.statService.getStatByCardID(e.id ?? ''))
-      return true;
-    return false
-  })
+  aktiveKarten = this.paketeService.getActiveCards();
 
   settings = this.settingsService.getSettings();
 
@@ -74,8 +71,8 @@ export class StatistikenComponent implements OnInit {
     let fälligLernen: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 1 ||
-        this.statService.getStatByCardID(e.id ?? '')?.rubrik == 4)
+      if (e.stat[e.stat.length-1].rubrik == 1 ||
+        e.stat[e.stat.length-1].rubrik == 4)
         return true
       return false
     })
@@ -83,7 +80,7 @@ export class StatistikenComponent implements OnInit {
     fälligLernen.push(
       lernenKarten.filter((e) => {
         if (
-          (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= Date.now()) {
+          (e.stat[e.stat.length-1].due ?? 0) <= Date.now()) {
           return true;
         }
         return false
@@ -93,8 +90,8 @@ export class StatistikenComponent implements OnInit {
     for (let i: number = 0; i < 30; i++) {
       fälligLernen.push(
         lernenKarten.filter((e) => {
-          if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now()  + (i * msProTag)) &&
-            (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
+          if ((e.stat[e.stat.length-1].due ?? 0) > (Date.now()  + (i * msProTag)) &&
+            (e.stat[e.stat.length-1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
           }
           return false
@@ -107,14 +104,14 @@ export class StatistikenComponent implements OnInit {
     let fälligJung: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 2)
+      if (e.stat[e.stat.length-1].rubrik == 2)
         return true
       return false
     })
 
     fälligJung.push(
       lernenKarten.filter((e) => {
-        if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= Date.now())
+        if ((e.stat[e.stat.length-1].due ?? 0) <= Date.now())
           return true;
         return false;
       }).length
@@ -123,8 +120,8 @@ export class StatistikenComponent implements OnInit {
     for (let i: number = 0; i < 30; i++) {
       fälligJung.push(
         lernenKarten.filter((e) => {
-          if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() + (i * msProTag)) &&
-            (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
+          if ((e.stat[e.stat.length-1].due ?? 0) > (Date.now() + (i * msProTag)) &&
+            (e.stat[e.stat.length-1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
           }
           return false
@@ -137,7 +134,7 @@ export class StatistikenComponent implements OnInit {
     let fälligAlt: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (this.statService.getStatByCardID(e.id ?? '')?.rubrik == 3)
+      if (e.stat[e.stat.length-1].rubrik == 3)
         return true
       return false
     })
@@ -145,7 +142,7 @@ export class StatistikenComponent implements OnInit {
     fälligAlt.push(
       lernenKarten.filter((e) => {
         if (
-          (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= Date.now()) {
+          (e.stat[e.stat.length-1].due ?? 0) <= Date.now()) {
           return true;
         }
         return false
@@ -156,8 +153,8 @@ export class StatistikenComponent implements OnInit {
     for (let i: number = 0; i < 30; i++) {
       fälligAlt.push(
         lernenKarten.filter((e) => {
-          if ((this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) > (Date.now() + (i * msProTag)) &&
-            (this.statService.getStatByCardID(e.id ?? '')?.fällig ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
+          if ((e.stat[e.stat.length-1].due ?? 0) > (Date.now() + (i * msProTag)) &&
+            (e.stat[e.stat.length-1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
           }
           return false

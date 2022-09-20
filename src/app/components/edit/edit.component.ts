@@ -5,6 +5,7 @@ import {Card} from '../../objekte/card/card.model';
 import {ZusatzComponent} from "./zusatz/zusatz.component";
 import {MatDialog} from '@angular/material/dialog';
 import {Content} from "../../objekte/card/content.model";
+import {Defaults} from "../../objekte/Defaults";
 
 @Component({
   selector: 'app-edit',
@@ -21,6 +22,11 @@ export class EditComponent implements OnInit {
     this.route.params.subscribe(params => {
 
       this.card = this.cardsService.getCard(params['id']);
+      if(!this.card){
+        console.error('Card nicht gefunden!')
+        this.card=Defaults.card()
+      }
+      console.log(this.card)
 
       this.original = this.card.content[this.card.content.length - 1]
       this.neu = {...this.card.content[this.card.content.length - 1]}
@@ -39,89 +45,69 @@ export class EditComponent implements OnInit {
   }
 
   paket: string = '';
-  original?: Content;
-  neu?: Content;
+  original: Content = Defaults.cardContent();
+  neu: any;
 
   paketOriginal: string = ''
 
   update() {
-    if ((this.frage == '' || this.antwort == '') && !ignoreWarnings) {
+    if ((this.neu?.felder.frage == '' || this.neu?.felder.antwort == '') && !this.neu?.entwurf) {
       alert('Weder Antwort noch Frage dürfen leer sein!')
+
       return;
     }
-    if (!this.card) {
-      console.error('Karte gibt es nicht');
-      return;
-    }
-    this.card.frage = this.frage;
-    this.card.antwort = this.antwort;
-    this.card.paket = this.paket.split('::')
-    this.paketOriginal = this.paket
-    this.materialOriginal = this.material
-    this.eingebenOriginal = this.eingeben
-    this.card.eingeben = this.eingeben
-    if (this.material != '')
-      this.card.material = this.material
+
+    if (this.card)
+      this.cardsService.updateCardContent(this.neu, this.card.id)
     else {
-      this.card.material = undefined;
+      console.error('Keine Card vorhanden!')
     }
-    this.card.eingeben = this.eingeben;
-    this.cardsService.updateCard(this.card)
   }
 
   reset() {
-    if (!this.card) {
-      console.error('Karte gibt es nicht');
-      return;
-    }
-    this.frage = this.card.frage;
-    this.antwort = this.card.antwort;
-    this.paket = this.card.paket[0]
-    this.material = this.materialOriginal
-    for (let i = 1; i < this.card.paket.length; i++) {
-      this.paket += ('::' + this.card.paket[i])
-    }
+    this.neu = {...this.original}
   }
 
   removeAltAntwort(a: string) {
-    this.card.alternativAntworten = this.card.alternativAntworten?.filter((i) => {
+    this.neu.felder.alternativAntworten = this.neu.felder.alternativAntworten?.filter((i: string) => {
       if (i != a)
         return true;
       return false
     })
-    this.cardsService.updateCard(this.card)
+
   }
 
   removeHFehler(f: string) {
-    this.card.fehler = this.card.fehler?.filter((i) => {
+    this.neu.felder.fehler = this.neu.felder.fehler?.filter((i: { antwort: string, fehler: string }) => {
       if (i.antwort != f)
         return true;
       return false
     })
-    this.cardsService.updateCard(this.card)
+
   }
 
   openDialog() {
     let dialogRef = this.dialog.open(ZusatzComponent, {
       data: {
-        card: this.card.id,
+        card: this.card?.id,
         alternative: ''
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.card = this.cardsService.getCard(this.id)
+      if (this.card)
+        this.card = this.cardsService.getCard(this.card.id)
     })
   }
 
   entwurfSpeichern() {
-    this.update(true)
+    this.update()
     this.router.navigate(['neu'])
   }
 
   addCard() {
-    this.card.entwurf = false
+    this.neu.felder.entwurf = false
     this.update()
-    this.router.navigate(['neu'])
+    this.router.navigate(['neu']);
   }
 
   abbrechen() {
