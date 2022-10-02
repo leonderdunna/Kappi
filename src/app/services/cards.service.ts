@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Card } from '../objekte/card/card.model';
-import { Strings } from '../resources/strings';
+import {Injectable} from '@angular/core';
+import {Card} from '../objekte/card/card.model';
+import {Strings} from '../resources/strings';
 import {Content} from "../objekte/card/content.model";
 import {Stat} from "../objekte/card/stat.model";
+import {Defaults} from "../objekte/Defaults";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,26 @@ import {Stat} from "../objekte/card/stat.model";
  */
 export class CardsService {
 
-  constructor( ) { }
+  constructor() {
+  }
+
+  /**
+   * @description Erstellt eine neue Karte und speichert diese im Speicher
+   * @return gibt an ob die karte erfolgreich erstellt wurde
+   * @param card
+   */
+  private addCard(card: Card): boolean {
+
+    //Karte als JSON Objekt speichern
+    window.localStorage.setItem(Strings.storage.card + card.id, JSON.stringify(card))
+
+
+    // ID der Karte in cardIDs hinzufügen.
+    let cardsList: string[] = JSON.parse(window.localStorage.getItem(Strings.storage.cardIDs) ?? '[]')
+    cardsList.push(card.id)
+    window.localStorage.setItem(Strings.storage.cardIDs, JSON.stringify(cardsList));
+    return true;
+  }
 
 
   /**
@@ -36,7 +56,7 @@ export class CardsService {
   /**
    * @return Gibt alle Karten zurück, die als Entwurf gekennzeichnet wurden
    */
-  getEntwürfe():Card[]{
+  getEntwürfe(): Card[] {
     let cardIDs: string[] = JSON.parse(window.localStorage.getItem(Strings.storage.cardIDs) ?? '[]');
     let cards: Card[] = [];
     for (let card of cardIDs) {
@@ -55,7 +75,20 @@ export class CardsService {
    * @param id ID der Karte
    */
   getCard(id: string): Card {
-    return JSON.parse(window.localStorage.getItem(Strings.storage.card + id) ?? 'false')
+
+    //Speicher wird geladen. wenn kein eintrag im localstorage ist wird card auf false gesetzt.
+    let card = JSON.parse(window.localStorage.getItem(Strings.storage.card + id) ?? 'false')
+
+    //Wenn karte nicht existiert, wird eine neue Erstellt.
+    if (!card) {
+      let neu = Defaults.card()
+      neu.id = id;
+      this.addCard(neu)
+      return neu;
+    }
+
+    //wenn eine karte existiert, wird diese zurückgegeben
+    return card
   }
 
 
@@ -85,22 +118,27 @@ export class CardsService {
    * @param content neuer Content
    * @param id ID der Karte, zu der der Kontent addiert werden soll
    */
-  updateCardContent(content:Content,id:string): void {
+  updateCardContent(content: Content, id: string, neuesPaket?: string): void {
     let card = this.getCard(id)
-
+    card.paket = neuesPaket?.split("::") ?? card.paket
     card.content.push(content)
-    window.localStorage.setItem(Strings.storage.card + card.id, JSON.stringify(card))
-  }
-
-  /**
-   * @description Fügt neuen Status zu einer Karte hinzu
-   * @param stat neuer Status
-   * @param id ID der Karte, zu der der Status addiert werden soll
-   */
-  updateCardStat(stat: Stat,id:string):void{
-    let card = this.getCard(id)
-    card.stat.push(stat)
     this.updateCard(card)
   }
+    /**
+     * @description Fügt neuen Status zu einer Karte hinzu
+     * @param stat neuer Status
+     * @param id ID der Karte, zu der der Status addiert werden soll
+     */
+    updateCardStat(stat
+  :
+    Stat, id
+  :
+    string
+  ):
+    void {
+      let card = this.getCard(id)
+      card.stat.push(stat)
+      this.updateCard(card)
+    }
 
-}
+  }

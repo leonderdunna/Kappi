@@ -1,86 +1,73 @@
 <div class="wrapper" *ngIf="card">
 
-    <mat-form-field appearance="standard">
-        <mat-label>Frage</mat-label>
-        <textarea [(ngModel)]="neu?.felder.frage" matInput placeholder="Beispiel: Wie hoch ist der Eifelturm?"></textarea>
-    </mat-form-field>
-    <mat-form-field appearance="standard">
-        <mat-label>Antwort</mat-label>
-        <textarea [(ngModel)]="neu?.felder.antwort" matInput placeholder="Beispiel: ca. 300m"></textarea>
+  <mat-form-field appearance="standard">
+    <mat-label>Frage</mat-label>
+    <textarea [(ngModel)]="neu?.felder.frage" matInput placeholder="Beispiel: Wie hoch ist der Eifelturm?"></textarea>
+  </mat-form-field>
+  <mat-form-field appearance="standard">
+    <mat-label>Antwort</mat-label>
+    <textarea [(ngModel)]="neu?.felder.antwort" matInput placeholder="Beispiel: ca. 300m"></textarea>
 
-    </mat-form-field>
-
-
-
-    <mat-form-field appearance="standard">
-        <mat-label>Paket</mat-label>
-        <textarea [(ngModel)]="paket" matInput placeholder="Beispiel: Schule::Sprachen::Französisch::Vokabeln"></textarea>
-    </mat-form-field>
+  </mat-form-field>
 
 
-        <mat-form-field appearance="standard">
-            <mat-label>Mehr Infos</mat-label>
-            <textarea [(ngModel)]="neu.material" matInput placeholder="Beispiel: https://Link-zum-Hefter.de"></textarea>
-        </mat-form-field>
+  <mat-form-field appearance="standard">
+    <mat-label>Paket</mat-label>
+    <textarea [(ngModel)]="paket" matInput placeholder="Beispiel: Schule::Sprachen::Französisch::Vokabeln"></textarea>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="standard">
+    <mat-label>Mehr Infos</mat-label>
+    <textarea [(ngModel)]="neu.material" matInput placeholder="Beispiel: https://Link-zum-Hefter.de"></textarea>
+  </mat-form-field>
 
   <mat-checkbox [(ngModel)]="neu.felder.eingeben">Antwort muss eingegeben werden</mat-checkbox>
 
-        <mat-card *ngIf="!(neu?.felder.alternativAntworten ==undefined ||neu?.felder.alternativAntworten?.length == 0)" class="aantworten">
-            <mat-card-title>Alternative Antworten</mat-card-title>
-            <mat-card-content>
-                <div *ngFor="let a of neu.felder.alternativAntworten">
-                    <span>{{a}} </span>
-                    <button mat-button (click)="removeAltAntwort(a)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </div>
-
-            </mat-card-content>
-        </mat-card>
-        <mat-card  *ngIf="!( neu.felder.fehler ==undefined || neu.felder.fehler?.length == 0)" class="hfehler">
-            <mat-card-title>Häufige Fehler</mat-card-title>
-            <mat-card-content>
-                <div *ngFor="let a of neu.felder.fehler">
-                    <span>{{a.antwort}} </span>
-                    <mat-icon class="forward">arrow_forward</mat-icon><span>{{a.hinweis}}</span>
-                    <button mat-button (click)="removeHFehler(a.antwort)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </div>
-
-            </mat-card-content>
-
-        </mat-card>
-  <div *ngIf="neu.felder.eingeben" class="div">
-        <button mat-button (click)="openDialog()">
-            <mat-icon>add_circle</mat-icon>Antwort
+  <mat-card *ngIf="!(neu?.felder.alternativAntworten ==undefined ||neu?.felder.alternativAntworten?.length == 0)"
+            class="aantworten">
+    <mat-card-title>Alternative Antworten</mat-card-title>
+    <mat-card-content>
+      <div *ngFor="let a of neu.felder.alternativAntworten">
+        <span>{{a}} </span>
+        <button mat-button (click)="removeAltAntwort(a)">
+          <mat-icon>delete</mat-icon>
         </button>
-</div>
-    <div *ngIf="!neu.entwurf">
-        <button
-            *ngIf="!(
-            (neu.felder.antwort ==original.felder.antwort)&&
-            (neu.felder.frage==original.felder.frage)&&
-            (paket == paketOriginal)&&
-            (neu.material==original.material))"
+      </div>
 
-            mat-raised-button (click)="reset()" color="primary">Verwerfen</button>
-        <button
-            *ngIf="!((neu.felder.antwort ==original.felder.antwort)&&(neu.felder.frage==original.felder.frage)&&(paket == paketOriginal)&&(neu.material==original.material))"
-            mat-raised-button (click)="update()" color="accent">Bearbeiten</button>
+    </mat-card-content>
+  </mat-card>
+  <mat-card *ngIf="!( neu.felder.fehler ==undefined || neu.felder.fehler?.length == 0)" class="hfehler">
+    <mat-card-title>Häufige Fehler</mat-card-title>
+    <mat-card-content>
+      <div *ngFor="let a of neu.felder.fehler">
+        <span>{{a.antwort}} </span>
+        <mat-icon class="forward">arrow_forward</mat-icon>
+        <span>{{a.hinweis}}</span>
+        <button mat-button (click)="removeHFehler(a.antwort)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
 
-        <button
-            *ngIf="((neu.felder.antwort ==original.felder.antwort)&&(neu.felder.frage==original.felder.frage)&&(paket == paketOriginal)&&(neu.material==original.material))"
-            mat-raised-button disabled (click)="reset()" color="primary">Verwerfen</button>
-        <button
-            *ngIf="((neu.felder.antwort ==original.felder.antwort)&&(neu.felder.frage==original.felder.frage)&&(paket == paketOriginal)&&(neu.material==original.material))"
-            mat-raised-button disabled="" (click)="update()" color="accent">Bearbeiten</button>
-    </div>
-    <div *ngIf="neu.entwurf">
-        <button mat-raised-button (click)="abbrechen()" color="primary">Abbrechen</button>
-        <button mat-raised-button (click)="entwurfSpeichern()" color="primary">Als Entwurf Speichern</button>
-        <button
-           mat-raised-button (click)="addCard()" color="accent">Hinzufügen</button>
+    </mat-card-content>
 
-    </div>
+  </mat-card>
+  <div *ngIf="neu.felder.eingeben" class="div">
+    <button mat-button (click)="openDialog()">
+      <mat-icon>add_circle</mat-icon>
+      Antwort
+    </button>
+  </div>
+  <div *ngIf="!neu.entwurf">
+    <button mat-raised-button (click)="reset()" color="primary">Verwerfen</button>
+    <button mat-raised-button (click)="update(false)" color="accent">Bearbeiten</button>
+  </div>
+  <div *ngIf="neu.entwurf">
+    <button mat-raised-button (click)="abbrechen()" color="primary">Abbrechen</button>
+    <button mat-raised-button (click)="update(true)" color="primary">Als Entwurf Speichern</button>
+    <button
+      mat-raised-button (click)="update(false)" color="accent">Hinzufügen
+    </button>
+
+  </div>
 </div>

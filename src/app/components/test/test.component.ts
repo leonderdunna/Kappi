@@ -1,30 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import { CardsService } from '../../services/cards.service';
-import { AnkiService } from '../../services/sync/anki.service';
+import {Component, OnInit} from '@angular/core';
+import {CardsService} from '../../services/cards.service';
+import {AnkiService} from '../../services/sync/anki.service';
 
 @Component({
   selector: 'app-test',
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss']
 })
-export class TestComponent implements OnInit {
+export class TestComponent {
 
   constructor(private ankiService: AnkiService,
-    private cardsService:CardsService) { }
+              private cardsService: CardsService) {
+  }
 
-  ngOnInit(): void {
+
+  addDeck(deck: string) {
+    this.ankiService.addDeck(deck)
   }
-  click() {
-    this.ankiService.addDeck(this.name)
+
+  async log() {
+    console.log(await this.ankiService.getAllCards())
   }
+
 
   name: string = '';
-addNote(){
-  let cards=this.cardsService.getCards()
-  for(let c of cards){
- //   this.ankiService.addNote(c.frage,c.antwort)
+
+ async addNote() {
+    for (let card of this.cardsService.getCards())
+    await  this.ankiService.addFrage(card)
   }
-}
- 
+  getAnki(){
+    this.ankiService.getAllCards()
+  }
+
 
 }

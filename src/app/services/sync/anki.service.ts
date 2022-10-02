@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {Card} from "../../objekte/card/card.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnkiService {
 
-  constructor() { }
+  constructor() {
+  }
 
   private invoke(action: string, version: number, params: any = {}) {
     return new Promise((resolve, reject) => {
@@ -13,7 +15,9 @@ export class AnkiService {
       xhr.addEventListener('error', () => reject('failed to issue request'));
       xhr.addEventListener('load', () => {
         try {
+
           const response = JSON.parse(xhr.responseText);
+
           if (Object.getOwnPropertyNames(response).length != 2) {
             throw 'response has an unexpected number of fields';
           }
@@ -33,49 +37,104 @@ export class AnkiService {
       });
 
       xhr.open('POST', 'http://127.0.0.1:8765');
-      xhr.send(JSON.stringify({ action, version, params }));
+      xhr.send(JSON.stringify({action, version, params}));
     });
   }
 
   addDeck(name: string) {
-    this.invoke('createDeck', 6, { deck: 'Kappi::' + name })
+    this.invoke('createDeck', 6, {deck: 'Kappi::' + name})
   }
 
-  addFrage(frage: string, antwort: string, id: string, deck: string) {
-
-
-
-    this.invoke(
-      "createModel",
+  async getAllCards() {
+    let cardIDs = await this.invoke(
+      "findCards",
       6,
       {
-        "params": {
+        "query": "deck:Kappi"
+      }
+    )
+    let noteIDs = await this.invoke(
+      "cardsToNotes",
+      6,
+      {
+        "cards": cardIDs
+
+      })
+
+
+
+    let cards = await this.invoke(
+      "notesInfo",
+      6,
+      {
+        "notes": noteIDs
+      }
+    )
+
+
+
+    return cards;
+  }
+
+  async isInAnki(card: Card) {
+    let ankiCards = await this.getAllCards();
+    console.log(ankiCards)
+    // @ts-ignore
+    for (let ankiCard of ankiCards) {
+      let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
+      console.log(ankiCardContent.id, card.id)
+      if(ankiCardContent.id == card.id){
+        console.log(ankiCardContent, card.id)
+        return true;
+      }
+
+    }
+    return false;
+  }
+
+  async addFrage(card: Card) {
+    if(await this.isInAnki(card)){
+      console.error("Card already in Anki")
+      return;
+    }
+
+    let models = await this.invoke('modelNames', 6, {})
+
+    // @ts-ignore
+    if (!models.includes('Kappi Frage')) {
+      await this.invoke(
+        "createModel",
+        6,
+        {
+
           "modelName": "Kappi Frage",
-          "inOrderFields": ["Frage", "Antwort", "link",'Deck'],
-          "css": "Optional CSS with default to builtin css",
+          "inOrderFields": ["card"],
+          "css": "",
           "isCloze": false,
           "cardTemplates": [
             {
               "Name": "My Card 1",
-              "Front": "Front html {{Field1}}",
-              "Back": "Back html  {{Field2}}"
+              "Front": "Front:{{card}}",
+              "Back": "Back html  {{card}}"
             }
           ]
-        }
-      })
+
+        })
+    }
+
+
+    this.addDeck(card.paket.join('::'));
+
 
     this.invoke(
       "addNote",
       6,
       {
         "note": {
-          "deckName": 'Kappi::' + deck,
+          "deckName": 'Kappi::' + card.paket.join('::'),
           "modelName": "Kappi Frage",
           "fields": {
-            "link": 'localhost:4200/edit/' + id, //TODO änderen zu Kappi
-            "Frage": frage,
-            'Antwort': antwort,
-            'Deck': deck.split('::')[deck.split('::').length - 1]
+            "card": JSON.stringify(card)
           },
           "options": {
             "allowDuplicate": false,

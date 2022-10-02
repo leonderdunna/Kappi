@@ -52,7 +52,7 @@ export class LernenComponent {
   }
 
 
-  fortschritt: Fortschritt = this.defaultfortschritt;
+  fortschritt: Fortschritt = {...this.defaultfortschritt};
 
   activeCard = '';
 
@@ -90,7 +90,8 @@ export class LernenComponent {
 
     //Reset all stuf
     this.userantwort = '';
-    this.fortschritt = this.defaultfortschritt;
+
+    this.fortschritt ={... this.defaultfortschritt};
 
 
     this.karten = this.paketeService.getActiveCards();

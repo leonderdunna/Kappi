@@ -41,7 +41,7 @@ import { SyncComponent } from './components/sync/sync.component';
 import { MatAutocompleteModule} from '@angular/material/autocomplete'
 import { MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { NeuComponent } from './components/neu/neu.component';
-
+import { MathjaxModule} from "mathjax-angular";
 
 
 @NgModule({
@@ -91,7 +91,19 @@ import { NeuComponent } from './components/neu/neu.component';
     MatProgressSpinnerModule,
     MatChipsModule,
     MatTooltipModule,
-
+    MathjaxModule.forRoot({
+      "config": {
+        "loader": {
+          "load": ["output/svg", "[tex]/require", "[tex]/ams"]
+        },
+        "tex": {
+          "inlineMath": [["\\(", "\\)"]],
+          "packages": ["base", "require", "ams"]
+        },
+        "svg": { "fontCache": "global" }
+      },
+      "src": "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/startup.js"
+    })
   ],
   providers: [
 

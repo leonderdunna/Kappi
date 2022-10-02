@@ -33,7 +33,7 @@ export class GelerntService {
 
     return this.cardService.getCards().filter(
       (e) => {
-        console.log(e)
+
         if (e.stat.length === 0) return false;
 
         if (e.stat[e.stat.length - 1].gelernt == undefined) return false

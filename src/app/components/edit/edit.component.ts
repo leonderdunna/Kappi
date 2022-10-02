@@ -12,7 +12,7 @@ import {Defaults} from "../../objekte/Defaults";
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditComponent {
 
   constructor(private cardsService: CardsService,
               private route: ActivatedRoute,
@@ -21,11 +21,9 @@ export class EditComponent implements OnInit {
   ) {
     this.route.params.subscribe(params => {
 
+
       this.card = this.cardsService.getCard(params['id']);
-      if(!this.card){
-        console.error('Card nicht gefunden!')
-        this.card=Defaults.card()
-      }
+
       console.log(this.card)
 
       this.original = this.card.content[this.card.content.length - 1]
@@ -39,10 +37,8 @@ export class EditComponent implements OnInit {
     })
   }
 
-  card?: Card;
+  card: Card = Defaults.card();
 
-  ngOnInit(): void {
-  }
 
   paket: string = '';
   original: Content = Defaults.cardContent();
@@ -50,25 +46,33 @@ export class EditComponent implements OnInit {
 
   paketOriginal: string = ''
 
-  update() {
+  update(entwurf: boolean) {
+
+
+
+    this.neu.entwurf = entwurf;
+
     if ((this.neu?.felder.frage == '' || this.neu?.felder.antwort == '') && !this.neu?.entwurf) {
       alert('Weder Antwort noch Frage dürfen leer sein!')
-
       return;
     }
 
-    if (this.card)
-      this.cardsService.updateCardContent(this.neu, this.card.id)
-    else {
-      console.error('Keine Card vorhanden!')
-    }
+    this.cardsService.updateCardContent(this.neu, this.card.id,this.paket)
+
+    if(this.original.entwurf)
+    this.router.navigate(['neu'])
+    else history.back();
+
   }
 
   reset() {
     this.neu = {...this.original}
   }
 
-  removeAltAntwort(a: string) {
+  removeAltAntwort(a
+                     :
+                     string
+  ) {
     this.neu.felder.alternativAntworten = this.neu.felder.alternativAntworten?.filter((i: string) => {
       if (i != a)
         return true;
@@ -77,7 +81,10 @@ export class EditComponent implements OnInit {
 
   }
 
-  removeHFehler(f: string) {
+  removeHFehler(f
+                  :
+                  string
+  ) {
     this.neu.felder.fehler = this.neu.felder.fehler?.filter((i: { antwort: string, fehler: string }) => {
       if (i.antwort != f)
         return true;
@@ -99,16 +106,6 @@ export class EditComponent implements OnInit {
     })
   }
 
-  entwurfSpeichern() {
-    this.update()
-    this.router.navigate(['neu'])
-  }
-
-  addCard() {
-    this.neu.felder.entwurf = false
-    this.update()
-    this.router.navigate(['neu']);
-  }
 
   abbrechen() {
     this.router.navigate(['neu'])

@@ -30,9 +30,12 @@ export class NeuComponent implements OnInit {
     this.router.navigate([`edit/${id}`])
   }
 
-neu(){
-    console.error("ich glaube hier klappt was noch nicht. id wird gehohlt, aber die karte nicht hinzugefügt")
-  this.router.navigate([`edit/${Defaults.card().id}`]) //TODO: das wird nicht funktionieren. die karte muss hinzugefügt werden.
+  /**
+   * @description Eine neue ID wird erstellt und zu der der Editor geöffnet.
+   * (einen Neue Karte wird vom Editor erstellt, wenn eine id übergeben wird, zu der keine karte gehört
+   */
+  neu(){
+  this.router.navigate([`edit/${Defaults.card().id}`])
 
 }
 

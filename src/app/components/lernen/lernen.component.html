@@ -13,7 +13,7 @@
     </button>
   </mat-card>
   <mat-card *ngIf="activeCard != '' && !fortschritt.fertig">
-    <mat-card-content [innerHTML]="karte.content[karte.content.length-1].felder.frage">Frage</mat-card-content>
+    <mat-card-content [mathjax]="karte.content[karte.content.length-1].felder.frage">Frage</mat-card-content>
 
   </mat-card>
   <mat-card *ngIf="(!fortschritt.fertig && karte.content[karte.content.length-1].felder.eingeben)"
@@ -36,7 +36,7 @@
   </mat-card>
   <mat-card
     *ngIf="activeCard != '' && !fortschritt.fertig && fortschritt.richtig && !karte.content[karte.content.length-1].felder.eingeben">
-    <mat-card-content [innerHTML]="karte.content[karte.content.length-1].felder.antwort">Antwort</mat-card-content>
+    <mat-card-content [mathjax]="karte.content[karte.content.length-1].felder.antwort">Antwort</mat-card-content>
 
   </mat-card>
 </div>

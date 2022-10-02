@@ -14,7 +14,7 @@ import { NeuComponent } from './components/neu/neu.component';
 const routes: Routes = [
   { path: 'lernen', component: LernenComponent },
   { path: 'pakete', component: PaketeComponent },
-  { path: '', component: KartenComponent },
+  { path: '', component: KartenComponent },//TODO: EIGENDLICH KartenComponent aber gerade ist testmodus an
   { path: 'neu', component: NeuComponent },
   { path: 'statistiken', component: StatistikenComponent },
   { path: 'account', component: AccountComponent },
