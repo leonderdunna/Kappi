@@ -1,3 +1,56 @@
-<div>
-<h1>Mit Anki synchronisieren</h1>
+<div class="wrapper">
+
+
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon">star</mat-icon>
+        Anki
+      </ng-template>
+      <h1>Mit Anki synchronisieren</h1>
+      <p class="warnung">
+        Diese Funktion ist noch experimentell.
+      </p>
+      <p>
+        Die Synchronisation funktioniert nur in eine Richtung: Kappi → Anki.
+        <span class="warnung">(manuelle Änderungen in Anki werden gelöscht.)</span>
+        Damit alles funktioniert, muss das Anki-Addon AnkiConnect installiert sein und anki geöffnet sein.
+      </p>
+      <button mat-raised-button color="primary" (click)="scan()">Scannen</button>
+      <button mat-raised-button color="primary" (click)="fullSync()">Alles synchronisieren</button>
+
+      <mat-card>
+        <div *ngIf="!laedt">
+          <p><span>{{kartenInAnki}}</span> Karten in Anki</p>
+          <p><span>{{kartenInKappi}}</span> Karten in Kappi</p>
+          <p><span>{{toSync.length}}</span>
+            Karten nur in Kappi
+          </p>
+          <p><span>{{geloescht.length}}</span>
+            Karten karten aus Kappi gelöscht, aber noch in Anki
+          </p>
+          <p><span>{{geaendert.length}}</span>
+            Karten in Kappi geändert
+          </p>
+        </div>
+        <mat-spinner *ngIf="laedt"></mat-spinner>
+
+      </mat-card>
+
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon">book</mat-icon>
+        Kappi-Server
+      </ng-template>
+
+      <h1>Mit Kappi-Server Synchronisieren</h1>
+      <p>Diese Funktion wurde noch nicht implementiert.</p>
+    </mat-tab>
+
+
+  </mat-tab-group>
+
+
 </div>

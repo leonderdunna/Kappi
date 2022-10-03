@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Card} from "../../objekte/card/card.model";
+import {CardsService} from "../cards.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnkiService {
 
-  constructor() {
+  constructor(private cardsService: CardsService) {
+
   }
 
   private invoke(action: string, version: number, params: any = {}) {
@@ -45,7 +47,25 @@ export class AnkiService {
     this.invoke('createDeck', 6, {deck: 'Kappi::' + name})
   }
 
-  async getAllCards() {
+  async deleteByKappiID(id: string) {
+    let ankiCards = await this.getAllCards();
+    // @ts-ignore
+    for (let ankiCard of ankiCards) {
+      let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
+      if (ankiCardContent.id == id) {
+        console.log(id, ankiCard,"in 'deletebykappiid'")
+        await this.invoke(
+          "deleteNotes",
+          6,
+          {
+            "notes": [ankiCard.noteId]
+          })
+      }
+
+    }
+  }
+
+  async getAllCards(): Promise<any[]> {
     let cardIDs = await this.invoke(
       "findCards",
       6,
@@ -62,7 +82,6 @@ export class AnkiService {
       })
 
 
-
     let cards = await this.invoke(
       "notesInfo",
       6,
@@ -72,19 +91,92 @@ export class AnkiService {
     )
 
 
-
+// @ts-ignore
     return cards;
+  }
+
+  async updateAnkiCardByKappiID(id: string) {
+    let ankiCards = await this.getAllCards();
+    // @ts-ignore
+    for (let ankiCard of ankiCards) {
+      let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
+      if (ankiCardContent.id == id) {
+        await this.invoke(
+          "updateNoteFields",
+          6,
+          {
+            "note": {
+              "id": ankiCard.noteId,
+              "fields": {
+                "card": JSON.stringify(this.cardsService.getCard(id))
+              }
+            }
+          })
+      }
+
+    }
+  }
+
+  async scan(): Promise<{ kartenInAnki: number, kartenInKappi: number, kartenFehlen: any[], kartenZuAktualisieren: any[], gelöscht: any[] }> {
+    let ankiCards = await this.getAllCards();
+    let cards = this.cardsService.getCards();
+
+    let zuaktualisieren: any[] = [];
+    let kartenFehlen: any[] = [];
+    let gelöscht: any[] = [];
+
+
+    for (let card of cards) {
+      if (!(await this.isInAnki(card))) {
+        kartenFehlen.push(card.id)
+        continue;
+      }
+      for (let ankiCard of ankiCards) {
+        let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
+
+        if (card.id == ankiCardContent.id) {
+           if (card.content[card.content.length - 1].time > ankiCardContent.content[ankiCardContent.content.length - 1].time) {
+             zuaktualisieren.push(card.id)
+
+          }
+        }
+      }
+
+
+    }
+    for (let ankiCard of ankiCards) {
+
+      let remove = true;
+      for (let card of cards) {
+        if (JSON.parse(ankiCard.fields.card.value).id == card.id) {
+          remove = false
+        }
+      }
+      if (remove) {
+        gelöscht.push(JSON.parse(ankiCard.fields.card.value).id)
+
+      }
+    }
+
+    return {
+      kartenInAnki: ankiCards.length,
+      kartenInKappi: cards.length,
+      kartenFehlen: kartenFehlen,
+      kartenZuAktualisieren: [...new Set(zuaktualisieren)],
+      gelöscht: gelöscht,
+    }
+
   }
 
   async isInAnki(card: Card) {
     let ankiCards = await this.getAllCards();
-    console.log(ankiCards)
+
     // @ts-ignore
     for (let ankiCard of ankiCards) {
       let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
-      console.log(ankiCardContent.id, card.id)
-      if(ankiCardContent.id == card.id){
-        console.log(ankiCardContent, card.id)
+
+      if (ankiCardContent.id == card.id) {
+
         return true;
       }
 
@@ -93,7 +185,7 @@ export class AnkiService {
   }
 
   async addFrage(card: Card) {
-    if(await this.isInAnki(card)){
+    if (await this.isInAnki(card)) {
       console.error("Card already in Anki")
       return;
     }

@@ -30,7 +30,9 @@ export class Defaults {
 
   static card(): Card {
     return {
-      id: Math.random() + '',
+      id: Date.now().toString(36)+
+        Math.random().toString(36).substring(2)+
+        Math.random().toString(36).substring(2),
       time: Date.now(),
       paket: ['Standard'],
       content: [this.cardContent()],

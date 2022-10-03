@@ -28,6 +28,7 @@ export class EditComponent {
 
       this.original = this.card.content[this.card.content.length - 1]
       this.neu = {...this.card.content[this.card.content.length - 1]}
+      this.neu.time = Date.now();
 
       for (let i = 1; i < this.card.paket.length; i++) {
         this.paket += ('::' + this.card.paket[i])
@@ -69,9 +70,7 @@ export class EditComponent {
     this.neu = {...this.original}
   }
 
-  removeAltAntwort(a
-                     :
-                     string
+  removeAltAntwort(a: string
   ) {
     this.neu.felder.alternativAntworten = this.neu.felder.alternativAntworten?.filter((i: string) => {
       if (i != a)
@@ -81,9 +80,7 @@ export class EditComponent {
 
   }
 
-  removeHFehler(f
-                  :
-                  string
+  removeHFehler(f: string
   ) {
     this.neu.felder.fehler = this.neu.felder.fehler?.filter((i: { antwort: string, fehler: string }) => {
       if (i.antwort != f)
