@@ -17,20 +17,34 @@
         Damit alles funktioniert, muss das Anki-Addon AnkiConnect installiert sein und anki geöffnet sein.
       </p>
       <button mat-raised-button color="primary" (click)="scan()">Scannen</button>
-      <button mat-raised-button color="primary" (click)="fullSync()">Alles synchronisieren</button>
+      <button mat-raised-button color="primary" [disabled]="laedt || connectionError" (click)="fullSync()">Alles synchronisieren</button>
 
       <mat-card>
         <div *ngIf="!laedt">
-          <p><span>{{kartenInAnki}}</span> Karten in Anki</p>
-          <p><span>{{kartenInKappi}}</span> Karten in Kappi</p>
-          <p><span>{{toSync.length}}</span>
-            Karten nur in Kappi
+          <h2>Ausstehende Aktionen:</h2>
+
+          <p *ngIf="toSync.length >=1"><span>{{toSync.length}}</span>
+            Karten zu Anki Importieren
           </p>
-          <p><span>{{geloescht.length}}</span>
-            Karten karten aus Kappi gelöscht, aber noch in Anki
+          <p *ngIf="geloescht.length >=1"><span>{{geloescht.length}}</span>
+            Karten aus Anki Löschen
           </p>
-          <p><span>{{geaendert.length}}</span>
-            Karten in Kappi geändert
+          <p *ngIf="geaendert.length >=1"><span>{{geaendert.length}}</span>
+            Karten in Anki Aktualisieren
+          </p>
+          <p *ngIf="connectionError">Ein Fehler ist aufgetreten.
+            <br> Häufige Fehler:
+            <br> - AnkiConnect ist nicht installiert <br>
+            - Anki ist nicht geöffnet<br>
+            - localhost:4200 ist nicht in den AnkiConnect-Einstellungen eingetragen:<br>
+            <span class="space-left">"webCorsOriginList": [
+            "http://localhost:4200"
+           ]</span>
+          </p>
+
+          <p *ngIf="(toSync.length <1 && geaendert.length<1 && geloescht.length<1&&!connectionError)">
+            <mat-icon>check</mat-icon>
+            Alles erledigt
           </p>
         </div>
         <mat-spinner *ngIf="laedt"></mat-spinner>

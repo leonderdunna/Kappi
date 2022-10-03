@@ -53,7 +53,7 @@ export class AnkiService {
     for (let ankiCard of ankiCards) {
       let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
       if (ankiCardContent.id == id) {
-        console.log(id, ankiCard,"in 'deletebykappiid'")
+        console.log(id, ankiCard, "in 'deletebykappiid'")
         await this.invoke(
           "deleteNotes",
           6,
@@ -117,6 +117,7 @@ export class AnkiService {
     }
   }
 
+  //TODO: gelöscht muss zu anki id werden und zu aktualisieren muss sowohl anki id als auch kappi id beinhalten.
   async scan(): Promise<{ kartenInAnki: number, kartenInKappi: number, kartenFehlen: any[], kartenZuAktualisieren: any[], gelöscht: any[] }> {
     let ankiCards = await this.getAllCards();
     let cards = this.cardsService.getCards();
@@ -135,8 +136,8 @@ export class AnkiService {
         let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
 
         if (card.id == ankiCardContent.id) {
-           if (card.content[card.content.length - 1].time > ankiCardContent.content[ankiCardContent.content.length - 1].time) {
-             zuaktualisieren.push(card.id)
+          if (card.content[card.content.length - 1].time > ankiCardContent.content[ankiCardContent.content.length - 1].time) {
+            zuaktualisieren.push(card.id)
 
           }
         }
@@ -201,13 +202,36 @@ export class AnkiService {
 
           "modelName": "Kappi Frage",
           "inOrderFields": ["card"],
-          "css": "",
+          "css": ".hiddn{\n" +
+            "display:none}\n" +
+            "#frage, #antwort{\n" +
+            "font-size:3em;\n" +
+            "margin:auto;\n" +
+            "}",
           "isCloze": false,
           "cardTemplates": [
             {
               "Name": "My Card 1",
-              "Front": "Front:{{card}}",
-              "Back": "Back html  {{card}}"
+              "Front": "<div id=\"frage\">huhu</div>\n" +
+                "<div class=\"hiddn frage\">{{card}}</div>\n" +
+                "<script>\n" +
+                "  let card = JSON.parse(document.querySelector(\".hiddn.frage\").textContent);\n" +
+                "        document.querySelector(\"#frage\").textContent = \n" +
+                "        card.content[card.content.length-1].felder.frage;\n" +
+                "\n" +
+                "</script>",
+              "Back": "\n" +
+                "<div id=\"frage\">huhu</div>\n" +
+                "<hr>\n" +
+                "<div id=\"antwort\"></div>\n" +
+                "<div class=\"hiddn frage\">{{card}}</div>\n" +
+                "<script>\n" +
+                "  \n" +
+                "        document.querySelector(\"#frage\").textContent = \n" +
+                "        card.content[card.content.length-1].felder.frage;\n" +
+                "document.querySelector(\"#antwort\").textContent=  card.content[card.content.length-1].felder.antwort;\n" +
+                "\n" +
+                "</script>"
             }
           ]
 

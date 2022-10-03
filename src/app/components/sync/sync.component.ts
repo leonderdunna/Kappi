@@ -13,14 +13,15 @@ export class SyncComponent {
     this.scan()
   }
 
- async fullSync() {
-this.laedt = true;
-   await this.add();
-   await this.sync();
-   await this.delete();
-   await this.scan();
+  async fullSync() {
+    this.laedt = true;
+    await this.add();
+    await this.sync();
+    await this.delete();
+    await this.scan();
   }
 
+  connectionError:boolean = false;
   geloescht: any[] = [];
   laedt: boolean = true;
   toSync: any[] = [];
@@ -46,21 +47,28 @@ this.laedt = true;
   async delete() {
     let toDelete = (await this.ankiService.scan()).gelöscht
     for (let id of toDelete) {
-      console.log(id, this.cardsService.getCard(id),"soll gelöscht werden")
+      console.log(id, this.cardsService.getCard(id), "soll gelöscht werden")
       await this.ankiService.deleteByKappiID(id)
     }
   }
 
   async scan() {
     this.laedt = true;
-    let result = await this.ankiService.scan()
-    console.log(result)
-    this.geloescht = result.gelöscht;
-    this.toSync = result.kartenFehlen;
-    this.geaendert = result.kartenZuAktualisieren;
-    this.kartenInKappi = result.kartenInKappi;
-    this.kartenInAnki = result.kartenInAnki;
-    this.laedt = false;
+    try {
+      let result = await this.ankiService.scan()
+      this.geloescht = result.gelöscht;
+      this.toSync = result.kartenFehlen;
+      this.geaendert = result.kartenZuAktualisieren;
+      this.kartenInKappi = result.kartenInKappi;
+      this.kartenInAnki = result.kartenInAnki;
+      this.laedt = false;
+      this.connectionError = false;
+    } catch (e) {
+      this.laedt = false;
+      this.connectionError = true;
+      console.log("im catch block")
+    }
+
   }
 
 }
