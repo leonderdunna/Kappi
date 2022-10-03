@@ -30,10 +30,10 @@ export class EditComponent {
       this.neu = {...this.card.content[this.card.content.length - 1]}
       this.neu.time = Date.now();
 
-      for (let i = 1; i < this.card.paket.length; i++) {
-        this.paket += ('::' + this.card.paket[i])
-      }
+      this.paket = this.card.paket.join('::')
       this.paketOriginal = this.paket
+      if(this.card.paket.length < 1)
+        this.paket = 'Default'
 
     })
   }

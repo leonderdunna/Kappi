@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { CardsService } from '../../services/cards.service';
+import {Component, OnInit} from '@angular/core';
+import {CardsService} from '../../services/cards.service';
 
 import * as Highcharts from 'highcharts';
-import { SettingsService } from '../../services/settings.service';
-import { GelerntService } from '../../services/gelernt.service';
+import {SettingsService} from '../../services/settings.service';
+import {GelerntService} from '../../services/gelernt.service';
 import {PaketeService} from "../../services/pakete.service";
+import {Rubriken} from "../../resources/rubriken";
 
 @Component({
   selector: 'app-statistiken',
@@ -15,7 +16,7 @@ export class StatistikenComponent implements OnInit {
 
   constructor(
     private cardsService: CardsService,
-    private paketeService:PaketeService,
+    private paketeService: PaketeService,
     private settingsService: SettingsService,
     private gelerntService: GelerntService) {
   }
@@ -23,10 +24,20 @@ export class StatistikenComponent implements OnInit {
   //Kartenzahlen
   karten = this.cardsService.getCards();
   gesamtkartenzahl = this.karten.length;
-  neueKartenZahl = this.karten.filter((card) => { return card.stat[card.stat.length-1].rubrik===0}).length
-  kartenJung = this.karten.filter((card) => { return card.stat[card.stat.length-1].rubrik===1}).length //TODO: 1 ist höchtwahrscheinlich nicht die rubrik für jung
-  kartenAlt = this.karten.filter((card) => { return card.stat[card.stat.length-1].rubrik===2}).length //TODO: 2 ist höchtwahrscheinlich nicht die rubrik für alt
-  lernenunderneut = this.karten.filter((card) => { return card.stat[card.stat.length-1].rubrik===2}).length //TODO: 2 ist höchtwahrscheinlich nicht die rubrik für lernen oder erneut
+  neueKartenZahl = this.karten.filter((card) => {
+    return card.stat[card.stat.length - 1].rubrik === 0
+  }).length
+  kartenJung = this.karten.filter((card) => {
+    return card.stat[card.stat.length - 1].rubrik === Rubriken.JUNG
+  }).length
+  kartenAlt = this.karten.filter((card) => {
+    return card.stat[card.stat.length - 1].rubrik === Rubriken.ALT
+  }).length
+  lernenunderneut = this.karten.filter((card) => {
+      return (card.stat[card.stat.length - 1].rubrik === Rubriken.LERNEN) ||
+        (card.stat[card.stat.length - 1].rubrik === Rubriken.ERNEUT_LERNEN)
+    }
+  ).length
   ngOnInit(): void {
   }
 
@@ -47,10 +58,10 @@ export class StatistikenComponent implements OnInit {
     if ((gesamt + this.gelerntService.getNeue(0)) >= this.settings.neueProTag) {
       gesamt -= (this.settings.neueProTag - this.gelerntService.getNeue(0));
       fälligNeu.push(this.settings.neueProTag - this.gelerntService.getNeue(0))
-   } else {
-      fälligNeu.push(gesamt );
-      gesamt =0;
-  }
+    } else {
+      fälligNeu.push(gesamt);
+      gesamt = 0;
+    }
     for (let i: number = 1; i < 31; i++) {
       if (gesamt >= this.settings.neueProTag) {
         gesamt -= this.settings.neueProTag;
@@ -67,12 +78,13 @@ export class StatistikenComponent implements OnInit {
     return fälligNeu;
 
   }
+
   getFälligLernen(): number[] {
     let fälligLernen: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (e.stat[e.stat.length-1].rubrik == 1 ||
-        e.stat[e.stat.length-1].rubrik == 4)
+      if (e.stat[e.stat.length - 1].rubrik == 1 ||
+        e.stat[e.stat.length - 1].rubrik == 4)
         return true
       return false
     })
@@ -80,7 +92,7 @@ export class StatistikenComponent implements OnInit {
     fälligLernen.push(
       lernenKarten.filter((e) => {
         if (
-          (e.stat[e.stat.length-1].due ?? 0) <= Date.now()) {
+          (e.stat[e.stat.length - 1].due ?? 0) <= Date.now()) {
           return true;
         }
         return false
@@ -90,8 +102,8 @@ export class StatistikenComponent implements OnInit {
     for (let i: number = 0; i < 30; i++) {
       fälligLernen.push(
         lernenKarten.filter((e) => {
-          if ((e.stat[e.stat.length-1].due ?? 0) > (Date.now()  + (i * msProTag)) &&
-            (e.stat[e.stat.length-1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
+          if ((e.stat[e.stat.length - 1].due ?? 0) > (Date.now() + (i * msProTag)) &&
+            (e.stat[e.stat.length - 1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
           }
           return false
@@ -100,18 +112,19 @@ export class StatistikenComponent implements OnInit {
     }
     return fälligLernen;
   }
+
   getFälligJung(): number[] {
     let fälligJung: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (e.stat[e.stat.length-1].rubrik == 2)
+      if (e.stat[e.stat.length - 1].rubrik == 2)
         return true
       return false
     })
 
     fälligJung.push(
       lernenKarten.filter((e) => {
-        if ((e.stat[e.stat.length-1].due ?? 0) <= Date.now())
+        if ((e.stat[e.stat.length - 1].due ?? 0) <= Date.now())
           return true;
         return false;
       }).length
@@ -120,8 +133,8 @@ export class StatistikenComponent implements OnInit {
     for (let i: number = 0; i < 30; i++) {
       fälligJung.push(
         lernenKarten.filter((e) => {
-          if ((e.stat[e.stat.length-1].due ?? 0) > (Date.now() + (i * msProTag)) &&
-            (e.stat[e.stat.length-1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
+          if ((e.stat[e.stat.length - 1].due ?? 0) > (Date.now() + (i * msProTag)) &&
+            (e.stat[e.stat.length - 1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
           }
           return false
@@ -130,11 +143,12 @@ export class StatistikenComponent implements OnInit {
     }
     return fälligJung;
   }
+
   getFälligAlt(): number[] {
     let fälligAlt: number[] = [];
     let msProTag: number = (1000 * 60 * 60 * 24);
     let lernenKarten = this.aktiveKarten.filter((e) => {
-      if (e.stat[e.stat.length-1].rubrik == 3)
+      if (e.stat[e.stat.length - 1].rubrik == 3)
         return true
       return false
     })
@@ -142,7 +156,7 @@ export class StatistikenComponent implements OnInit {
     fälligAlt.push(
       lernenKarten.filter((e) => {
         if (
-          (e.stat[e.stat.length-1].due ?? 0) <= Date.now()) {
+          (e.stat[e.stat.length - 1].due ?? 0) <= Date.now()) {
           return true;
         }
         return false
@@ -153,8 +167,8 @@ export class StatistikenComponent implements OnInit {
     for (let i: number = 0; i < 30; i++) {
       fälligAlt.push(
         lernenKarten.filter((e) => {
-          if ((e.stat[e.stat.length-1].due ?? 0) > (Date.now() + (i * msProTag)) &&
-            (e.stat[e.stat.length-1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
+          if ((e.stat[e.stat.length - 1].due ?? 0) > (Date.now() + (i * msProTag)) &&
+            (e.stat[e.stat.length - 1].due ?? 0) <= (Date.now() + ((i + 1) * msProTag))) {
             return true;
           }
           return false
@@ -218,13 +232,13 @@ export class StatistikenComponent implements OnInit {
       borderColor: 'gray',
       colorKey: 'red',
       colorByPoint: true,
-      dataLabels: { style: { color: 'lightgray', textOutline: 'none' }, shadow: false },
+      dataLabels: {style: {color: 'lightgray', textOutline: 'none'}, shadow: false},
 
       data: [
-        { name: 'Neue Karten', y: this.neueKartenZahl },
-        { name: 'Junge Karten', y: this.kartenJung },
-        { name: 'Alte karten', y: this.kartenAlt },
-        { name: 'Lernen und Erneut Lernen', y: this.lernenunderneut }]
+        {name: 'Neue Karten', y: this.neueKartenZahl},
+        {name: 'Junge Karten', y: this.kartenJung},
+        {name: 'Alte karten', y: this.kartenAlt},
+        {name: 'Lernen und Erneut Lernen', y: this.lernenunderneut}]
     }],
 
   };
@@ -245,9 +259,7 @@ export class StatistikenComponent implements OnInit {
       text: ''
     },
     xAxis: {
-      categories: [
-
-      ],
+      categories: [],
       crosshair: true
     },
     yAxis: {

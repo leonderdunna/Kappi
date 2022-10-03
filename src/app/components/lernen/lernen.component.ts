@@ -12,6 +12,7 @@ import {PaketeService} from '../../services/pakete.service';
 import {ZusatzComponent} from "../edit/zusatz/zusatz.component";
 import {Fortschritt} from "../../objekte/fortschritt.model";
 import {Defaults} from "../../objekte/Defaults";
+import {Rubriken} from "../../resources/rubriken";
 
 @Component({
   selector: 'app-lernen',
@@ -102,9 +103,9 @@ export class LernenComponent {
 
       //if (!stat.due) return true;  //Ich weiß nicht mehr was das tut. vielleicht ist es wichtig. kp habs erstmal auskommentiert
       if (this.gelerntService.getNeue(0) >= (this.settingsService.getSettings().neueProTag - 0) &&
-        stat.rubrik == 0)
+        stat.rubrik == Rubriken.NEU)
         return false;
-      if (stat.rubrik == 0 || stat.due < Date.now())
+      if (stat.rubrik == Rubriken.NEU || stat.due < Date.now())
         return true;
       return false
     })
