@@ -47,12 +47,15 @@ export class AnkiService {
     this.invoke('createDeck', 6, {deck: 'Kappi::' + name})
   }
 
+  /**
+   * @Description: Löscht die entsprechende Karte aus Anki. sollte nicht verwendet werden. (deleteByAnkiID ist sehr viel performanter)
+   * @param id
+   */
   async deleteByKappiID(id: string) {
     let ankiCards = await this.getAllCards();
     // @ts-ignore
     for (let ankiCard of ankiCards) {
-      let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
-      if (ankiCardContent.id == id) {
+      if (ankiCard.fields["Kappi ID"].value == id) {
         console.log(id, ankiCard, "in 'deletebykappiid'")
         await this.invoke(
           "deleteNotes",
@@ -63,6 +66,15 @@ export class AnkiService {
       }
 
     }
+  }
+
+  async deleteByAnkiID(id: string | string[], deleteMultiple: boolean = false) {
+    await this.invoke(
+      "deleteNotes",
+      6,
+      {
+        "notes": deleteMultiple ? id : [+id]
+      })
   }
 
   async getAllCards(): Promise<any[]> {
@@ -95,49 +107,81 @@ export class AnkiService {
     return cards;
   }
 
-  async updateAnkiCardByKappiID(id: string) {
-    let ankiCards = await this.getAllCards();
-    // @ts-ignore
-    for (let ankiCard of ankiCards) {
-      let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
-      if (ankiCardContent.id == id) {
-        await this.invoke(
-          "updateNoteFields",
-          6,
-          {
-            "note": {
-              "id": ankiCard.noteId,
-              "fields": {
-                "card": JSON.stringify(this.cardsService.getCard(id))
-              }
-            }
-          })
+  async updateKappiCardByAnkiID(id: string) {
+    let ankiCard = await this.invoke(
+      "notesInfo",
+      6,
+      {
+        "notes": [+id]
       }
+    )
 
-    }
+    // @ts-ignore
+    let card = this.cardsService.getCard(ankiCard[0].fields["Kappi ID"].value)
+
+    // @ts-ignore
+    card.content[card.content.length - 1].felder.frage = ankiCard[0].fields["Frage"].value;
+    // @ts-ignore
+    card.content[card.content.length - 1].felder.antwort = ankiCard[0].fields["Antwort"].value;
+    card.content[card.content.length - 1].time = Date.now();
+
+    this.cardsService.updateCardContent(card.content[card.content.length - 1], card.id)
   }
 
-  //TODO: gelöscht muss zu anki id werden und zu aktualisieren muss sowohl anki id als auch kappi id beinhalten.
-  async scan(): Promise<{ kartenInAnki: number, kartenInKappi: number, kartenFehlen: any[], kartenZuAktualisieren: any[], gelöscht: any[] }> {
+  async updateAnkiCardByAnkiID(id: string) {
+    let ankiCard = await this.invoke(
+      "notesInfo",
+      6,
+      {
+        "notes": [+id]
+      }
+    )
+    // @ts-ignore
+
+    let card = this.cardsService.getCard(ankiCard[0].fields["Kappi ID"].value)
+
+    await this.invoke(
+      "updateNoteFields",
+      6,
+      {
+        "note": {
+          "id": +id,
+          "fields": {
+            "Kappi ID": card.id,
+            "Kappi Time": card.content[card.content.length - 1].time + "",
+            "Frage": card.content[card.content.length - 1].felder.frage,
+            "Antwort": card.content[card.content.length - 1].felder.antwort,
+          }
+        }
+      })
+
+    //TODO
+  }
+
+
+  //TODO:
+  async scan(): Promise<{ kartenInAnki: number, kartenInKappi: number, kartenFehlen: { kappiId: string }[], newerInKappi: { kappiId: string, ankiId: string }[],newerInAnki:{kappiId:string,ankiId:string}[] , gelöscht: { ankiId: string }[], conflicts: any[] }> {
     let ankiCards = await this.getAllCards();
     let cards = this.cardsService.getCards();
+    console.log(cards, ankiCards, "in 'scan' anfang")
 
-    let zuaktualisieren: any[] = [];
-    let kartenFehlen: any[] = [];
-    let gelöscht: any[] = [];
+    let newerInKappi: { kappiId: string, ankiId: string }[] = [];
+    let kartenFehlen: { kappiId: string }[] = [];
+    let gelöscht: { ankiId: string }[] = [];
+    let conflicts: any[] = [];
+    let newerInAnki: { kappiId: string, ankiId: string }[] = [];
 
 
     for (let card of cards) {
       if (!(await this.isInAnki(card))) {
-        kartenFehlen.push(card.id)
+        kartenFehlen.push({kappiId: card.id})
         continue;
       }
       for (let ankiCard of ankiCards) {
-        let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
 
-        if (card.id == ankiCardContent.id) {
-          if (card.content[card.content.length - 1].time > ankiCardContent.content[ankiCardContent.content.length - 1].time) {
-            zuaktualisieren.push(card.id)
+        if (card.id == ankiCard.fields["Kappi ID"].value) {
+          if (card.content[card.content.length - 1].time > ankiCard.fields["Kappi Time"].value-0) {
+            newerInKappi.push({kappiId: card.id, ankiId: ankiCard.noteId})
 
           }
         }
@@ -149,22 +193,45 @@ export class AnkiService {
 
       let remove = true;
       for (let card of cards) {
-        if (JSON.parse(ankiCard.fields.card.value).id == card.id) {
+        console.log(card.id, ankiCard.fields["Kappi ID"].value, "in 'scan' for")
+        if (ankiCard.fields["Kappi ID"].value == card.id) {
           remove = false
         }
       }
       if (remove) {
-        gelöscht.push(JSON.parse(ankiCard.fields.card.value).id)
+        console.log(ankiCard,cards, "in 'scan' to remove")
+        gelöscht.push({ankiId: ankiCard.noteId})
 
       }
+
+      //Search updates in Anki
+      let id = ankiCard.fields["Kappi ID"].value;
+      let card = this.cardsService.getCard(id);
+      let cardContent = card.content[card.content.length - 1];
+      if(cardContent.felder.frage != ankiCard.fields["Frage"].value || cardContent.felder.antwort != ankiCard.fields["Antwort"].value){
+        newerInAnki.push({ankiId: ankiCard.noteId, kappiId: id})
+      }
+
     }
 
+    console.log(
+      {
+        kartenInAnki: ankiCards.length,
+        kartenInKappi: cards.length,
+        kartenFehlen: kartenFehlen,
+        kartenZuAktualisieren: [...new Set(newerInKappi)],
+        gelöscht: gelöscht,
+        conflicts: conflicts
+      }
+    )
     return {
       kartenInAnki: ankiCards.length,
       kartenInKappi: cards.length,
       kartenFehlen: kartenFehlen,
-      kartenZuAktualisieren: [...new Set(zuaktualisieren)],
+      newerInKappi: [...new Set(newerInKappi)],
       gelöscht: gelöscht,
+      conflicts: conflicts,
+      newerInAnki: newerInAnki
     }
 
   }
@@ -174,9 +241,8 @@ export class AnkiService {
 
     // @ts-ignore
     for (let ankiCard of ankiCards) {
-      let ankiCardContent = JSON.parse(ankiCard.fields.card.value)
 
-      if (ankiCardContent.id == card.id) {
+      if (ankiCard.fields["Kappi ID"].value == card.id) {
 
         return true;
       }
@@ -186,71 +252,30 @@ export class AnkiService {
   }
 
   async addFrage(card: Card) {
-    if (await this.isInAnki(card)) {
-      console.error("Card already in Anki")
-      return;
-    }
+
 
     let models = await this.invoke('modelNames', 6, {})
 
     // @ts-ignore
-    if (!models.includes('Kappi Frage')) {
-      await this.invoke(
-        "createModel",
-        6,
-        {
-
-          "modelName": "Kappi Frage",
-          "inOrderFields": ["card"],
-          "css": ".hiddn{\n" +
-            "display:none}\n" +
-            "#frage, #antwort{\n" +
-            "font-size:3em;\n" +
-            "margin:auto;\n" +
-            "}",
-          "isCloze": false,
-          "cardTemplates": [
-            {
-              "Name": "My Card 1",
-              "Front": "<div id=\"frage\">huhu</div>\n" +
-                "<div class=\"hiddn frage\">{{card}}</div>\n" +
-                "<script>\n" +
-                "  let card = JSON.parse(document.querySelector(\".hiddn.frage\").textContent);\n" +
-                "        document.querySelector(\"#frage\").textContent = \n" +
-                "        card.content[card.content.length-1].felder.frage;\n" +
-                "\n" +
-                "</script>",
-              "Back": "\n" +
-                "<div id=\"frage\">huhu</div>\n" +
-                "<hr>\n" +
-                "<div id=\"antwort\"></div>\n" +
-                "<div class=\"hiddn frage\">{{card}}</div>\n" +
-                "<script>\n" +
-                "  \n" +
-                "        document.querySelector(\"#frage\").textContent = \n" +
-                "        card.content[card.content.length-1].felder.frage;\n" +
-                "document.querySelector(\"#antwort\").textContent=  card.content[card.content.length-1].felder.antwort;\n" +
-                "\n" +
-                "</script>"
-            }
-          ]
-
-        })
+    if (!models.includes('Kappi: Default')) {
+      await this.addModel();
     }
-
 
     this.addDeck(card.paket.join('::'));
 
 
-    this.invoke(
+    await this.invoke(
       "addNote",
       6,
       {
         "note": {
           "deckName": 'Kappi::' + card.paket.join('::'),
-          "modelName": "Kappi Frage",
+          "modelName": "Kappi: Default",
           "fields": {
-            "card": JSON.stringify(card)
+            "Frage": card.content[card.content.length - 1].felder.frage,
+            "Antwort": card.content[card.content.length - 1].felder.antwort,
+            "Kappi ID": card.id,
+            "Kappi Time": card.content[card.content.length - 1].time + "",
           },
           "options": {
             "allowDuplicate": false,
@@ -265,6 +290,32 @@ export class AnkiService {
             "Kappi"
           ]
         }
+      })
+  }
+
+  async addModel() {
+    await this.invoke(
+      "createModel",
+      6,
+      {
+
+        "modelName": "Kappi: Default",
+        "inOrderFields": ["Frage", "Antwort", "Kappi ID", "Kappi Time"],
+        "css": ".hiddn{\n" +
+          "display:none}\n" +
+          "#frage, #antwort{\n" +
+          "font-size:3em;\n" +
+          "margin:auto;\n" +
+          "}",
+        "isCloze": false,
+        "cardTemplates": [
+          {
+            "Name": "Karte 1",
+            "Front": "{{Frage}}",
+            "Back": "{{Antwort}}"
+          }
+        ]
+
       })
   }
 
