@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AnkiService} from "../../services/sync/anki.service";
 import {CardsService} from "../../services/cards.service";
+import {Defaults} from "../../objekte/Defaults";
 
 @Component({
   selector: 'app-sync',
@@ -11,17 +12,18 @@ export class SyncComponent {
 
   constructor(private ankiService: AnkiService, private cardsService: CardsService) {
     this.scan()
-  }
+}
 
   async fullSync() {
     this.laedt = true;
 
     console.log("fullsync")
 
-    await this.add();
-    console.log("add-fertig")
+    await this.addToAnki();
+    console.log("add anki-fertig")
     await this.syncToAnki();
     console.log("syncTo ANki-fertig")
+    await this.addToKappi();
 
    await this.syncToKappi();
     console.log("syncTo Kappi-fertig")
@@ -39,25 +41,41 @@ export class SyncComponent {
   kartenInKappi: number = 0;
   kartenInAnki: number = 0;
 
-  async add() {
-    let toAdd = (await this.ankiService.scan()).kartenFehlen
+  async addToAnki() {
+    let toAdd = (await this.ankiService.scan()).kartenFehlenInAnki
     for (let id of toAdd) {
       await this.ankiService.addFrage(this.cardsService.getCard(id.kappiId))
     }
+  }
+ async addToKappi() {
+
+    let scanResults = await this.ankiService.scan()
+    let toAdd = scanResults.kartenFehlenInKappi
+    for (let infos of toAdd) {
+      let card =this.cardsService.getCard( Defaults.card().id)
+      let content = card.content[card.content.length-1]
+      content.felder.frage = infos.frage;
+      content.felder.antwort = infos.antwort;
+      card.paket = infos.paket.split("::");
+      content.entwurf = false;
+      this.cardsService.updateCardContent(content,card.id)
+
+    }
+
   }
 
   async syncToAnki() {
 
     let toSync = (await this.ankiService.scan()).newerInKappi
     for (let id of toSync) {
-      console.log(id, "soll aktualisiert werden")
+
       await this.ankiService.updateAnkiCardByAnkiID(id.ankiId )
     }
   }
   async syncToKappi() {
     let toSync = (await this.ankiService.scan()).newerInAnki
     for (let id of toSync) {
-      console.log(id, "soll aktualisiert werden")
+
       await this.ankiService.updateKappiCardByAnkiID(id.ankiId)
     }
   }
@@ -75,13 +93,14 @@ export class SyncComponent {
     try {
       let result = await this.ankiService.scan()
       this.geloescht = result.gelöscht;
-      this.toSync = result.kartenFehlen;
+      this.toSync = result.kartenFehlenInAnki;
       this.geaendert = result.newerInAnki;
       this.geaendert.push(...result.newerInKappi)
       this.kartenInKappi = result.kartenInKappi;
       this.kartenInAnki = result.kartenInAnki;
       this.laedt = false;
       this.connectionError = false;
+      console.log(result)
     } catch (e) {
       this.laedt = false;
       this.connectionError = true;
