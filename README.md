@@ -2,18 +2,34 @@
 
 > Author: Leonard-Orlando Menzel
 
-> Datum: 19.12.2021
+> Beginn der Arbeit: 19.12.2021
+
+> Website: https://kappi-app.web.app/
 
 <hr>
 
-## Über das Projekt
-Die Website stellt eine Lernplatform da, deren Algorhitmus auf dem von [Anki](https://github.com/ankitects/anki) beruht, jedoch vollständig kollaborativ genutzt werden kann. Es handelt sich um ein spaced repetition & active recall Prinzip.
-Da es sich um ein Schulprojekt handelt erfolgt die Dokumentation über ein [Pflichtenheft](https://docs.google.com/document/d/1iFDPQ7m8bli4c9Cg_8fpXniyE0Hk6XLpDd1PPH6XAUs/edit?usp=sharing)
+## Ziel
+Eine Website, auf der Kollaborativ Karteikarten erstellt, gelernt und bearbeitet werden können. Zusätzlich sollen erstellte karten mit Anki synchronisiert werden können. 
 
-### Das Projekt ist durch folgende Software möglich:
+### Was schon funktioniert
+- Karten Erstellen
+- Karten Lernen
+- Karten Bearbeiten und Löschen
+- Karten zu Anki Importieren
+- Minimale Statistiken
+- Aktivieren oder deaktivieren von Paketen
+
+## Was noch nicht funkioniert
+- Änderungen in Anki auch nach Kappi importieren
+- Ein Backend oder so bauen, damit es kollaborativ wird (Erste versuche im Kappi-Server repository)
+- Accounts für private Decks
+- aktivieren / Deaktivieren von unterpaketen (Zur Zeit gehen nur ganze Pakete)
+- Einstellungen werden nur zum Teil berücksichtigt. (Max Neue Karten pro Tag und so)
+
+### Das Projekt nutzt folgende Frameworks/Module:
     Angular,
-    Anki,
-    NestJS,
-    MongoDB,
-    TypeORM,
-    Angular Material
+    Angular Material,
+    Mathjax,
+    HighCharts
+    
+    
